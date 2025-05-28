@@ -7,6 +7,7 @@
     "tsc": "tsc",
     "dev": "ts-node-dev index.ts",
     "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "start": "ts-node index.ts",
     "build": "cd frontend && npm install && npm run build"
   },
