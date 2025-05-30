@@ -1,5 +1,7 @@
 ## Hours
 
-#### total hours 3
+#### total hours 4
+
+30.5.2025 Service live in https://wb-timetable-dev.onrender.com/. Hours: 1
 
 28.5.2025 Created basic monorepo setup using React, Express, Typescript. Hours: 3
