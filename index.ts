@@ -1,15 +1,10 @@
-import app from "./backend/app";
+import startServer from "./backend/util/startServer";
+import db from "./backend/util/db";
 
-const PORT = process.env.PORT || 3001;
-
-const start = () => {
-  try {
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  } catch (e) {
-    console.error(`Failed to connect server: `, e);
+db.connectToDatabase().catch((e) => {
+  if (e instanceof Error) {
+    console.log(`Unable to connect database: ${e.message}`);
   }
-};
+});
 
-start();
+startServer();
