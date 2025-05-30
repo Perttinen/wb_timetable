@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 4
+#### total hours 7
+
+30.5.2025 User model + migration. Hours: 1
 
 30.5.2025 Created database to Render. Server connected. Hours: 2
 
