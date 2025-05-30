@@ -3,6 +3,8 @@ import { Sequelize } from "sequelize-typescript";
 
 dotenv.config();
 
+console.log(process.env.NODE_ENV);
+
 const sequelize: Sequelize =
   process.env.NODE_ENV === "dev"
     ? new Sequelize(
