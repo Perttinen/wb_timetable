@@ -24,7 +24,10 @@
     "typescript-eslint": "^8.33.0"
   },
   "dependencies": {
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "sequelize-typescript": "^2.1.6",
+    "umzug": "^3.8.2"
   }
 }
