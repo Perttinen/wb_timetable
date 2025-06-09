@@ -16,4 +16,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check style
-        run: npm run lint:fix
+        uses: actions/checkout@v4
+      - run: npm run lint:fix
