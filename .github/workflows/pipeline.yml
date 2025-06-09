@@ -6,15 +6,14 @@ on:
       - dev
 
 jobs:
-  hello_world_job:
+  simple_deployment_pipeline:
     runs-on: ubuntu-latest
     steps:
-      - name: Say hello
-        run: |
-          echo "Hello World!"
-  tests:
-    runs-on: ubuntu-latest
-    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm install
       - name: Check style
-        uses: actions/checkout@v4
-      - run: npm run lint:fix
+        run: npm run lint:fix
