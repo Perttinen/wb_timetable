@@ -12,3 +12,8 @@ jobs:
       - name: Say hello
         run: |
           echo "Hello World!"
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check style
+        run: npm run lint:fix
