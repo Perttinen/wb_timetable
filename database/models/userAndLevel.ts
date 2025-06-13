@@ -4,22 +4,23 @@ import db from "../../backend/util/db";
 
 const { sequelize } = db;
 
-class User extends Model {}
+class UserAndlevel extends Model {}
 
-User.init(
+UserAndlevel.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    username: {
-      type: DataTypes.STRING,
-      unique: true,
+    userlevelId: {
+      type: DataTypes.INTEGER,
+      references: { model: "userlevels", key: "id" },
       allowNull: false,
     },
-    password: {
-      type: DataTypes.STRING,
+    userId: {
+      type: DataTypes.INTEGER,
+      references: { model: "users", key: "id" },
       allowNull: false,
     },
   },
@@ -27,8 +28,8 @@ User.init(
     sequelize,
     underscored: true,
     timestamps: false,
-    modelName: "user",
+    modelName: "userAndLevel",
   }
 );
 
-export default User;
+export default UserAndlevel;
