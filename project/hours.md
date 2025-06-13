@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 7
+#### total hours 15
+
+13.6.2025 Userapi, errorhandler, etc. Hours: 8
 
 30.5.2025 User model + migration. Hours: 1
 
