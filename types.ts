@@ -8,7 +8,7 @@ export interface ICreateUserEntry extends IUser {
 }
 
 export interface IUpdateUserEntry {
-  active?: boolean;
+  disabled?: boolean;
   id: number;
   password?: string;
   userlevels?: string[];
@@ -18,7 +18,7 @@ export interface IUpdateUserEntry {
 export interface IJsonUser extends IUser {
   id: number;
   userlevels: [{ userlevel: string }];
-  active: boolean;
+  disabled: boolean;
 }
 
 export interface IJsonUserPw extends IJsonUser {

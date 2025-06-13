@@ -35,6 +35,31 @@ const getUserParams = {
   ],
 };
 
+const getUserlevels = async () => {
+  const userlevels: IUserlevel[] = (await Userlevel.findAll()).map((ul) =>
+    ul.toJSON()
+  );
+  return userlevels;
+};
+
+const validateUserlevelInput = ({
+  userlevel,
+  allUserlevels,
+}: {
+  userlevel: string[];
+  allUserlevels: IUserlevel[];
+}): number[] => {
+  const uniqueInputLevels = userlevel.filter(
+    (value: string, index: number, array: string[]) =>
+      array.indexOf(value) === index
+  );
+  const validatedInputLevelIds = allUserlevels
+    .filter((ul) => uniqueInputLevels.includes(ul.userlevel))
+    .map((ul) => ul.id);
+  if (userlevel.length !== validatedInputLevelIds.length) return [];
+  return validatedInputLevelIds;
+};
+
 const createNewUser = asyncHandler(
   async (req: Request<unknown, unknown, ICreateUserEntry>, res: Response) => {
     const { username, password, userlevel } = req.body;
@@ -42,25 +67,23 @@ const createNewUser = asyncHandler(
     const newUser: IJsonUserPw = (
       await User.create({ username, password: passwordHash })
     ).toJSON();
-    const userLevels: IUserlevel[] = (await Userlevel.findAll()).map((ul) =>
-      ul.toJSON()
-    );
+    const allUserlevels = await getUserlevels();
+    // If not userlevel add "user" as userlevel. If valid userlevels then add them. If not valid destroy created user.
     if (userlevel) {
-      const userlevelNames: string[] = userLevels.map((ul) => ul.userlevel);
-      for (const e of userlevel) {
-        if (!userlevelNames.includes(e)) {
-          await User.destroy({ where: { id: newUser.id } });
-          res.status(406).json({ message: "Userlevels array is not valid" });
-        }
+      const validatedInputLevelIds = validateUserlevelInput({
+        allUserlevels,
+        userlevel,
+      });
+      if (validatedInputLevelIds.length < 1) {
+        await User.destroy({ where: { id: newUser.id } });
+        res.status(406).json({ message: "Userlevels array is not valid" });
       }
-      const requestedUserlevels = userLevels
-        .filter((ul) => userlevel.includes(ul.userlevel))
-        .map((ul) => {
-          return { userlevelId: ul.id, userId: newUser.id };
-        });
-      await UserAndlevel.bulkCreate(requestedUserlevels);
+      const userlevelsToSave = validatedInputLevelIds.map((ul) => {
+        return { userlevelId: ul, userId: newUser.id };
+      });
+      await UserAndlevel.bulkCreate(userlevelsToSave);
     } else {
-      const userlevelUser = userLevels.find((ul) => ul.userlevel === "user");
+      const userlevelUser = allUserlevels.find((ul) => ul.userlevel === "user");
       if (userlevelUser) {
         await UserAndlevel.create({
           userlevelId: userlevelUser.id,
@@ -79,19 +102,18 @@ const createNewUser = asyncHandler(
 );
 
 const deleteAllUsers = asyncHandler(async (_req: Request, res: Response) => {
-  const userAndLevelDestroyed = await UserAndlevel.destroy({ where: {} });
-  const userDestroyed = await User.destroy({ where: {} });
-  if (userAndLevelDestroyed && userDestroyed)
-    res.status(204).json({ message: "All users deleted successfully" });
+  await UserAndlevel.destroy({ where: {} });
+  await User.destroy({ where: {} });
+
+  res.status(204).end();
 });
 
 const deleteUser = asyncHandler(async (req: Request, res: Response) => {
-  const userAndLevelDestroyed = await UserAndlevel.destroy({
+  await UserAndlevel.destroy({
     where: { userId: req.params.id },
   });
-  const userDestroyed = await User.destroy({ where: { id: req.params.id } });
-  if (userAndLevelDestroyed && userDestroyed)
-    res.status(204).json({ message: "User deleted successfully" });
+  await User.destroy({ where: { id: req.params.id } });
+  res.status(204).end();
 });
 
 const getAllUsers = asyncHandler(async (_req: Request, res: Response) => {
@@ -125,21 +147,39 @@ const updateUser = asyncHandler(
     if (req.body.username) jsonUser.username = req.body.username;
     if (req.body.password)
       jsonUser.password = await bcrypt.hash(req.body.password, 10);
-
-    const newUserlevels = req.body.userlevels;
-    if (newUserlevels) {
-      const jsonUserlevels: IUserlevel[] = (await Userlevel.findAll()).map(
-        (ul) => ul.toJSON()
-      );
-      await UserAndlevel.destroy({ where: { userId: id } });
-      const newUserAndLevels = jsonUserlevels
-        .filter((ul) => newUserlevels.includes(ul.userlevel))
-        .map((ul) => ({ userlevelId: ul.id, userId: id }));
-      await UserAndlevel.bulkCreate(newUserAndLevels);
+    if (req.body.disabled === true || req.body.disabled === false) {
+      jsonUser.disabled = req.body.disabled;
+    }
+    const userlevel = req.body.userlevels;
+    if (userlevel) {
+      const allUserlevels = await getUserlevels();
+      const validatedInputLevelIds = validateUserlevelInput({
+        allUserlevels,
+        userlevel,
+      });
+      if (
+        validatedInputLevelIds.length > 0 &&
+        validatedInputLevelIds.length === userlevel.length
+      ) {
+        await UserAndlevel.destroy({ where: { userId: id } });
+        const userlevelsToSave = validatedInputLevelIds.map((ul) => {
+          return { userlevelId: ul, userId: id };
+        });
+        await UserAndlevel.bulkCreate(userlevelsToSave);
+      } else {
+        res.status(406).json({ message: "Userlevels array is not valid" });
+      }
     }
     await userToUpdate.update(jsonUser);
-    const updatedUser = await User.findByPk(id);
-    if (updatedUser) res.json(userlevelsToArray(updatedUser));
+    const user = await User.findOne({
+      where: { id: id },
+      ...getUserParams,
+    });
+    if (user) {
+      res.json(userlevelsToArray(user));
+    } else {
+      res.status(404).end();
+    }
   }
 );
 
