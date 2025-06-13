@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 15
+#### total hours 16
+
+13.6.2025 Userapi bug fixing and refactoring. Hours: 1
 
 13.6.2025 Userapi, errorhandler, etc. Hours: 8
 
