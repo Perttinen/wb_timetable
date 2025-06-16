@@ -10,6 +10,7 @@ import {
   IUserlevel,
 } from "../../types";
 import { User, UserAndlevel, Userlevel } from "../../database/models";
+import { addUserlevels } from "./commonFuncs";
 
 // Converts User object to json and User.userlevels to array.
 const userlevelsToArray = (user: User) => {
@@ -19,20 +20,6 @@ const userlevelsToArray = (user: User) => {
     userlevels: jsonUser.userlevels.map((ul) => ul.userlevel),
   };
   return returnUser;
-};
-
-// User getter common parameters
-const getUserParams = {
-  attributes: { exclude: ["password"] },
-  include: [
-    {
-      model: Userlevel,
-      attributes: ["userlevel"],
-      through: {
-        attributes: [],
-      },
-    },
-  ],
 };
 
 const getUserlevels = async () => {
@@ -92,8 +79,9 @@ const createNewUser = asyncHandler(
       }
     }
     const createdUser = await User.findOne({
+      attributes: { exclude: ["password"] },
       where: { id: newUser.id },
-      ...getUserParams,
+      ...addUserlevels,
     });
     if (createdUser) {
       res.status(201).json(userlevelsToArray(createdUser));
@@ -116,8 +104,15 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   res.status(204).end();
 });
 
+console.log(addUserlevels);
+
 const getAllUsers = asyncHandler(async (_req: Request, res: Response) => {
-  const users = await User.findAll(getUserParams);
+  const users = await User.findAll({
+    attributes: { exclude: ["password"] },
+    ...addUserlevels,
+  });
+  console.log(users);
+
   const resUsers = users.map((u) => userlevelsToArray(u));
   if (users) res.json(resUsers);
   res.status(404).end();
@@ -125,8 +120,9 @@ const getAllUsers = asyncHandler(async (_req: Request, res: Response) => {
 
 const getUser = asyncHandler(async (req: Request, res: Response) => {
   const user = await User.findOne({
+    attributes: { exclude: ["password"] },
     where: { id: req.params.id },
-    ...getUserParams,
+    ...addUserlevels,
   });
   if (user) {
     res.json(userlevelsToArray(user));
@@ -172,8 +168,9 @@ const updateUser = asyncHandler(
     }
     await userToUpdate.update(jsonUser);
     const user = await User.findOne({
+      attributes: { exclude: ["password"] },
       where: { id: id },
-      ...getUserParams,
+      ...addUserlevels,
     });
     if (user) {
       res.json(userlevelsToArray(user));

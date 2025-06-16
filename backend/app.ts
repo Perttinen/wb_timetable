@@ -6,12 +6,14 @@ import {
   requestLogger,
   unknownEndpoint,
 } from "./util/middleware";
-import userRouter from "./routes/usersRoutes";
+import userRouter from "./routes/userRoutes";
+import authRouter from "./routes/authRoutes";
 
 const app = express();
 app.use(express.json());
 
 app.use("/userapi", userRouter);
+app.use("/auth", authRouter);
 
 const DIST_PATH = path.resolve(__dirname, "../frontend/build");
 

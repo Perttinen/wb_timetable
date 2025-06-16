@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 16
+#### total hours 17
+
+16.6.2025 Auth/login endpoint & controller. Hours: 1
 
 13.6.2025 Userapi bug fixing and refactoring. Hours: 1
 

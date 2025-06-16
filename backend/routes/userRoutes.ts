@@ -1,6 +1,6 @@
 import Router from "express";
 
-import users from "../controllers/usersController";
+import users from "../controllers/userController";
 
 const router = Router();
 
