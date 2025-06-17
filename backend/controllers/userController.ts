@@ -111,7 +111,6 @@ const getAllUsers = asyncHandler(async (_req: Request, res: Response) => {
     attributes: { exclude: ["password"] },
     ...addUserlevels,
   });
-  console.log(users);
 
   const resUsers = users.map((u) => userlevelsToArray(u));
   if (users) res.json(resUsers);

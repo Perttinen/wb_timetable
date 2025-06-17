@@ -25,7 +25,14 @@ const login = asyncHandler(
       const { password, ...safeUser } = userlevelsToArray(dbUser);
       const passwordCorrect = await bcrypt.compare(reqPwd, password);
       if (passwordCorrect) {
-        const token = jwt.sign(safeUser, String(process.env.SECRET));
+        const token = jwt.sign(safeUser, String(process.env.JWT), {
+          expiresIn: 60 * 60 * 3,
+        });
+        console.log(
+          "token extracted: ",
+          jwt.verify(token, String(process.env.JWT))
+        );
+
         res.status(200).json({ token, ...safeUser });
       } else {
         res.status(401).json({
