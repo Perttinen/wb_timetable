@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { RequestHandler } from "express";
+import { User } from "../../../database/models";
+import { IJsonUserFromDbNoLevels } from "../../../types";
 
 dotenv.config();
 
@@ -16,7 +18,7 @@ interface IAuthObject extends jwt.JwtPayload {
 }
 
 const authorizer = (requiredLevel: string): RequestHandler => {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     const authHeader = req.get("authorization");
 
     if (!authHeader?.toLowerCase().startsWith("bearer ")) {
@@ -29,11 +31,23 @@ const authorizer = (requiredLevel: string): RequestHandler => {
       res.status(401).json({ error: "token invalid" });
       return;
     }
-    const { userlevels, disabled } = decoded as IAuthObject;
-    if (disabled) {
-      res.status(401).json({ error: "user disabled" });
+
+    const { userlevels } = decoded as IAuthObject;
+
+    const dbUser = await User.findOne({ where: { id: decoded.id } });
+
+    if (dbUser instanceof User) {
+      const user: IJsonUserFromDbNoLevels = dbUser.toJSON();
+      if (user.disabled === true) {
+        console.log("disabled = true");
+        res.status(401).json({ error: "user disabled" });
+        return;
+      }
+    } else {
+      res.status(401).json({ error: "user not found" });
       return;
     }
+
     if (!userlevels.includes(requiredLevel)) {
       res.status(401).json({ error: "unauthorized" });
       return;
