@@ -10,6 +10,13 @@ export interface IJsonUserFromDb extends IUser {
   username: string;
 }
 
+export interface IJsonUserFromDbNoLevels extends IUser {
+  password: string;
+  id: number;
+  disabled: boolean;
+  username: string;
+}
+
 export interface ICreateUserEntry extends IUser {
   password: string;
   userlevel?: string[];
