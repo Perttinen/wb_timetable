@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 20
+#### total hours 21,5
+
+20.6.2025 Integration tests configured. Hours: 1,5, Total: 21,5
 
 17.6.2025 Authorizer & errorHandler middleware. Hours: 3, Total: 20
 

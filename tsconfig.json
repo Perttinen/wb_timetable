@@ -113,5 +113,10 @@
     //"skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "exclude": ["./frontend"],
-  "include": ["backend/**/*.ts", "tests/**/*.test.ts"]
+  "include": [
+    "backend/**/*.ts",
+    "tests/**/*.test.ts",
+    "database/**/*.ts",
+    "index.ts"
+  ]
 }
