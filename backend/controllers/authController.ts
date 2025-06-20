@@ -17,6 +17,8 @@ interface ILoginUser {
 const login = asyncHandler(
   async (req: Request<unknown, unknown, ILoginUser>, res: Response) => {
     const { username, password: reqPwd } = req.body;
+    console.log("constroller: ", req.body);
+
     const dbUser = await User.findOne({
       where: { username: username },
       ...addUserlevels,

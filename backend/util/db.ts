@@ -5,7 +5,7 @@ import { Umzug, SequelizeStorage } from "umzug";
 dotenv.config();
 
 const sequelize: Sequelize =
-  process.env.NODE_ENV === "dev"
+  process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "test"
     ? new Sequelize(
         String(process.env.DATABASE),
         String(process.env.DATABASEUSER),

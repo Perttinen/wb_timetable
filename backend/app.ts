@@ -13,6 +13,10 @@ import authRouter from "./routes/authRoutes";
 const app = express();
 app.use(express.json());
 
+app.get("/tese/", (_req, res) => {
+  res.status(200).end();
+});
+
 app.use("/userapi", userRouter);
 app.use("/auth", authRouter);
 
