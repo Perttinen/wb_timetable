@@ -8,8 +8,13 @@ on:
 jobs:
   simple_deployment_pipeline:
     runs-on: ubuntu-latest
+    env:
+      HAL_PW: ${{ secrets.HAL_PW }}
     steps:
       - uses: actions/checkout@v4
+      - name: Setup environment
+        run: |
+          echo "HAL_PW=$HAL_PW}" >> .env
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
