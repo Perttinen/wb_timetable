@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 21,5
+#### total hours 22,5
+
+21.6.2025 Tests added to actions. Databese connection works. Hours: 1, Total: 22,5
 
 20.6.2025 Integration tests configured. Hours: 1,5, Total: 21,5
 
