@@ -26,9 +26,6 @@ jobs:
           echo "HAL_PW=${HAL_PW}" >> .env
           echo "DATABASEPASSWORD={$DATABASEPASSWORD}" >> .env
           echo "HOST={$HOST}" >> .env
-      - name: Say pw
-        run: |
-          echo "${HAL_PW}"
       - name: Install dependencies
         run: npm install
       - name: Check style

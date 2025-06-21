@@ -3,7 +3,6 @@ import app from "../backend/app";
 import db from "../backend/util/db";
 
 const halPw = process.env.HAL_PW;
-console.log(halPw);
 
 describe("testing", () => {
   it("tese returns 200", async () => {
