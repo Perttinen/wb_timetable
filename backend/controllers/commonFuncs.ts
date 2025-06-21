@@ -4,7 +4,6 @@ import { IJsonUserFromDb } from "../../types";
 
 export const userlevelsToArray = (user: User) => {
   const jsonUser: IJsonUserFromDb = user.toJSON();
-  console.log(jsonUser);
 
   const returnUser = {
     ...jsonUser,
