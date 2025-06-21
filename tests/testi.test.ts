@@ -20,6 +20,5 @@ describe("testing", () => {
       .post("/auth/login")
       .send({ username: "hal", password: halPw });
     expect(response.status).toBe(200);
-    console.log("testi2 ", response.body);
   });
 });
