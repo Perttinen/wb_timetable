@@ -9,6 +9,10 @@ jobs:
   simple_deployment_pipeline:
     runs-on: ubuntu-latest
     env:
+      DATABASE: ${{ secrets.DATABASE }}
+      DATABASEUSER: ${{ secrets.DATABASEUSER }}
+      DATABASEPASSWORD: ${{ secrets.DATABASEPASSWORD }}
+      HOST: ${{ secrets.HOST }}
       HAL_PW: ${{ secrets.HAL_PW }}
     steps:
       - uses: actions/checkout@v4
@@ -17,7 +21,11 @@ jobs:
           node-version: "20"
       - name: Setup environment
         run: |
+          echo "DATABASE=${DATABASE}" >> .env
+          echo "DATABASEUSER=${DATABASEUSER}" >> .env
           echo "HAL_PW=${HAL_PW}" >> .env
+          echo "DATABASEPASSWORD={$DATABASEPASSWORD}" >> .env
+          echo "HOST={$HOST}" >> .env
       - name: Say pw
         run: |
           echo "${HAL_PW}"
