@@ -1,16 +1,16 @@
 import request from "supertest";
 import app from "../backend/app";
-import db from "../backend/util/db";
+// import db from "../backend/util/db";
 
 const halPw = process.env.HAL_PW;
 
-beforeAll(async () => {
-  await db.connectToDatabase().catch((e) => {
-    if (e instanceof Error) {
-      console.log(`Unable to connect database: ${e.message}`);
-    }
-  });
-});
+// beforeAll(async () => {
+//   await db.connectToDatabase().catch((e) => {
+//     if (e instanceof Error) {
+//       console.log(`Unable to connect database: ${e.message}`);
+//     }
+//   });
+// });
 
 describe("testing", () => {
   it("tese returns 200", async () => {
