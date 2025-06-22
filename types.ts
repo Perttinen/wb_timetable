@@ -10,6 +10,14 @@ export interface IJsonUserFromDb extends IUser {
   username: string;
 }
 
+export interface IJsonSafeUser extends IUser {
+  token: string;
+  id: number;
+  disabled: boolean;
+  userlevels: { userlevel: string; id: number }[];
+  username: string;
+}
+
 export interface IJsonUserFromDbNoLevels extends IUser {
   password: string;
   id: number;
