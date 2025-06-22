@@ -104,8 +104,6 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   res.status(204).end();
 });
 
-console.log(addUserlevels);
-
 const getAllUsers = asyncHandler(async (_req: Request, res: Response) => {
   const users = await User.findAll({
     attributes: { exclude: ["password"] },
