@@ -10,4 +10,8 @@ const connect = async () => {
 //     console.log(`Unable to connect database: ${e.message}`);
 //   }
 // });
-connect();
+connect().catch((e) => {
+  if (e instanceof Error) {
+    console.log(`Unable to connect database: ${e.message}`);
+  }
+});
