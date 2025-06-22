@@ -26,7 +26,7 @@ const sequelize: Sequelize =
 
 const connectToDatabase = async () => {
   await sequelize.authenticate();
-  // await runMigrations();
+  await runMigrations();
   console.log("database connected");
   return null;
 };
@@ -40,13 +40,13 @@ const migrationConf = {
   logger: console,
 };
 
-// const runMigrations = async () => {
-//   const migrator = new Umzug(migrationConf);
-//   const migrations = await migrator.up();
-//   console.log("Migrations up to date", {
-//     files: migrations.map((mig) => mig.name),
-//   });
-// };
+const runMigrations = async () => {
+  const migrator = new Umzug(migrationConf);
+  const migrations = await migrator.up();
+  console.log("Migrations up to date", {
+    files: migrations.map((mig) => mig.name),
+  });
+};
 
 const rollbackMigration = async () => {
   await sequelize.authenticate();
