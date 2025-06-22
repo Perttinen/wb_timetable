@@ -22,7 +22,6 @@ export interface IJsonUserFromDbNoLevels extends IUser {
   password: string;
   id: number;
   disabled: boolean;
-  username: string;
 }
 
 export interface ICreateUserEntry extends IUser {
