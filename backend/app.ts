@@ -9,9 +9,18 @@ import {
 } from "./util/middleware";
 import userRouter from "./routes/userRoutes";
 import authRouter from "./routes/authRoutes";
+// import db from "./util/db";
+
+// const conn = async () => {
+//   await db.connectToDatabase();
+// };
+
+// conn();
 
 const app = express();
 app.use(express.json());
+
+console.log("app");
 
 app.get("/tese/", (_req, res) => {
   res.status(200).end();
