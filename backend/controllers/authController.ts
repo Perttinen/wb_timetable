@@ -34,7 +34,7 @@ const login = asyncHandler(
           }
         );
         console.log(
-          "token extracted: ",
+          "token extracted jee: ",
           jwt.verify(token, String(process.env.JWT))
         );
 
