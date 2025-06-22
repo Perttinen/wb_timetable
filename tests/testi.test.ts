@@ -12,7 +12,7 @@ beforeAll(async () => {
   const halResponse = await request(app)
     .post("/auth/login")
     .send({ username: "hal", password: halPw });
-  hal = halResponse.body;
+  hal = halResponse.body as IJsonSafeUser;
   console.log("1. hal: ", hal);
   await request(app)
     .delete("/userapi")
