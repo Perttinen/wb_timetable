@@ -8,26 +8,26 @@ let hal: IJsonSafeUser;
 let testAdmin: IJsonUser;
 let testUser: IJsonUser;
 
-beforeAll(() => {
-  setTimeout(() => {
-    console.log("Waiting for 2 seconds");
-  }, 2000);
-});
+// beforeAll(() => {
+//   setTimeout(() => {
+//     console.log("Waiting for 2 seconds");
+//   }, 2000);
+// });
 
 describe("USER", () => {
-  it("login, POST /auth/login", async () => {
+  test("login, POST /auth/login", async () => {
     const halResponse = await request(app)
       .post("/auth/login")
       .send({ username: "hal", password: halPw });
     hal = halResponse.body as IJsonSafeUser;
-  });
-  it("hal destroys everyone else, DELETE /userapi", async () => {
+  }, 10000);
+  test("hal destroys everyone else, DELETE /userapi", async () => {
     const response = await request(app)
       .delete("/userapi")
       .set("Authorization", `Bearer ${hal.token}`);
     expect(response.status).toBe(204);
   });
-  it("getAllUsers, GET /userapi", async () => {
+  test("getAllUsers, GET /userapi", async () => {
     const response = await request(app)
       .get("/userapi")
       .set("Authorization", `Bearer ${hal.token}`);
@@ -35,7 +35,7 @@ describe("USER", () => {
     expect(response.status).toBe(200);
     expect(body.length).toBe(1);
   });
-  it("create admin, POST /userapi", async () => {
+  test("create admin, POST /userapi", async () => {
     const adminResponse = await request(app)
       .post("/userapi")
       .send({
@@ -51,7 +51,7 @@ describe("USER", () => {
     expect(testAdmin.userlevels).toContain("admin");
     expect(testAdmin.userlevels).not.toContain("hal");
   });
-  it('"create user, POST /userapi"', async () => {
+  test('"create user, POST /userapi"', async () => {
     const userResponse = await request(app)
       .post("/userapi")
       .send({
