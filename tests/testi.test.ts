@@ -10,7 +10,7 @@ let testUser: IJsonUser;
 
 beforeAll(() => {
   setTimeout(() => {
-    console.log("Waiting for 2 seconds");
+    console.log("Waiting for 2 seconds.");
   }, 2000);
 });
 
