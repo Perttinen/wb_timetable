@@ -14,6 +14,7 @@ jobs:
       DATABASEPASSWORD: ${{ secrets.DATABASEPASSWORD }}
       HOST: ${{ secrets.HOST }}
       HAL_PW: ${{ secrets.HAL_PW }}
+      TEST_PW: ${{ secrets.TEST_PW }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -24,6 +25,7 @@ jobs:
           echo "DATABASE=${DATABASE}" >> .env
           echo "DATABASEUSER=${DATABASEUSER}" >> .env
           echo "HAL_PW=${HAL_PW}" >> .env
+          echo "TEST_PW=${HAL_PW}" >> .env
           echo "DATABASEPASSWORD={$DATABASEPASSWORD}" >> .env
           echo "HOST={$HOST}" >> .env
       - name: Install dependencies
