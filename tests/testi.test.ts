@@ -3,77 +3,111 @@ import app from "../backend/app";
 import { IJsonSafeUser, IJsonUser } from "../types";
 
 const halPw = process.env.HAL_PW;
+const testPw = process.env.TEST_PW;
 
 let hal: IJsonSafeUser;
-let testAdmin: IJsonUser;
-let testUser: IJsonUser;
-
-// beforeAll(() => {
-//   setTimeout(() => {
-//     console.log("Waiting for 2 seconds");
-//   }, 2000);
-// });
+let testAdmin: IJsonSafeUser;
+let testUser: IJsonSafeUser;
 
 describe("USER", () => {
-  test("login, POST /auth/login", async () => {
+  test("Hal logs in, POST /auth/login", async () => {
     const halResponse = await request(app)
       .post("/auth/login")
       .send({ username: "hal", password: halPw });
     hal = halResponse.body as IJsonSafeUser;
   }, 10000);
+
   test("hal destroys everyone else, DELETE /userapi", async () => {
     const response = await request(app)
       .delete("/userapi")
       .set("Authorization", `Bearer ${hal.token}`);
     expect(response.status).toBe(204);
   });
-  test("getAllUsers, GET /userapi", async () => {
+
+  test("hal creates admin, POST /userapi", async () => {
     const response = await request(app)
-      .get("/userapi")
-      .set("Authorization", `Bearer ${hal.token}`);
-    const body = response.body as IJsonUser[];
-    expect(response.status).toBe(200);
-    expect(body.length).toBe(1);
-  });
-  test("create admin, POST /userapi", async () => {
-    const adminResponse = await request(app)
       .post("/userapi")
       .send({
         username: "testAdmin",
-        password: process.env.TEST_PW,
+        password: testPw,
         userlevel: ["admin", "user"],
       })
       .set("Authorization", `Bearer ${hal.token}`);
 
-    testAdmin = adminResponse.body as IJsonUser;
-
-    expect(testAdmin.userlevels).toContain("user");
-    expect(testAdmin.userlevels).toContain("admin");
-    expect(testAdmin.userlevels).not.toContain("hal");
+    const returnedAdmin = response.body as IJsonUser;
+    expect(returnedAdmin.userlevels).toContain("user");
+    expect(returnedAdmin.userlevels).toContain("admin");
+    expect(returnedAdmin.userlevels).not.toContain("hal");
   });
-  test('"create user, POST /userapi"', async () => {
-    const userResponse = await request(app)
+
+  test("admin logs in, POST /auth/login", async () => {
+    const response = await request(app)
+      .post("/auth/login")
+      .send({ username: "testAdmin", password: testPw });
+    testAdmin = response.body as IJsonSafeUser;
+    expect(response.status).toBe(200);
+  });
+
+  test("admin creates user, POST /userapi", async () => {
+    const response = await request(app)
       .post("/userapi")
       .send({
         username: "testUser",
-        password: process.env.TEST_PW,
-        userlevel: ["user"],
+        password: testPw,
       })
-      .set("Authorization", `Bearer ${hal.token}`);
-
-    testUser = userResponse.body as IJsonUser;
-
-    expect(testUser.userlevels).toContain("user");
-    expect(testUser.userlevels).not.toContain("admin");
-    expect(testUser.userlevels).not.toContain("hal");
+      .set("Authorization", `Bearer ${testAdmin.token}`);
+    const returnedUser = response.body as IJsonUser;
+    expect(returnedUser.userlevels).toContain("user");
+    expect(returnedUser.userlevels).not.toContain("admin");
+    expect(returnedUser.userlevels).not.toContain("hal");
   });
 
-  // it("getUser, GET /userapi:id", async () => {
-  //   const response = await request(app)
-  //     .get(`/userapi/${testAdmin.id}`)
-  //     .set("Authorization", `Bearer ${hal.token}`);
-  //   const body = response.body as IJsonUser;
-  //   expect(response.status).toBe(200);
-  //   expect(body).toEqual(testAdmin);
-  // });
+  test("user logs in, POST /auth/login", async () => {
+    const response = await request(app)
+      .post("/auth/login")
+      .send({ username: "testUser", password: testPw });
+    testUser = response.body as IJsonSafeUser;
+    expect(response.status).toBe(200);
+    expect(testUser).toBeDefined();
+  });
+
+  test("admin gets user, GET /userapi:id", async () => {
+    const response = await request(app)
+      .get(`/userapi/${testUser.id}`)
+      .set("Authorization", `Bearer ${testAdmin.token}`);
+    expect(response.status).toBe(200);
+  });
+
+  test("user gets all users, GET /userapi", async () => {
+    const response = await request(app)
+      .get("/userapi")
+      .set("Authorization", `Bearer ${testUser.token}`);
+    const body = response.body as IJsonUser[];
+    expect(response.status).toBe(200);
+    expect(body.length).toBe(3);
+  });
+
+  test("admin updates user, PATCH /auth/login", async () => {
+    const response = await request(app)
+      .patch("/userapi")
+      .set("Authorization", `Bearer ${testAdmin.token}`)
+      .send({ id: testUser.id, username: "dille" });
+    testUser = response.body as IJsonSafeUser;
+    expect(response.status).toBe(200);
+    expect(testUser.username).toBe("dille");
+  });
+
+  test("admin deletes user, DELETE /userapi:id", async () => {
+    const response = await request(app)
+      .delete(`/userapi/${testUser.id}`)
+      .set("Authorization", `Bearer ${testAdmin.token}`);
+    expect(response.status).toBe(204);
+  });
+
+  test("hal deletes admin, DELETE /userapi:id", async () => {
+    const response = await request(app)
+      .delete(`/userapi/${testAdmin.id}`)
+      .set("Authorization", `Bearer ${hal.token}`);
+    expect(response.status).toBe(204);
+  });
 });
