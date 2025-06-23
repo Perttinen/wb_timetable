@@ -5,7 +5,6 @@ import {
   requestLogger,
   errorHandler,
   unknownEndpoint,
-  // authorizer,
 } from "./util/middleware";
 import userRouter from "./routes/userRoutes";
 import authRouter from "./routes/authRoutes";

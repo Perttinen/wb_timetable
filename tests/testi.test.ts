@@ -1,27 +1,79 @@
 import request from "supertest";
 import app from "../backend/app";
-import db from "../backend/util/db";
+import { IJsonSafeUser, IJsonUser } from "../types";
 
 const halPw = process.env.HAL_PW;
 
-beforeAll(async () => {
-  await db.connectToDatabase().catch((e) => {
-    if (e instanceof Error) {
-      console.log(`Unable to connect database: ${e.message}`);
-    }
-  });
-});
+let hal: IJsonSafeUser;
+let testAdmin: IJsonUser;
+let testUser: IJsonUser;
 
-describe("testing", () => {
-  it("tese returns 200", async () => {
-    const response = await request(app).get("/tese");
-    expect(response.status).toBe(200);
-    console.log("testi");
-  });
-  it("POST /login", async () => {
-    const response = await request(app)
+// beforeAll(() => {
+//   setTimeout(() => {
+//     console.log("Waiting for 2 seconds");
+//   }, 2000);
+// });
+
+describe("USER", () => {
+  test("login, POST /auth/login", async () => {
+    const halResponse = await request(app)
       .post("/auth/login")
       .send({ username: "hal", password: halPw });
-    expect(response.status).toBe(200);
+    hal = halResponse.body as IJsonSafeUser;
+  }, 10000);
+  test("hal destroys everyone else, DELETE /userapi", async () => {
+    const response = await request(app)
+      .delete("/userapi")
+      .set("Authorization", `Bearer ${hal.token}`);
+    expect(response.status).toBe(204);
   });
+  test("getAllUsers, GET /userapi", async () => {
+    const response = await request(app)
+      .get("/userapi")
+      .set("Authorization", `Bearer ${hal.token}`);
+    const body = response.body as IJsonUser[];
+    expect(response.status).toBe(200);
+    expect(body.length).toBe(1);
+  });
+  test("create admin, POST /userapi", async () => {
+    const adminResponse = await request(app)
+      .post("/userapi")
+      .send({
+        username: "testAdmin",
+        password: process.env.TEST_PW,
+        userlevel: ["admin", "user"],
+      })
+      .set("Authorization", `Bearer ${hal.token}`);
+
+    testAdmin = adminResponse.body as IJsonUser;
+
+    expect(testAdmin.userlevels).toContain("user");
+    expect(testAdmin.userlevels).toContain("admin");
+    expect(testAdmin.userlevels).not.toContain("hal");
+  });
+  test('"create user, POST /userapi"', async () => {
+    const userResponse = await request(app)
+      .post("/userapi")
+      .send({
+        username: "testUser",
+        password: process.env.TEST_PW,
+        userlevel: ["user"],
+      })
+      .set("Authorization", `Bearer ${hal.token}`);
+
+    testUser = userResponse.body as IJsonUser;
+
+    expect(testUser.userlevels).toContain("user");
+    expect(testUser.userlevels).not.toContain("admin");
+    expect(testUser.userlevels).not.toContain("hal");
+  });
+
+  // it("getUser, GET /userapi:id", async () => {
+  //   const response = await request(app)
+  //     .get(`/userapi/${testAdmin.id}`)
+  //     .set("Authorization", `Bearer ${hal.token}`);
+  //   const body = response.body as IJsonUser;
+  //   expect(response.status).toBe(200);
+  //   expect(body).toEqual(testAdmin);
+  // });
 });

@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
+import { Op } from "@sequelize/core";
 
 import {
   ICreateUserEntry,
@@ -90,9 +91,18 @@ const createNewUser = asyncHandler(
 );
 
 const deleteAllUsers = asyncHandler(async (_req: Request, res: Response) => {
-  await UserAndlevel.destroy({ where: {} });
-  await User.destroy({ where: {} });
-
+  const hal = await User.findOne({
+    attributes: { exclude: ["password"] },
+    where: { username: "hal" },
+    ...addUserlevels,
+  });
+  if (hal) {
+    const jsonHal: IJsonUser = hal.toJSON();
+    await UserAndlevel.destroy({
+      where: { userId: { [Op.not]: jsonHal.id } },
+    });
+    await User.destroy({ where: { id: { [Op.not]: jsonHal.id } } });
+  }
   res.status(204).end();
 });
 
@@ -104,8 +114,6 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   res.status(204).end();
 });
 
-console.log(addUserlevels);
-
 const getAllUsers = asyncHandler(async (_req: Request, res: Response) => {
   const users = await User.findAll({
     attributes: { exclude: ["password"] },
@@ -114,7 +122,7 @@ const getAllUsers = asyncHandler(async (_req: Request, res: Response) => {
 
   const resUsers = users.map((u) => userlevelsToArray(u));
   if (users) res.json(resUsers);
-  res.status(404).end();
+  res.status(200).end();
 });
 
 const getUser = asyncHandler(async (req: Request, res: Response) => {
@@ -124,7 +132,7 @@ const getUser = asyncHandler(async (req: Request, res: Response) => {
     ...addUserlevels,
   });
   if (user) {
-    res.json(userlevelsToArray(user));
+    res.status(200).json(userlevelsToArray(user));
   } else {
     res.status(404).end();
   }

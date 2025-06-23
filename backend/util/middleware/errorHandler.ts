@@ -7,8 +7,6 @@ const errorHandler = (
   response: Response,
   next: NextFunction
 ): void => {
-  console.log("erroriiii");
-
   logger.error(error.message);
 
   if (error.name === "CastError") {

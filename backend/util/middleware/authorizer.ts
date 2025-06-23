@@ -39,7 +39,6 @@ const authorizer = (requiredLevel: string): RequestHandler => {
     if (dbUser instanceof User) {
       const user: IJsonUserFromDbNoLevels = dbUser.toJSON();
       if (user.disabled === true) {
-        console.log("disabled = true");
         res.status(401).json({ error: "user disabled" });
         return;
       }

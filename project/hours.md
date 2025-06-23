@@ -1,6 +1,10 @@
 ## Hours
 
-#### total hours 22,5
+#### total hours 25
+
+23.6.2025 Made tests run smoothly in actions. Hour 1, Total 25
+
+22.6.2025 Some endpoints and config added to user tests. Hours 1,5, Total: 24
 
 21.6.2025 Tests added to actions. Databese connection works. Hours: 1, Total: 22,5
 

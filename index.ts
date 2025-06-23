@@ -1,10 +1,13 @@
 import startServer from "./backend/util/startServer";
 import db from "./backend/util/db";
 
-db.connectToDatabase().catch((e) => {
+const start = async () => {
+  await db.connectToDatabase();
+  startServer();
+};
+
+start().catch((e) => {
   if (e instanceof Error) {
-    console.log(`Unable to connect database: ${e.message}`);
+    console.log(`Unable to start: ${e.message}`);
   }
 });
-
-startServer();
