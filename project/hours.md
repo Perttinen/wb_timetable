@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 24
+#### total hours 25
+
+23.6.2025 Made tests run smoothly in actions. Hour 1, Total 25
 
 22.6.2025 Some endpoints and config added to user tests. Hours 1,5, Total: 24
 

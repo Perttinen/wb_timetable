@@ -32,5 +32,5 @@ jobs:
         run: npm install
       - name: Check style
         run: npm run lint:fix
-      - name: IntegrationTest
+      - name: ApiTest
         run: npm test
