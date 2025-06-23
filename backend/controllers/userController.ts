@@ -180,7 +180,7 @@ const updateUser = asyncHandler(
       ...addUserlevels,
     });
     if (user) {
-      res.json(userlevelsToArray(user));
+      res.status(200).json(userlevelsToArray(user));
     } else {
       res.status(404).end();
     }
