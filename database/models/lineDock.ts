@@ -15,12 +15,12 @@ LineDock.init(
     },
     dockId: {
       type: DataTypes.INTEGER,
-      references: { model: "userlevels", key: "id" },
+      references: { model: "docks", key: "id" },
       allowNull: false,
     },
     lineId: {
       type: DataTypes.INTEGER,
-      references: { model: "users", key: "id" },
+      references: { model: "lines", key: "id" },
       allowNull: false,
     },
     delayFromStart: {

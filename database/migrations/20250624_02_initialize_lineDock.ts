@@ -10,12 +10,12 @@ module.exports = {
       },
       dock_id: {
         type: DataTypes.INTEGER,
-        references: { model: "userlevels", key: "id" },
+        references: { model: "docks", key: "id" },
         allowNull: false,
       },
       line_id: {
         type: DataTypes.INTEGER,
-        references: { model: "users", key: "id" },
+        references: { model: "lines", key: "id" },
         allowNull: false,
       },
       delay_from_start: {

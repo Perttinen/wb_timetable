@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 
-import { Dock } from "../../database/models";
+import {
+  Dock,
+  // , Line, LineDock
+} from "../../database/models";
 
 interface IDock {
   id: number;
@@ -51,7 +54,9 @@ const updateDock = asyncHandler(
 );
 
 const deleteAllDocks = asyncHandler(async (_req: Request, res: Response) => {
-  await Dock.truncate();
+  // await LineDock.destroy({ where: {} });
+  // await Line.destroy({ where: {} });
+  await Dock.destroy({ where: {} });
   res.status(204).end();
 });
 

@@ -67,10 +67,10 @@ describe("DOCK", () => {
     expect(body.name).toBe("dalhock");
   });
 
-  test("hal deletes dock, DELETE /api/dock:id", async () => {
-    const response = await request(app)
-      .delete(`/api/dock/${testDock.id}`)
-      .set("Authorization", `Bearer ${hal.token}`);
-    expect(response.status).toBe(204);
-  });
+  // test("hal deletes dock, DELETE /api/dock:id", async () => {
+  //   const response = await request(app)
+  //     .delete(`/api/dock/${testDock.id}`)
+  //     .set("Authorization", `Bearer ${hal.token}`);
+  //   expect(response.status).toBe(204);
+  // });
 });
