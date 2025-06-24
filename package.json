@@ -7,10 +7,10 @@
     "testii": "ts-node-test tests/",
     "tsc": "tsc",
     "dev": "cross-env NODE_ENV=dev ts-node-dev index.ts",
-    "migration:down": "ts-node backend/util/rollback.ts",
+    "migration:down": "cross-env NODE_ENV=dev ts-node backend/util/rollback.ts",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "start": "ts-node index.ts",
+    "start": "cross-env NODE_ENV=dev ts-node index.ts",
     "build": "cd frontend && npm install && npm run build"
   },
   "author": "",
