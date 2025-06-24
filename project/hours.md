@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 29
+#### total hours 30,5
+
+24.6.2025 line & lineDock models and migrations. Hours 1,5, Total 30,5
 
 24.6.2025 Docks: migration, router, controller, tests. Hours 3, Total 29
 

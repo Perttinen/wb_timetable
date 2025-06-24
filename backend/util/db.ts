@@ -49,7 +49,9 @@ const runMigrations = async () => {
 };
 
 const rollbackMigration = async () => {
-  await sequelize.authenticate();
+  console.log(await sequelize.authenticate());
+
+  console.log("rolling");
   const migrator = new Umzug(migrationConf);
   await migrator.down();
 };
