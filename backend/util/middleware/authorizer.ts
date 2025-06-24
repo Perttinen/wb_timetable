@@ -20,7 +20,6 @@ interface IAuthObject extends jwt.JwtPayload {
 const authorizer = (requiredLevel: string): RequestHandler => {
   return async (req, res, next) => {
     const authHeader = req.get("authorization");
-
     if (!authHeader?.toLowerCase().startsWith("bearer ")) {
       res.status(401).json({ error: "token missing" });
       return;
@@ -31,11 +30,8 @@ const authorizer = (requiredLevel: string): RequestHandler => {
       res.status(401).json({ error: "token invalid" });
       return;
     }
-
     const { userlevels } = decoded as IAuthObject;
-
     const dbUser = await User.findOne({ where: { id: decoded.id } });
-
     if (dbUser instanceof User) {
       const user: IJsonUserFromDbNoLevels = dbUser.toJSON();
       if (user.disabled === true) {
@@ -46,7 +42,6 @@ const authorizer = (requiredLevel: string): RequestHandler => {
       res.status(401).json({ error: "user not found" });
       return;
     }
-
     if (!userlevels.includes(requiredLevel)) {
       res.status(401).json({ error: "unauthorized" });
       return;
