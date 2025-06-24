@@ -8,6 +8,7 @@ import {
 } from "./util/middleware";
 import userRouter from "./routes/userRoutes";
 import authRouter from "./routes/authRoutes";
+import dockRouter from "./routes/dockRoutes";
 
 const app = express();
 app.use(express.json());
@@ -16,8 +17,9 @@ app.get("/tese/", (_req, res) => {
   res.status(200).end();
 });
 
-app.use("/userapi", userRouter);
-app.use("/auth", authRouter);
+app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/dock", dockRouter);
 
 const DIST_PATH = path.resolve(__dirname, "../frontend/build");
 

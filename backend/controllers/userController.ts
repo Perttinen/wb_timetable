@@ -121,8 +121,8 @@ const getAllUsers = asyncHandler(async (_req: Request, res: Response) => {
   });
 
   const resUsers = users.map((u) => userlevelsToArray(u));
-  if (users) res.json(resUsers);
-  res.status(200).end();
+  if (users) res.status(200).json(resUsers);
+  res.status(400).end();
 });
 
 const getUser = asyncHandler(async (req: Request, res: Response) => {

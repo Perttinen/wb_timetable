@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 25
+#### total hours 29
+
+24.6.2025 Docks: migration, router, controller, tests. Hours 3, Total 29
 
 23.6.2025 At least one test for every current endpoint. Hours 1, Total 26
 

@@ -33,11 +33,6 @@ const login = asyncHandler(
             expiresIn: 60 * 60 * 3,
           }
         );
-        console.log(
-          "token extracted: ",
-          jwt.verify(token, String(process.env.JWT))
-        );
-
         res.status(200).json({ token, ...safeUser });
       } else {
         res.status(401).json({

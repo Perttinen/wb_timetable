@@ -9,24 +9,24 @@ let hal: IJsonSafeUser;
 let testAdmin: IJsonSafeUser;
 let testUser: IJsonSafeUser;
 
-describe("USER", () => {
-  test("Hal logs in, POST /auth/login", async () => {
+describe("USER & AUTH", () => {
+  test("Hal logs in, POST /api/auth/login", async () => {
     const halResponse = await request(app)
-      .post("/auth/login")
+      .post("/api/auth/login")
       .send({ username: "hal", password: halPw });
     hal = halResponse.body as IJsonSafeUser;
   }, 10000);
 
-  test("hal destroys everyone else, DELETE /userapi", async () => {
+  test("hal destroys everyone else, DELETE /api/user", async () => {
     const response = await request(app)
-      .delete("/userapi")
+      .delete("/api/user")
       .set("Authorization", `Bearer ${hal.token}`);
     expect(response.status).toBe(204);
   });
 
-  test("hal creates admin, POST /userapi", async () => {
+  test("hal creates admin, POST /api/user", async () => {
     const response = await request(app)
-      .post("/userapi")
+      .post("/api/user")
       .send({
         username: "testAdmin",
         password: testPw,
@@ -40,17 +40,17 @@ describe("USER", () => {
     expect(returnedAdmin.userlevels).not.toContain("hal");
   });
 
-  test("admin logs in, POST /auth/login", async () => {
+  test("admin logs in, POST /api/auth/login", async () => {
     const response = await request(app)
-      .post("/auth/login")
+      .post("/api/auth/login")
       .send({ username: "testAdmin", password: testPw });
     testAdmin = response.body as IJsonSafeUser;
     expect(response.status).toBe(200);
   });
 
-  test("admin creates user, POST /userapi", async () => {
+  test("admin creates user, POST /api/user", async () => {
     const response = await request(app)
-      .post("/userapi")
+      .post("/api/user")
       .send({
         username: "testUser",
         password: testPw,
@@ -62,34 +62,34 @@ describe("USER", () => {
     expect(returnedUser.userlevels).not.toContain("hal");
   });
 
-  test("user logs in, POST /auth/login", async () => {
+  test("user logs in, POST /api/auth/login", async () => {
     const response = await request(app)
-      .post("/auth/login")
+      .post("/api/auth/login")
       .send({ username: "testUser", password: testPw });
     testUser = response.body as IJsonSafeUser;
     expect(response.status).toBe(200);
     expect(testUser).toBeDefined();
   });
 
-  test("admin gets user, GET /userapi:id", async () => {
+  test("admin gets user, GET /api/user:id", async () => {
     const response = await request(app)
-      .get(`/userapi/${testUser.id}`)
+      .get(`/api/user/${testUser.id}`)
       .set("Authorization", `Bearer ${testAdmin.token}`);
     expect(response.status).toBe(200);
   });
 
-  test("user gets all users, GET /userapi", async () => {
+  test("user gets all users, GET /api/user", async () => {
     const response = await request(app)
-      .get("/userapi")
+      .get("/api/user")
       .set("Authorization", `Bearer ${testUser.token}`);
     const body = response.body as IJsonUser[];
     expect(response.status).toBe(200);
     expect(body.length).toBe(3);
   });
 
-  test("admin updates user, PATCH /auth/login", async () => {
+  test("admin updates user, PATCH /api/auth/login", async () => {
     const response = await request(app)
-      .patch("/userapi")
+      .patch("/api/user")
       .set("Authorization", `Bearer ${testAdmin.token}`)
       .send({ id: testUser.id, username: "dille" });
     testUser = response.body as IJsonSafeUser;
@@ -97,17 +97,43 @@ describe("USER", () => {
     expect(testUser.username).toBe("dille");
   });
 
-  test("admin deletes user, DELETE /userapi:id", async () => {
+  test("updated user logs in, POST /api/auth/login", async () => {
     const response = await request(app)
-      .delete(`/userapi/${testUser.id}`)
+      .post("/api/auth/login")
+      .send({ username: "dille", password: testPw });
+    testUser = response.body as IJsonSafeUser;
+    expect(response.status).toBe(200);
+    expect(testUser).toBeDefined();
+  });
+
+  test("user deletes admin, DELETE /api/user:id", async () => {
+    const response = await request(app)
+      .delete(`/api/user/${testAdmin.id}`)
+      .set("Authorization", `Bearer ${testUser.token}`);
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({ error: "unauthorized" });
+  });
+
+  test("admin deletes user, DELETE /api/user:id", async () => {
+    const response = await request(app)
+      .delete(`/api/user/${testUser.id}`)
       .set("Authorization", `Bearer ${testAdmin.token}`);
     expect(response.status).toBe(204);
   });
 
-  test("hal deletes admin, DELETE /userapi:id", async () => {
+  test("hal deletes admin, DELETE /api/user:id", async () => {
     const response = await request(app)
-      .delete(`/userapi/${testAdmin.id}`)
+      .delete(`/api/user/${testAdmin.id}`)
       .set("Authorization", `Bearer ${hal.token}`);
     expect(response.status).toBe(204);
+  });
+
+  test("hal gets all, GET /api/user", async () => {
+    const response = await request(app)
+      .get("/api/user")
+      .set("Authorization", `Bearer ${hal.token}`);
+    const body = response.body as IJsonUser[];
+    expect(response.status).toBe(200);
+    expect(body.length).toBe(1);
   });
 });
