@@ -9,6 +9,8 @@ import {
 import userRouter from "./routes/userRoutes";
 import authRouter from "./routes/authRoutes";
 import dockRouter from "./routes/dockRoutes";
+import lineRouter from "./routes/lineRoutes";
+import departureRouter from "./routes/departureRoutes";
 
 const app = express();
 app.use(express.json());
@@ -20,6 +22,8 @@ app.get("/tese/", (_req, res) => {
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/dock", dockRouter);
+app.use("/api/line", lineRouter);
+app.use("/api/departure", departureRouter);
 
 const DIST_PATH = path.resolve(__dirname, "../frontend/build");
 

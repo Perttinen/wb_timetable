@@ -2,7 +2,10 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 
 import {
+  Departure,
   Dock,
+  Line,
+  LineDock,
   // , Line, LineDock
 } from "../../database/models";
 
@@ -16,6 +19,15 @@ const createNewDock = asyncHandler(
     const { name } = req.body;
     const newDock = await Dock.create({ name });
     res.status(201).json(newDock.dataValues);
+  }
+);
+
+const createManyDocks = asyncHandler(
+  async (req: Request<unknown, unknown, { name: string }[]>, res: Response) => {
+    const createdDocks: IDock[] = (await Dock.bulkCreate(req.body)).map((d) =>
+      d.toJSON()
+    );
+    res.status(201).json(createdDocks);
   }
 );
 
@@ -54,9 +66,11 @@ const updateDock = asyncHandler(
 );
 
 const deleteAllDocks = asyncHandler(async (_req: Request, res: Response) => {
-  // await LineDock.destroy({ where: {} });
-  // await Line.destroy({ where: {} });
+  await Departure.destroy({ where: {} });
+  await LineDock.destroy({ where: {} });
+  await Line.destroy({ where: {} });
   await Dock.destroy({ where: {} });
+
   res.status(204).end();
 });
 
@@ -67,4 +81,5 @@ export default {
   getDock,
   updateDock,
   deleteAllDocks,
+  createManyDocks,
 };

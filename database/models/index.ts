@@ -4,6 +4,7 @@ import Userlevel from "./userlevel";
 import Dock from "./dock";
 import Line from "./line";
 import LineDock from "./lineDock";
+import Departure from "./departure";
 
 User.belongsToMany(Userlevel, { through: UserAndlevel });
 Userlevel.belongsToMany(User, { through: UserAndlevel });
@@ -11,4 +12,4 @@ Userlevel.belongsToMany(User, { through: UserAndlevel });
 Line.belongsToMany(Dock, { through: LineDock });
 Dock.belongsToMany(Line, { through: LineDock });
 
-export { UserAndlevel, User, Userlevel, Dock, Line, LineDock };
+export { UserAndlevel, User, Userlevel, Dock, Line, LineDock, Departure };
