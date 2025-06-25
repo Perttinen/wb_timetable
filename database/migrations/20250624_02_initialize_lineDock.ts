@@ -2,7 +2,7 @@ import { DataTypes, QueryInterface } from "sequelize";
 
 module.exports = {
   up: async ({ context: queryInterface }: { context: QueryInterface }) => {
-    await queryInterface.createTable("line_dock", {
+    await queryInterface.createTable("line_docks", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -25,6 +25,6 @@ module.exports = {
     });
   },
   down: async ({ context: queryInterface }: { context: QueryInterface }) => {
-    await queryInterface.dropTable("line_dock");
+    await queryInterface.dropTable("line_docks");
   },
 };

@@ -4,23 +4,22 @@ import db from "../../backend/util/db";
 
 const { sequelize } = db;
 
-class Line extends Model {}
+class Departure extends Model {}
 
-Line.init(
+Departure.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    startDockId: {
+    lineId: {
       type: DataTypes.INTEGER,
-      references: { model: "docks", key: "id" },
+      references: { model: "lines", key: "id" },
       allowNull: false,
     },
-    endDockId: {
-      type: DataTypes.INTEGER,
-      references: { model: "docks", key: "id" },
+    start: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
   },
@@ -28,8 +27,8 @@ Line.init(
     sequelize,
     underscored: true,
     timestamps: false,
-    modelName: "line",
+    modelName: "departure",
   }
 );
 
-export default Line;
+export default Departure;

@@ -2,25 +2,24 @@ import { DataTypes, QueryInterface } from "sequelize";
 
 module.exports = {
   up: async ({ context: queryInterface }: { context: QueryInterface }) => {
-    await queryInterface.createTable("lines", {
+    await queryInterface.createTable("departures", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      end_dock_id: {
+      line_id: {
         type: DataTypes.INTEGER,
-        references: { model: "docks", key: "id" },
+        references: { model: "lines", key: "id" },
         allowNull: false,
       },
-      start_dock_id: {
-        type: DataTypes.INTEGER,
-        references: { model: "docks", key: "id" },
+      start: {
+        type: DataTypes.DATE,
         allowNull: false,
       },
     });
   },
   down: async ({ context: queryInterface }: { context: QueryInterface }) => {
-    await queryInterface.dropTable("lines");
+    await queryInterface.dropTable("departures");
   },
 };

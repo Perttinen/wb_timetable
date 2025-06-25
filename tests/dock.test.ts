@@ -1,6 +1,7 @@
 import request from "supertest";
 import app from "../backend/app";
 import { IJsonSafeUser } from "../types";
+import { tenDocks } from "../testHelpers";
 
 const halPw = process.env.HAL_PW;
 
@@ -11,6 +12,7 @@ interface Dock {
 
 let hal: IJsonSafeUser;
 let testDock: Dock;
+let testDocks: Dock[];
 
 describe("DOCK", () => {
   test("Hal logs in, POST /api/auth/login", async () => {
@@ -67,10 +69,49 @@ describe("DOCK", () => {
     expect(body.name).toBe("dalhock");
   });
 
-  // test("hal deletes dock, DELETE /api/dock:id", async () => {
-  //   const response = await request(app)
-  //     .delete(`/api/dock/${testDock.id}`)
-  //     .set("Authorization", `Bearer ${hal.token}`);
-  //   expect(response.status).toBe(204);
-  // });
+  test("hal deletes dock, DELETE /api/dock:id", async () => {
+    const response = await request(app)
+      .delete(`/api/dock/${testDock.id}`)
+      .set("Authorization", `Bearer ${hal.token}`);
+    expect(response.status).toBe(204);
+  });
+
+  test("delete all docks, lines and dockLines", async () => {
+    const response = await request(app).delete("/api/dock/");
+    expect(response.status).toBe(204);
+  });
+
+  test("create many docks", async () => {
+    const response = await request(app).post("/api/dock/many").send(tenDocks);
+    testDocks = response.body as Dock[];
+    expect(response.status).toBe(201);
+  });
+
+  test("create line", async () => {
+    const response = await request(app)
+      .post("/api/line")
+      .send({
+        startDockId: testDocks[0].id,
+        endDockId: testDocks[1].id,
+        stops: [
+          { dockId: testDocks[2].id, delayFromStart: 36 },
+          { dockId: testDocks[3].id, delayFromStart: 45 },
+        ],
+      });
+    expect(response.status).toBe(201);
+  });
+
+  test("create another line", async () => {
+    const response = await request(app)
+      .post("/api/line")
+      .send({
+        startDockId: testDocks[2].id,
+        endDockId: testDocks[4].id,
+        stops: [
+          { dockId: testDocks[5].id, delayFromStart: 24 },
+          { dockId: testDocks[8].id, delayFromStart: 6 },
+        ],
+      });
+    expect(response.status).toBe(201);
+  });
 });

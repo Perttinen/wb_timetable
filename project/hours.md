@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 30,5
+#### total hours 33
+
+25.6.2025 Initilized lines, lineDocks, departure. Some controlling and testing. Hours 2,5, Total 33
 
 24.6.2025 line & lineDock models and migrations. Hours 1,5, Total 30,5
 
