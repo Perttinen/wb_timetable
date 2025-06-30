@@ -6,6 +6,7 @@ import lines from "../controllers/lineController";
 const router = Router();
 
 router.route("/").post(lines.createNewLine);
+// router.route("/many").post(lines.createManyLines);
 router.route("/").get(lines.getAllLines);
 router.route("/:id").get(lines.getLine);
 router.route("/:id").delete(lines.deleteLine);

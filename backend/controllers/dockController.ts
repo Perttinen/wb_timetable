@@ -1,13 +1,7 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 
-import {
-  Departure,
-  Dock,
-  Line,
-  LineDock,
-  // , Line, LineDock
-} from "../../database/models";
+import { Departure, Dock, Line, LineDock } from "../../database/models";
 
 interface IDock {
   id: number;
