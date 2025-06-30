@@ -73,11 +73,11 @@ const create10Departures = async (lineIds: number[]) => {
   const depaerturesToAdd = [
     {
       lineId: lineIds[0],
-      start: "2025-06-27T17:30:00+03:00",
+      start: "2025-07-01T17:30:00+03:00",
     },
     {
       lineId: lineIds[0],
-      start: "2025-06-27T17:30:00+03:00",
+      start: "2025-07-02T17:30:00+03:00",
     },
     {
       lineId: lineIds[1],
@@ -85,7 +85,7 @@ const create10Departures = async (lineIds: number[]) => {
     },
     {
       lineId: lineIds[1],
-      start: "2025-06-27T17:30:00+03:00",
+      start: "2025-07-02T17:30:00+03:00",
     },
     {
       lineId: lineIds[2],
@@ -93,7 +93,7 @@ const create10Departures = async (lineIds: number[]) => {
     },
     {
       lineId: lineIds[2],
-      start: "2025-06-27T17:30:00+03:00",
+      start: "2025-07-02T17:30:00+03:00",
     },
     {
       lineId: lineIds[2],
@@ -101,15 +101,15 @@ const create10Departures = async (lineIds: number[]) => {
     },
     {
       lineId: lineIds[3],
-      start: "2025-06-27T17:30:00+03:00",
+      start: "2025-07-02T17:30:00+03:00",
     },
     {
       lineId: lineIds[3],
-      start: "2025-06-27T17:30:00+03:00",
+      start: "2025-07-03T17:30:00+03:00",
     },
     {
       lineId: lineIds[3],
-      start: "2025-06-27T17:30:00+03:00",
+      start: "2025-07-04T17:30:00+03:00",
     },
   ];
   await Departure.bulkCreate(depaerturesToAdd);
