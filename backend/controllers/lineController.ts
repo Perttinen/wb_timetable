@@ -1,78 +1,15 @@
-// import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-// import { Op } from "@sequelize/core";
 
 import { ILine, IStop } from "../../types";
 import { INTEGER } from "@sequelize/core/lib/abstract-dialect/data-types";
 import { Dock, Line, LineDock } from "../../database/models";
-// import { User, UserAndlevel, Userlevel } from "../../database/models";
-// import { addUserlevels } from "./commonFuncs";
-
-// Converts User object to json and User.userlevels to array.
-// const userlevelsToArray = (user: User) => {
-//   const jsonUser: IJsonUser = user.toJSON();
-//   const returnUser = {
-//     ...jsonUser,
-//     userlevels: jsonUser.userlevels.map((ul) => ul.userlevel),
-//   };
-//   return returnUser;
-// };
-
-// const getUserlevels = async () => {
-//   const userlevels: IUserlevel[] = (await Userlevel.findAll()).map((ul) =>
-//     ul.toJSON()
-//   );
-//   return userlevels;
-// };
-
-// const validateUserlevelInput = ({
-//   userlevel,
-//   allUserlevels,
-// }: {
-//   userlevel: string[];
-//   allUserlevels: IUserlevel[];
-// }): number[] => {
-//   const uniqueInputLevels = userlevel.filter(
-//     (value: string, index: number, array: string[]) =>
-//       array.indexOf(value) === index
-//   );
-//   const validatedInputLevelIds = allUserlevels
-//     .filter((ul) => uniqueInputLevels.includes(ul.userlevel))
-//     .map((ul) => ul.id);
-//   if (userlevel.length !== validatedInputLevelIds.length) return [];
-//   return validatedInputLevelIds;
-// };
 
 interface ILineToAdd {
   startDockId: INTEGER;
   stops: { dockId: INTEGER; delayFromStart: INTEGER }[];
   endDockId: INTEGER;
 }
-
-// interface IAddableLine {
-//   startDockId: INTEGER;
-//   endDockId: INTEGER;
-// }
-
-// interface IStop {
-//   id: INTEGER;
-//   dockId: INTEGER;
-//   delayFromStart: INTEGER;
-// }
-
-// interface ILine {
-//   id: INTEGER;
-//   startDockId: INTEGER;
-//   endDockId: INTEGER;
-//   stops: IStop[];
-// }
-
-// interface IStopToAdd {
-//   lineId: INTEGER;
-//   dockId: INTEGER;
-//   delayFromStart: INTEGER;
-// }
 
 const createNewLine = asyncHandler(
   async (req: Request<unknown, unknown, ILineToAdd>, res: Response) => {
@@ -98,30 +35,12 @@ const createNewLine = asyncHandler(
       }));
     }
     if (createdLine) {
-      console.log("line: ", createdLine);
-
       res.status(201).json(createdLine);
     } else {
       res.status(400).end();
     }
   }
 );
-
-// const createManyLines = asyncHandler(
-//   async (req: Request<unknown, unknown, ILineToAdd[]>, res: Response) => {
-//     const lines = req.body
-//     let stopsToAdd:IStopToAdd[] = []
-//     let linesToAdd: IAddableLine[] = []
-//     for(const l of lines ){
-//       linesToAdd.push({startDockId: l.startDockId, endDockId: l.endDockId})
-//       if(l.stops.length > 0){
-
-//       }
-//     }
-
-//     res.status(201).end()
-//   }
-// );
 
 const deleteAllLines = asyncHandler(async (_req: Request, res: Response) => {
   await LineDock.destroy({ where: {} });

@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 39
+#### total hours 40
+
+30.6.2025 refactored getAllDeparturesByDockId. Hours: 1, Total:40
 
 30.6.2025 getAllDeparturesByDockId controller. Hours: 6, Total: 39
 

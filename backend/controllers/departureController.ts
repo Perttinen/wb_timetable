@@ -21,36 +21,25 @@ const formatLines = (input: IFormatLinesEntry): IFormattedLine[] => {
     line.docks.sort(
       (a, b) => a.lineDock.delayFromStart - b.lineDock.delayFromStart
     );
+
+    const isStartDock = line.startDock.id === dockId;
     const dockInDocks = line.docks.find((d) => d.id === dockId);
-    if (dockInDocks || line.startDock.id === dockId) {
-      if (line.startDock.id === dockId) {
-        formattedLines.push({
-          lineId: line.id,
-          endDock: line.endDock.name,
-          delay: 0,
-          via: line.docks.map((dock) => dock.name),
-        });
-      } else {
-        if (!dockInDocks) {
-          throw new Error(`Dock not found`);
-        }
-        const dockInDocksIndex = line.docks.indexOf(dockInDocks);
-        const delay = dockInDocks.lineDock.delayFromStart;
-        const via = line.docks
-          .filter((d, i: number) => {
-            if (i > dockInDocksIndex) {
-              return d.name;
-            } else return;
-          })
-          .map((d) => d.name);
-        formattedLines.push({
-          lineId: line.id,
-          endDock: line.endDock.name,
-          delay,
-          via,
-        });
-      }
-    }
+
+    if (!isStartDock && !dockInDocks) continue;
+
+    const delay = isStartDock ? 0 : dockInDocks!.lineDock.delayFromStart;
+
+    const via = isStartDock
+      ? line.docks.map((dock) => dock.name)
+      : line.docks
+          .slice(line.docks.indexOf(dockInDocks!) + 1)
+          .map((dock) => dock.name);
+    formattedLines.push({
+      lineId: line.id,
+      endDock: line.endDock.name,
+      delay,
+      via,
+    });
   }
   return formattedLines;
 };
@@ -73,6 +62,9 @@ const getAllDepartures = asyncHandler(async (_req: Request, res: Response) => {
 const getAllDeparturesByDockId = asyncHandler(
   async (req: Request, res: Response) => {
     const dockId = parseInt(req.params.id);
+    if (isNaN(dockId)) {
+      res.status(400).json({ error: "Invalid dockId" });
+    }
 
     const lines: IBigLine[] = (
       await Line.findAll({
@@ -91,27 +83,38 @@ const getAllDeparturesByDockId = asyncHandler(
 
     const formattedLines = formatLines({ lines, dockId });
 
-    const relatedLines = formattedLines.map((line) => line.lineId);
+    const relatedLineIds = formattedLines.map((line) => line.lineId);
 
-    const relatedDepartures: IDeparture[] = (
-      await Departure.findAll({ where: { lineId: relatedLines } })
-    ).map((d) => d.toJSON());
+    const relatedDeparturesDb: Departure[] = await Departure.findAll({
+      where: { lineId: relatedLineIds },
+      order: [["start", "ASC"]] as [["start", "ASC"]],
+    });
 
-    const dockDepartures = [];
-    for (const departure of relatedDepartures) {
-      for (const l of formattedLines) {
-        if (departure.lineId === l.lineId) {
-          dockDepartures.push({
-            destination: l.endDock,
-            startTime: new Date(
-              departure.start.setMinutes(departure.start.getMinutes() + l.delay)
-            ),
-            via: l.via,
-          });
-        }
+    const relatedDepartures: IDeparture[] = relatedDeparturesDb.map((d) =>
+      d.toJSON()
+    );
+
+    const lineMap = new Map(formattedLines.map((line) => [line.lineId, line]));
+
+    const dockDepartures = relatedDepartures.map((departure) => {
+      const line = lineMap.get(departure.lineId);
+      if (!line) {
+        throw new Error(
+          `Something went wrong with lines and departures ${departure.lineId}, ${departure.id}`
+        );
       }
-    }
-    res.status(200).json(dockDepartures);
+      const startTime = new Date(departure.start);
+      startTime.setMinutes(startTime.getMinutes() + line.delay);
+      return {
+        destination: line.endDock,
+        startTime,
+        via: line.via,
+      };
+    });
+    const comingDepartures = dockDepartures.filter(
+      (departure) => departure.startTime > new Date(Date.now())
+    );
+    res.status(200).json(comingDepartures.slice(0, 20));
   }
 );
 
