@@ -6,6 +6,9 @@ import Line from "./line";
 import LineDock from "./lineDock";
 import Departure from "./departure";
 
+Line.belongsTo(Dock, { as: "startDock", foreignKey: "startDockId" });
+Line.belongsTo(Dock, { as: "endDock", foreignKey: "endDockId" });
+
 User.belongsToMany(Userlevel, { through: UserAndlevel });
 Userlevel.belongsToMany(User, { through: UserAndlevel });
 

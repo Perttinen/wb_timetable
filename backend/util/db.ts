@@ -14,6 +14,7 @@ const sequelize: Sequelize =
           host: process.env.HOST,
           dialect: "postgres",
           protocol: "postgres",
+          logging: process.env.NODE_ENV === "test" ? false : console.log,
           dialectOptions: {
             ssl: {
               require: true,

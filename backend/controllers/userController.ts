@@ -117,7 +117,15 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
 const getAllUsers = asyncHandler(async (_req: Request, res: Response) => {
   const users = await User.findAll({
     attributes: { exclude: ["password"] },
-    ...addUserlevels,
+    include: [
+      {
+        model: Userlevel,
+        attributes: ["userlevel"],
+        through: {
+          attributes: [],
+        },
+      },
+    ],
   });
 
   const resUsers = users.map((u) => userlevelsToArray(u));
