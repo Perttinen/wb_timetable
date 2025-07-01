@@ -1,10 +1,12 @@
 ## Hours
 
-#### total hours 40
+#### total hours 41
 
-30.6.2025 refactored getAllDeparturesByDockId. Hours: 1, Total:40
+1.7.2025 Little bit better testing initializer. Hours: 1, Total: 41
 
-30.6.2025 getAllDeparturesByDockId controller. Hours: 6, Total: 39
+30.6.2025 Refactored getAllDeparturesByDockId. Hours: 1, Total:40
+
+30.6.2025 GetAllDeparturesByDockId controller. Hours: 6, Total: 39
 
 25.6.2025 Initialized lines, lineDocks, departure. Some controlling and testing. Hours: 2,5, Total: 33
 

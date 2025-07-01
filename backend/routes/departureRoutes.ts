@@ -1,16 +1,12 @@
 import Router from "express";
 
 import departures from "../controllers/departureController";
-// import { authorizer } from "../util/middleware";
+
+import { authorizer } from "../util/middleware";
 
 const router = Router();
-
-router.route("/").post(departures.createDeparture);
-// router.route("/many").post(docks.createManyDocks);
-router.route("/").get(departures.getAllDepartures);
-router.route("/:id").get(departures.getAllDeparturesByDockId);
-// router.route("/:id").delete(docks.deleteDock);
-// router.route("/").delete(docks.deleteAllDocks);
-// router.route("/").patch(docks.updateDock);
+router.route("/").post(authorizer("user"), departures.createDeparture);
+router.route("/").get(authorizer("user"), departures.getAllDepartures);
+router.route("/:dockId").get(departures.get20DeparturesByDockId);
 
 export default router;
