@@ -59,9 +59,9 @@ const getAllDepartures = asyncHandler(async (_req: Request, res: Response) => {
   res.status(200).json(departures);
 });
 
-const getAllDeparturesByDockId = asyncHandler(
+const get20DeparturesByDockId = asyncHandler(
   async (req: Request, res: Response) => {
-    const dockId = parseInt(req.params.id);
+    const dockId = parseInt(req.params.dockId);
     if (isNaN(dockId)) {
       res.status(400).json({ error: "Invalid dockId" });
     }
@@ -121,5 +121,5 @@ const getAllDeparturesByDockId = asyncHandler(
 export default {
   createDeparture,
   getAllDepartures,
-  getAllDeparturesByDockId,
+  get20DeparturesByDockId,
 };
