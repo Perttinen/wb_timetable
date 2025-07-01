@@ -70,14 +70,6 @@ export interface ILine {
   stops: IStop[];
 }
 
-export interface IUpdateUserEntry {
-  disabled?: boolean;
-  id: number;
-  password?: string;
-  userlevels?: string[];
-  username?: string;
-}
-
 export interface IJsonUserPw extends IJsonUser {
   password: string;
 }

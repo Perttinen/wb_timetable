@@ -5,8 +5,6 @@ const info = (...params: unknown[]) => {
 };
 
 const error = (...params: unknown[]) => {
-  console.log("loggererrroorro", params);
-
   if (process.env.NODE_ENV !== "test") {
     console.error(...params);
   }

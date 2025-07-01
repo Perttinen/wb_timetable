@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 41
+#### total hours 42
+
+1.7.2025 Little bit better error handling. Hours: 1, Total: 42
 
 1.7.2025 Little bit better testing initializer. Hours: 1, Total: 41
 

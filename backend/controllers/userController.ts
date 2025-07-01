@@ -3,15 +3,10 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { Op } from "@sequelize/core";
 
-import {
-  ICreateUserEntry,
-  IUpdateUserEntry,
-  IJsonUser,
-  IJsonUserPw,
-  IUserlevel,
-} from "../../types";
+import { IJsonUser, IJsonUserPw, IUserlevel } from "../../types";
 import { User, UserAndlevel, Userlevel } from "../../database/models";
 import { addUserlevels } from "./commonFuncs";
+import { throwNotFound } from "../util/errorThrowers";
 
 // Converts User object to json and User.userlevels to array.
 const userlevelsToArray = (user: User) => {
@@ -48,8 +43,14 @@ const validateUserlevelInput = ({
   return validatedInputLevelIds;
 };
 
+interface INewUserRequest {
+  username: string;
+  password: string;
+  userlevel?: string[];
+}
+
 const createNewUser = asyncHandler(
-  async (req: Request<unknown, unknown, ICreateUserEntry>, res: Response) => {
+  async (req: Request<unknown, unknown, INewUserRequest>, res) => {
     const { username, password, userlevel } = req.body;
     const passwordHash = await bcrypt.hash(password, 10);
     const newUser: IJsonUserPw = (
@@ -133,25 +134,33 @@ const getAllUsers = asyncHandler(async (_req: Request, res: Response) => {
   res.status(400).end();
 });
 
-const getUser = asyncHandler(async (req: Request, res: Response) => {
+const getUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({
     attributes: { exclude: ["password"] },
     where: { id: req.params.id },
     ...addUserlevels,
   });
-  if (user) {
-    res.status(200).json(userlevelsToArray(user));
+  if (!user) {
+    throwNotFound(`user ${req.params.id} not found`);
   } else {
-    res.status(404).end();
+    res.status(200).json(userlevelsToArray(user));
   }
 });
 
+export interface IUpdateUserInput {
+  disabled?: boolean;
+  id: number;
+  password?: string;
+  userlevels?: string[];
+  username?: string;
+}
+
 const updateUser = asyncHandler(
-  async (req: Request<unknown, unknown, IUpdateUserEntry>, res: Response) => {
+  async (req: Request<unknown, unknown, IUpdateUserInput>, res) => {
     const id = req.body.id;
     const userToUpdate = await User.findOne({ where: { id } });
     if (!userToUpdate) {
-      res.status(400).json({ message: "User not found" });
+      throwNotFound(`User ${id} not found`);
       return;
     }
     const jsonUser: IJsonUserPw = userToUpdate.toJSON();
