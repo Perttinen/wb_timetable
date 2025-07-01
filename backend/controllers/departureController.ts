@@ -1,11 +1,10 @@
-import { INTEGER } from "@sequelize/core/lib/abstract-dialect/data-types";
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { Departure, Dock, Line } from "../../database/models";
 import { IBigLine, IDeparture, IFormattedLine } from "../../types";
 
 interface IInputDeparture {
-  lineId: INTEGER;
+  lineId: number;
   start: Date;
 }
 
