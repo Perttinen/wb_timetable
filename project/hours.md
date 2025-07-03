@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 42
+#### total hours 47
+
+3.7.2025 users, auth and authorizer refactoring + better errorhandling.Those parts ready now! Hours: 5, Total: 47
 
 1.7.2025 Little bit better error handling. Hours: 1, Total: 42
 
