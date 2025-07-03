@@ -45,7 +45,7 @@ export interface IJsonSafeUser extends IUser {
 
 export interface IJsonUser extends IUser {
   id: number;
-  userlevels: [{ userlevel: string }];
+  userlevels: { userlevel: string }[];
   disabled: boolean;
 }
 
@@ -63,15 +63,15 @@ export interface IJsonUserFromDbNoLevels extends IUser {
   disabled: boolean;
 }
 
+export interface IJsonUserPw extends IJsonUser {
+  password: string;
+}
+
 export interface ILine {
   id: number;
   startDockId: number;
   endDockId: number;
   stops: IStop[];
-}
-
-export interface IJsonUserPw extends IJsonUser {
-  password: string;
 }
 
 export interface IStop {

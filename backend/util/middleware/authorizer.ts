@@ -19,8 +19,29 @@ interface IAuthObject extends jwt.JwtPayload {
   disabled: boolean;
 }
 
+interface IAuthorizationCheckEntry {
+  userId: number;
+  reqId: number;
+  userlevels: string[];
+  requiredLevel: string;
+}
+
+// Check if user is allowed to route
+const authorizationCheck = (values: IAuthorizationCheckEntry): boolean => {
+  const { userId, reqId, userlevels, requiredLevel } = values;
+  if (userlevels.includes("hal")) return true;
+  if (userlevels.includes(requiredLevel)) return true;
+  if (requiredLevel === "admin/user") {
+    if (userlevels.includes("admin")) return true;
+    if (userId === reqId) return true;
+  }
+  return false;
+};
+
+// Checks authorization
 const authorizer = (requiredLevel: string): RequestHandler =>
   asyncHandler(async (req, _res, next) => {
+    // Checks for authorization header
     const authHeader = req.get("authorization");
     if (!authHeader) {
       throwAuthError("token missing");
@@ -29,25 +50,33 @@ const authorizer = (requiredLevel: string): RequestHandler =>
     if (!authHeader || !authHeader.toLowerCase().startsWith("bearer ")) {
       throwAuthError("token malformed");
     }
+    // Checks jwt and get base values from jwt user
     const token = authHeader.substring(7);
     const decoded = jwt.verify(token, String(process.env.JWT));
     if (typeof decoded !== "object") {
       throwAuthError("token invalid");
       return;
     }
-    const { userlevels } = decoded as IAuthObject;
-    const dbUser = await User.findOne({ where: { id: decoded.id } });
-    if (dbUser instanceof User) {
-      const user: IJsonUserFromDbNoLevels = dbUser.toJSON();
-      if (user.disabled === true) {
-        throwAuthError("user disabled");
-        return;
-      }
-    } else {
-      throwNotFound("user not found");
+    const { userlevels, id } = decoded as IAuthObject;
+    // Check if user is disabled
+    const dbUser = await User.findOne({ where: { id } });
+    if (!dbUser) {
+      throwNotFound(`user ${req.params.id} not found`);
       return;
     }
-    if (!userlevels.includes(requiredLevel)) {
+    const user: IJsonUserFromDbNoLevels = dbUser.toJSON();
+    if (user.disabled === true) {
+      throwAuthError("user disabled");
+      return;
+    }
+    // Check authorization and add decoded token to reqest
+    const authCheckObj = {
+      userId: Number(id),
+      reqId: Number(req.params.id),
+      userlevels,
+      requiredLevel,
+    };
+    if (!authorizationCheck(authCheckObj)) {
       throwAuthError("unauthorized");
       return;
     }
