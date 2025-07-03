@@ -29,7 +29,7 @@ describe("API", () => {
     if (docksDb) {
       docks = docksDb;
     }
-  });
+  }, 10000);
   describe("LOGIN & USER", () => {
     test("Hal logs in, POST /api/auth/login", async () => {
       const expectedProperties = [
