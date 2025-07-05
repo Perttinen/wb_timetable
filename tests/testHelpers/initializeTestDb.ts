@@ -130,10 +130,10 @@ const initializeDb = async () => {
     await Dock.destroy({ where: {} });
     await deleteAllButHal();
     // add initial values
-    const docks = await create20Docks();
-    const lineIds = await create4Lines(docks);
-    await create10Departures(lineIds);
-    return docks;
+    const docksDb = await create20Docks();
+    const lineIdsDb = await create4Lines(docksDb);
+    await create10Departures(lineIdsDb);
+    return { docksDb, lineIdsDb };
   } catch (e) {
     if (e instanceof Error) {
       console.log(e.message);

@@ -11,6 +11,7 @@ import {
   throwNotFound,
   throwValidationError,
 } from "../util/errorThrowers";
+import { IJsonUserTokenFlattenedLevels } from "../../types";
 
 dotenv.config();
 
@@ -20,7 +21,10 @@ interface ILoginUser {
 }
 
 const login = asyncHandler(
-  async (req: Request<unknown, unknown, ILoginUser>, res: Response) => {
+  async (
+    req: Request<unknown, unknown, ILoginUser>,
+    res: Response<IJsonUserTokenFlattenedLevels>
+  ) => {
     const { username, password: reqPwd } = req.body;
 
     // Check required fields existence

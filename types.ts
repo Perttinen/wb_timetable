@@ -17,6 +17,23 @@ export interface IBigLine {
   }[];
 }
 
+export interface ILineReturnable {
+  id: number;
+  startDock: {
+    name: string;
+    id: number;
+  };
+  endDock: {
+    name: string;
+    id: number;
+  };
+  stopDocks: {
+    name: string;
+    id: number;
+    delayFromStart: number;
+  }[];
+}
+
 export interface ICreateUserEntry extends IUser {
   password: string;
   userlevel?: string[];
@@ -26,6 +43,17 @@ export interface IDeparture {
   id: number;
   lineId: number;
   start: Date;
+}
+
+export interface IDepartureForTimetable {
+  destination: string;
+  startTime: Date;
+  via: string[];
+}
+
+export interface IDock {
+  id: number;
+  name: string;
 }
 
 export interface IFormattedLine {
@@ -49,6 +77,19 @@ export interface IJsonUser extends IUser {
   disabled: boolean;
 }
 
+export interface IJsonUserFlattenedLevels extends IUser {
+  id: number;
+  disabled: boolean;
+  userlevels: string[];
+}
+
+export interface IJsonUserTokenFlattenedLevels extends IUser {
+  id: number;
+  disabled: boolean;
+  userlevels: string[];
+  token?: string;
+}
+
 export interface IJsonUserFromDb extends IUser {
   password: string;
   id: number;
@@ -67,11 +108,17 @@ export interface IJsonUserPw extends IJsonUser {
   password: string;
 }
 
-export interface ILine {
+export interface ILineWithStopsArray {
   id: number;
   startDockId: number;
   endDockId: number;
   stops: IStop[];
+}
+
+export interface ILine {
+  id: number;
+  startDockId: number;
+  endDockId: number;
 }
 
 export interface IStop {

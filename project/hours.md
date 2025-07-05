@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 47
+#### total hours 53
+
+5.7.2025 dock, line and departure => refactoring, tests etc. BACKEND READY!(?) Hours: 6, Total: 53
 
 3.7.2025 users, auth and authorizer refactoring + better errorhandling.Those parts ready now! Hours: 5, Total: 47
 
