@@ -2,64 +2,66 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 
 import { Departure, Dock, Line, LineDock } from "../../database/models";
-
-interface IDock {
-  id: number;
-  name: string;
-}
+import { IDock } from "../../types";
+import { throwNotFound, throwValidationError } from "../util/errorThrowers";
 
 const createNewDock = asyncHandler(
-  async (req: Request<unknown, unknown, { name: string }>, res: Response) => {
+  async (
+    req: Request<unknown, unknown, { name: string }>,
+    res: Response<IDock>
+  ) => {
     const { name } = req.body;
-    const newDock = await Dock.create({ name });
-    res.status(201).json(newDock.dataValues);
+    if (!name) {
+      throwValidationError("required { name } input value missing");
+    }
+    const newDock: IDock = (await Dock.create({ name })).toJSON();
+    res.status(201).json(newDock);
   }
 );
 
-const createManyDocks = asyncHandler(
-  async (req: Request<unknown, unknown, { name: string }[]>, res: Response) => {
-    const createdDocks: IDock[] = (await Dock.bulkCreate(req.body)).map((d) =>
-      d.toJSON()
-    );
-    res.status(201).json(createdDocks);
-  }
-);
-
-const deleteDock = asyncHandler(async (req: Request, res: Response) => {
+const deleteDock = asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
-  await Dock.destroy({ where: { id } });
+  const destroyedDock = await Dock.destroy({ where: { id } });
+  if (!destroyedDock) {
+    throwNotFound("nothing deleted");
+    return;
+  }
   res.status(204).end();
 });
 
-const getAllDocks = asyncHandler(async (_req: Request, res: Response) => {
+const getAllDocks = asyncHandler(async (_req, res: Response<IDock[]>) => {
   const docks: IDock[] = (await Dock.findAll({})).map((d) => d.toJSON());
   res.status(200).json(docks);
 });
 
-const getDock = asyncHandler(async (req: Request, res: Response) => {
+const getDock = asyncHandler(async (req, res: Response<IDock>) => {
   const id = Number(req.params.id);
   const dock = await Dock.findByPk(id);
-  if (dock) {
-    res.status(200).json(dock);
-  } else {
-    res.status(404).end();
+  if (!dock) {
+    throwNotFound(`dock ${id} not found`);
+    return;
   }
+  res.status(200).json(dock.toJSON());
 });
 
 const updateDock = asyncHandler(
-  async (req: Request<unknown, unknown, IDock>, res: Response) => {
-    const id = Number(req.body.id);
-    const dockToUpdate = await Dock.findByPk(id);
-    if (dockToUpdate) {
-      await dockToUpdate.update({ name: req.body.name });
-      res.status(200).json(req.body);
-    } else {
-      res.status(404).end();
+  async (req: Request<unknown, unknown, IDock>, res: Response<IDock>) => {
+    const { id, name } = req.body;
+    if (!id || !name) {
+      throwValidationError("required { id, name } input value missing");
     }
+    const dockToUpdate = await Dock.findByPk(id);
+    if (!dockToUpdate) {
+      throwNotFound(`dock id ${id} not found`);
+      return;
+    }
+    const updatedDock = await dockToUpdate.update({ name });
+
+    res.status(200).json(updatedDock.toJSON());
   }
 );
 
-const deleteAllDocks = asyncHandler(async (_req: Request, res: Response) => {
+const deleteAllDocks = asyncHandler(async (_req, res) => {
   await Departure.destroy({ where: {} });
   await LineDock.destroy({ where: {} });
   await Line.destroy({ where: {} });
@@ -75,5 +77,4 @@ export default {
   getDock,
   updateDock,
   deleteAllDocks,
-  createManyDocks,
 };

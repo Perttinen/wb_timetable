@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { Departure, Dock, Line } from "../../database/models";
-import { IBigLine, IDeparture, IFormattedLine } from "../../types";
-
-interface IInputDeparture {
-  lineId: number;
-  start: Date;
-}
+import {
+  IBigLine,
+  IDeparture,
+  IDepartureForTimetable,
+  IDock,
+  IFormattedLine,
+} from "../../types";
+import { throwNotFound, throwValidationError } from "../util/errorThrowers";
 
 interface IFormatLinesEntry {
   lines: IBigLine[];
@@ -15,6 +17,7 @@ interface IFormatLinesEntry {
 
 const formatLines = (input: IFormatLinesEntry): IFormattedLine[] => {
   const { lines, dockId } = input;
+
   const formattedLines = [];
   for (const line of lines) {
     line.docks.sort(
@@ -43,9 +46,18 @@ const formatLines = (input: IFormatLinesEntry): IFormattedLine[] => {
   return formattedLines;
 };
 
+interface IInputDeparture {
+  lineId: number;
+  start: Date;
+}
+
 const createDeparture = asyncHandler(
   async (req: Request<unknown, unknown, IInputDeparture>, res: Response) => {
     const { lineId, start } = req.body;
+    if (!lineId || !start) {
+      throwValidationError("lineId and start are required");
+      return;
+    }
     const response = await Departure.create({ lineId, start });
     res.status(200).json(response);
   }
@@ -58,12 +70,29 @@ const getAllDepartures = asyncHandler(async (_req: Request, res: Response) => {
   res.status(200).json(departures);
 });
 
-const get20DeparturesByDockId = asyncHandler(
+const getDeparturesByLineId = asyncHandler(
   async (req: Request, res: Response) => {
-    const dockId = parseInt(req.params.dockId);
-    if (isNaN(dockId)) {
-      res.status(400).json({ error: "Invalid dockId" });
+    const lineId = req.params.lineId;
+    const departures: Departure[] = (
+      await Departure.findAll({
+        where: { lineId },
+      })
+    ).map((d) => d.toJSON());
+    res.status(200).json(departures);
+  }
+);
+
+const get20DeparturesByDockName = asyncHandler(
+  async (req: Request, res: Response<IDepartureForTimetable[]>) => {
+    const dockDb = await Dock.findOne({
+      where: { name: req.params.dockName },
+    });
+    if (!dockDb) {
+      throwNotFound(`dock name ${req.params.dockName} not found in db`);
+      return;
     }
+    const dock: IDock = dockDb.toJSON();
+    const dockId = dock.id;
 
     const lines: IBigLine[] = (
       await Line.findAll({
@@ -120,5 +149,6 @@ const get20DeparturesByDockId = asyncHandler(
 export default {
   createDeparture,
   getAllDepartures,
-  get20DeparturesByDockId,
+  get20DeparturesByDockName,
+  getDeparturesByLineId,
 };
