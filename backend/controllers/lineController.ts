@@ -27,43 +27,43 @@ const dockIdsAreValid = async (line: ILineToAdd): Promise<boolean> => {
 
 const lineIncludes = [
   {
-    model: Dock,
-    as: "startDock",
+    association: "startDock",
     attributes: ["id", "name"],
   },
   {
-    model: Dock,
-    as: "endDock",
+    association: "endDock",
     attributes: ["id", "name"],
   },
   {
-    model: Dock,
-    attributes: ["name", "id"],
+    association: "docks",
+    attributes: ["id", "name"],
     through: {
       attributes: ["delayFromStart"],
     },
   },
 ];
 
-const createReturnableLine = (line: Line) => {
+const createReturnableLine = (line: Line): ILineReturnable | void => {
   const jsonLine: IBigLine = line.toJSON();
-  const stopDocks = jsonLine.docks.map((dock) => ({
-    id: dock.id,
-    name: dock.name,
-    delayFromStart: dock.lineDock.delayFromStart,
-  }));
-  return {
-    id: jsonLine.id,
-    startDock: {
-      name: jsonLine.startDock.name,
-      id: jsonLine.startDock.id,
-    },
-    endDock: {
-      name: jsonLine.endDock.name,
-      id: jsonLine.endDock.id,
-    },
-    stopDocks,
-  };
+  if (jsonLine.docks && jsonLine.endDock && jsonLine.startDock) {
+    const stopDocks = jsonLine.docks.map((dock) => ({
+      id: dock.id,
+      name: dock.name,
+      delayFromStart: dock.lineDock.delayFromStart,
+    }));
+    return {
+      id: jsonLine.id,
+      startDock: {
+        name: jsonLine.startDock.name,
+        id: jsonLine.startDock.id,
+      },
+      endDock: {
+        name: jsonLine.endDock.name,
+        id: jsonLine.endDock.id,
+      },
+      stopDocks,
+    };
+  }
 };
 
 const createNewLine = asyncHandler(
@@ -108,7 +108,12 @@ const createNewLine = asyncHandler(
       throwNotFound("line to create not found in db");
       return;
     }
-    res.status(201).json(createReturnableLine(newLine));
+    const lineToReturn = createReturnableLine(newLine);
+    if (!lineToReturn) {
+      throwNotFound(`created line id ${newLine.id} not found`);
+      return;
+    }
+    res.status(201).json(lineToReturn);
   }
 );
 
@@ -175,7 +180,7 @@ const updateLine = asyncHandler(
     await lineToUpdate.update({ startDockId, endDockId });
     const lineDocksToAdd = stops.map(({ dockId, delayFromStart }) => ({
       dockId,
-      lineId,
+      lineId: Number(lineId),
       delayFromStart,
     }));
     await LineDock.bulkCreate(lineDocksToAdd);
@@ -187,7 +192,14 @@ const updateLine = asyncHandler(
       throwNotFound(`updated line ${lineId} was not found after update`);
       return;
     }
-    res.status(200).json(createReturnableLine(updatedLine));
+    const lineToReturn = createReturnableLine(updatedLine);
+
+    if (!lineToReturn) {
+      throwNotFound(`updated line ${lineId} not found from db`);
+      return;
+    }
+
+    res.status(200).json(lineToReturn);
   }
 );
 

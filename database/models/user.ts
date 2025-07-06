@@ -1,10 +1,21 @@
-import { Model, DataTypes } from "sequelize";
+import {
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+} from "@sequelize/core";
 
 import db from "../../backend/util/db";
 
 const { sequelize } = db;
 
-class User extends Model {}
+class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+  declare id: CreationOptional<number>;
+  declare username: string;
+  declare password: string;
+  declare disabled: CreationOptional<boolean>;
+}
 
 User.init(
   {

@@ -12,7 +12,7 @@ Line.belongsTo(Dock, { as: "endDock", foreignKey: "endDockId" });
 User.belongsToMany(Userlevel, { through: UserAndlevel });
 Userlevel.belongsToMany(User, { through: UserAndlevel });
 
-Line.belongsToMany(Dock, { through: LineDock });
-Dock.belongsToMany(Line, { through: LineDock });
+Line.belongsToMany(Dock, { through: LineDock, as: "docks" });
+Dock.belongsToMany(Line, { through: LineDock, as: "lines" });
 
 export { UserAndlevel, User, Userlevel, Dock, Line, LineDock, Departure };

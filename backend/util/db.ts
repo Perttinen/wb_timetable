@@ -1,34 +1,28 @@
 import dotenv from "dotenv";
-import { Sequelize } from "sequelize-typescript";
+import { Sequelize } from "@sequelize/core";
+import { PostgresDialect } from "@sequelize/postgres";
 import { Umzug, SequelizeStorage } from "umzug";
 
 dotenv.config();
 
 const sequelize: Sequelize =
   process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "test"
-    ? new Sequelize(
-        String(process.env.DATABASE),
-        String(process.env.DATABASEUSER),
-        String(process.env.DATABASEPASSWORD),
-        {
-          host: process.env.HOST,
-          dialect: "postgres",
-          protocol: "postgres",
-          logging: process.env.NODE_ENV === "test" ? false : console.log,
-          dialectOptions: {
-            ssl: {
-              require: true,
-              rejectUnauthorized: false,
-            },
-          },
-        }
-      )
-    : new Sequelize(String(process.env.LOCAL_DB));
+    ? new Sequelize({
+        url: String(process.env.DB),
+        dialect: PostgresDialect,
+        ssl: true,
+        logging: process.env.NODE_ENV === "test" ? false : console.log,
+      })
+    : new Sequelize({
+        url: String(process.env.LOCAL_DB),
+        dialect: PostgresDialect,
+        ssl: true,
+      });
 
 const connectToDatabase = async () => {
   await sequelize.authenticate();
   await runMigrations();
-  console.log("database connected");
+  console.log("✅ Database connected");
   return null;
 };
 
@@ -37,12 +31,11 @@ const migrationConf = {
     glob: "database/migrations/*.ts",
   },
   storage: new SequelizeStorage({ sequelize, tableName: "migrations" }),
-  context: sequelize.getQueryInterface(),
+  context: sequelize.queryInterface,
   logger: console,
 };
-
+const migrator = new Umzug(migrationConf);
 const runMigrations = async () => {
-  const migrator = new Umzug(migrationConf);
   const migrations = await migrator.up();
   console.log("Migrations up to date", {
     files: migrations.map((mig) => mig.name),
@@ -51,11 +44,12 @@ const runMigrations = async () => {
 
 const rollbackMigration = async () => {
   console.log(await sequelize.authenticate());
-
   console.log("rolling");
   const migrator = new Umzug(migrationConf);
   await migrator.down();
 };
+
+export type Migration = typeof migrator._types.migration;
 
 export default {
   connectToDatabase,

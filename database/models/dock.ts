@@ -1,10 +1,19 @@
-import { Model, DataTypes } from "sequelize";
+import {
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+} from "@sequelize/core";
 
 import db from "../../backend/util/db";
 
 const { sequelize } = db;
 
-class Dock extends Model {}
+class Dock extends Model<InferAttributes<Dock>, InferCreationAttributes<Dock>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
+}
 
 Dock.init(
   {

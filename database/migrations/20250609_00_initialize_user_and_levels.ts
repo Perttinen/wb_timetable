@@ -1,26 +1,26 @@
-import { DataTypes, QueryInterface } from "sequelize";
+import { DataTypes } from "@sequelize/core";
+import { User, Userlevel } from "../models";
+import type { Migration } from "../../backend/util/db";
 
-module.exports = {
-  up: async ({ context: queryInterface }: { context: QueryInterface }) => {
-    await queryInterface.createTable("user_and_level", {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      userlevelId: {
-        type: DataTypes.INTEGER,
-        references: { model: "userlevels", key: "id" },
-        allowNull: false,
-      },
-      userId: {
-        type: DataTypes.INTEGER,
-        references: { model: "users", key: "id" },
-        allowNull: false,
-      },
-    });
-  },
-  down: async ({ context: queryInterface }: { context: QueryInterface }) => {
-    await queryInterface.dropTable("user_and_level");
-  },
+export const up: Migration = async ({ context: queryInterface }) => {
+  await queryInterface.createTable("user_and_level", {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    userlevelId: {
+      type: DataTypes.INTEGER,
+      references: { model: Userlevel, key: "id" },
+      allowNull: false,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      references: { model: User, key: "id" },
+      allowNull: false,
+    },
+  });
+};
+export const down: Migration = async ({ context: queryInterface }) => {
+  await queryInterface.dropTable("user_and_level");
 };

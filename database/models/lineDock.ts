@@ -1,10 +1,26 @@
-import { Model, DataTypes } from "sequelize";
+import {
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+} from "@sequelize/core";
 
 import db from "../../backend/util/db";
 
+import Dock from "./dock";
+import Line from "./line";
+
 const { sequelize } = db;
 
-class LineDock extends Model {}
+class LineDock extends Model<
+  InferAttributes<LineDock>,
+  InferCreationAttributes<LineDock>
+> {
+  declare id: CreationOptional<number>;
+  declare dockId: number;
+  declare lineId: number;
+}
 
 LineDock.init(
   {
@@ -15,12 +31,12 @@ LineDock.init(
     },
     dockId: {
       type: DataTypes.INTEGER,
-      references: { model: "docks", key: "id" },
+      references: { model: Dock, key: "id" },
       allowNull: false,
     },
     lineId: {
       type: DataTypes.INTEGER,
-      references: { model: "lines", key: "id" },
+      references: { model: Line, key: "id" },
       allowNull: false,
     },
     delayFromStart: {

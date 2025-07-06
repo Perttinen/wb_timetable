@@ -1,14 +1,14 @@
 export interface IBigLine {
   id: number;
-  startDock: {
+  startDock?: {
     name: string;
     id: number;
   };
-  endDock: {
+  endDock?: {
     name: string;
     id: number;
   };
-  docks: {
+  docks?: {
     name: string;
     id: number;
     lineDock: {
@@ -73,7 +73,7 @@ export interface IJsonSafeUser extends IUser {
 
 export interface IJsonUser extends IUser {
   id: number;
-  userlevels: { userlevel: string }[];
+  userlevels?: { userlevel: string }[];
   disabled: boolean;
 }
 

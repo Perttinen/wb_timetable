@@ -1,14 +1,13 @@
-import { DataTypes, QueryInterface } from "sequelize";
+import { DataTypes } from "@sequelize/core";
+import type { Migration } from "../../backend/util/db";
 
-module.exports = {
-  up: async ({ context: queryInterface }: { context: QueryInterface }) => {
-    await queryInterface.addColumn("users", "disabled", {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-    });
-  },
-  down: async ({ context: queryInterface }: { context: QueryInterface }) => {
-    await queryInterface.removeColumn("users", "disabled");
-  },
+export const up: Migration = async ({ context: queryInterface }) => {
+  await queryInterface.addColumn("users", "disabled", {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  });
+};
+export const down: Migration = async ({ context: queryInterface }) => {
+  await queryInterface.removeColumn("users", "disabled");
 };
