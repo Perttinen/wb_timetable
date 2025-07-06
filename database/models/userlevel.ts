@@ -1,10 +1,22 @@
-import { Model, DataTypes } from "sequelize";
+import {
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+} from "@sequelize/core";
 
-import db from "../../backend/util/db";
+import db from "../db";
 
 const { sequelize } = db;
 
-class Userlevel extends Model {}
+class Userlevel extends Model<
+  InferAttributes<Userlevel>,
+  InferCreationAttributes<Userlevel>
+> {
+  declare id: CreationOptional<number>;
+  declare userlevel: string;
+}
 
 Userlevel.init(
   {

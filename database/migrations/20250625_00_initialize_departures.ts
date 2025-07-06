@@ -1,25 +1,25 @@
-import { DataTypes, QueryInterface } from "sequelize";
+import { DataTypes } from "@sequelize/core";
+import { Line } from "../models";
+import type { Migration } from "../db";
 
-module.exports = {
-  up: async ({ context: queryInterface }: { context: QueryInterface }) => {
-    await queryInterface.createTable("departures", {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      line_id: {
-        type: DataTypes.INTEGER,
-        references: { model: "lines", key: "id" },
-        allowNull: false,
-      },
-      start: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-    });
-  },
-  down: async ({ context: queryInterface }: { context: QueryInterface }) => {
-    await queryInterface.dropTable("departures");
-  },
+export const up: Migration = async ({ context: queryInterface }) => {
+  await queryInterface.createTable("departures", {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    line_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: Line, key: "id" },
+    },
+    start: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+  });
+};
+export const down: Migration = async ({ context: queryInterface }) => {
+  await queryInterface.dropTable("departures");
 };

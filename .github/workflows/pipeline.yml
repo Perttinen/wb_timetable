@@ -4,15 +4,11 @@ on:
   push:
     branches:
       - dev
-
 jobs:
   simple_deployment_pipeline:
     runs-on: ubuntu-latest
     env:
-      DATABASE: ${{ secrets.DATABASE }}
-      DATABASEUSER: ${{ secrets.DATABASEUSER }}
-      DATABASEPASSWORD: ${{ secrets.DATABASEPASSWORD }}
-      HOST: ${{ secrets.HOST }}
+      DB: ${{ secrets.DB }}
       HAL_PW: ${{ secrets.HAL_PW }}
       TEST_PW: ${{ secrets.TEST_PW }}
     steps:
@@ -22,12 +18,9 @@ jobs:
           node-version: "20"
       - name: Setup environment
         run: |
-          echo "DATABASE=${DATABASE}" >> .env
-          echo "DATABASEUSER=${DATABASEUSER}" >> .env
+          echo "DB=${DB}" >> .env
           echo "HAL_PW=${HAL_PW}" >> .env
           echo "TEST_PW=${HAL_PW}" >> .env
-          echo "DATABASEPASSWORD={$DATABASEPASSWORD}" >> .env
-          echo "HOST={$HOST}" >> .env
       - name: Install dependencies
         run: npm install
       - name: Check style

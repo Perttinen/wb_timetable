@@ -59,7 +59,9 @@ const authorizer = (requiredLevel: string): RequestHandler =>
     }
     const { userlevels, id } = decoded as IAuthObject;
     // Check if user is disabled
-    const dbUser = await User.findOne({ where: { id } });
+    const dbUser = await User.findOne({
+      where: { id: Number(id) },
+    });
     if (!dbUser) {
       throwNotFound(`user ${req.params.id} not found`);
       return;

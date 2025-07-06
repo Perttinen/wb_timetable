@@ -1,10 +1,25 @@
-import { Model, DataTypes } from "sequelize";
+import {
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+} from "@sequelize/core";
 
-import db from "../../backend/util/db";
+import db from "../db";
+import Userlevel from "./userlevel";
+import User from "./user";
 
 const { sequelize } = db;
 
-class UserAndlevel extends Model {}
+class UserAndlevel extends Model<
+  InferAttributes<UserAndlevel>,
+  InferCreationAttributes<UserAndlevel>
+> {
+  declare id: CreationOptional<number>;
+  declare userlevelId: number;
+  declare userId: number;
+}
 
 UserAndlevel.init(
   {
@@ -15,12 +30,12 @@ UserAndlevel.init(
     },
     userlevelId: {
       type: DataTypes.INTEGER,
-      references: { model: "userlevels", key: "id" },
+      references: { model: Userlevel, key: "id" },
       allowNull: false,
     },
     userId: {
       type: DataTypes.INTEGER,
-      references: { model: "users", key: "id" },
+      references: { model: User, key: "id" },
       allowNull: false,
     },
   },

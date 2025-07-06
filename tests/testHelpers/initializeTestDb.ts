@@ -70,49 +70,49 @@ const create4Lines = async (docks: IDock[]) => {
 };
 
 const create10Departures = async (lineIds: number[]) => {
-  const depaerturesToAdd: { lineId: number; start: number }[] = [];
+  const depaerturesToAdd: { lineId: number; start: Date }[] = [];
   for (let i = 0; i < 20; i++) {
     const now = new Date(Date.now());
     const departures = [
       {
         lineId: lineIds[0],
-        start: new Date(Date.now()).setHours(now.getHours() + i),
+        start: new Date(new Date(Date.now()).setHours(now.getHours() + i)),
       },
       {
         lineId: lineIds[0],
-        start: new Date(Date.now()).setDate(now.getDate() + i),
+        start: new Date(new Date(Date.now()).setDate(now.getDate() + i)),
       },
       {
         lineId: lineIds[1],
-        start: new Date(Date.now()).setHours(now.getHours() + i),
+        start: new Date(new Date(Date.now()).setHours(now.getHours() + i)),
       },
       {
         lineId: lineIds[1],
-        start: new Date(Date.now()).setDate(now.getDate() + i),
+        start: new Date(new Date(Date.now()).setDate(now.getDate() + i)),
       },
       {
         lineId: lineIds[2],
-        start: new Date(Date.now()).setDate(now.getDate() - i),
+        start: new Date(new Date(Date.now()).setDate(now.getDate() - i)),
       },
       {
         lineId: lineIds[2],
-        start: new Date(Date.now()).setHours(now.getHours() + i),
+        start: new Date(new Date(Date.now()).setHours(now.getHours() + i)),
       },
       {
         lineId: lineIds[2],
-        start: new Date(Date.now()).setDate(now.getDate() + i),
+        start: new Date(new Date(Date.now()).setDate(now.getDate() + i)),
       },
       {
         lineId: lineIds[3],
-        start: new Date(Date.now()).setDate(now.getDate() - i),
+        start: new Date(new Date(Date.now()).setDate(now.getDate() - i)),
       },
       {
         lineId: lineIds[3],
-        start: new Date(Date.now()).setHours(now.getHours() + i),
+        start: new Date(new Date(Date.now()).setHours(now.getHours() + i)),
       },
       {
         lineId: lineIds[3],
-        start: new Date(Date.now()).setDate(now.getDate() + i),
+        start: new Date(new Date(Date.now()).setDate(now.getDate() + i)),
       },
     ];
     depaerturesToAdd.push(...departures);

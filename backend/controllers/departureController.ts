@@ -20,28 +20,30 @@ const formatLines = (input: IFormatLinesEntry): IFormattedLine[] => {
 
   const formattedLines = [];
   for (const line of lines) {
-    line.docks.sort(
-      (a, b) => a.lineDock.delayFromStart - b.lineDock.delayFromStart
-    );
+    if (line.docks && line.startDock && line.endDock) {
+      line.docks.sort(
+        (a, b) => a.lineDock.delayFromStart - b.lineDock.delayFromStart
+      );
 
-    const isStartDock = line.startDock.id === dockId;
-    const dockInDocks = line.docks.find((d) => d.id === dockId);
+      const isStartDock = line.startDock.id === dockId;
+      const dockInDocks = line.docks.find((d) => d.id === dockId);
 
-    if (!isStartDock && !dockInDocks) continue;
+      if (!isStartDock && !dockInDocks) continue;
 
-    const delay = isStartDock ? 0 : dockInDocks!.lineDock.delayFromStart;
+      const delay = isStartDock ? 0 : dockInDocks!.lineDock.delayFromStart;
 
-    const via = isStartDock
-      ? line.docks.map((dock) => dock.name)
-      : line.docks
-          .slice(line.docks.indexOf(dockInDocks!) + 1)
-          .map((dock) => dock.name);
-    formattedLines.push({
-      lineId: line.id,
-      endDock: line.endDock.name,
-      delay,
-      via,
-    });
+      const via = isStartDock
+        ? line.docks.map((dock) => dock.name)
+        : line.docks
+            .slice(line.docks.indexOf(dockInDocks!) + 1)
+            .map((dock) => dock.name);
+      formattedLines.push({
+        lineId: line.id,
+        endDock: line.endDock.name,
+        delay,
+        via,
+      });
+    }
   }
   return formattedLines;
 };
@@ -98,12 +100,20 @@ const get20DeparturesByDockName = asyncHandler(
       await Line.findAll({
         attributes: { exclude: ["startDockId", "endDockId"] },
         include: [
-          { model: Dock, as: "startDock", attributes: ["name", "id"] },
-          { model: Dock, as: "endDock", attributes: ["id", "name"] },
           {
-            model: Dock,
-            attributes: ["name", "id"],
-            through: { attributes: ["delayFromStart"] },
+            association: "startDock",
+            attributes: ["id", "name"],
+          },
+          {
+            association: "endDock",
+            attributes: ["id", "name"],
+          },
+          {
+            association: "docks",
+            attributes: ["id", "name"],
+            through: {
+              attributes: ["delayFromStart"],
+            },
           },
         ],
       })

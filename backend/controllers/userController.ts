@@ -6,6 +6,7 @@ import { Op } from "@sequelize/core";
 import {
   IJsonUser,
   IJsonUserFlattenedLevels,
+  IJsonUserFromDbNoLevels,
   IJsonUserPw,
   IUserlevel,
 } from "../../types";
@@ -17,9 +18,15 @@ import { throwNotFound, throwValidationError } from "../util/errorThrowers";
 
 const userlevelsToArray = (user: User): IJsonUserFlattenedLevels => {
   const jsonUser: IJsonUser = user.toJSON();
+  let userlevelsToReturn: { userlevel: string }[];
+  if (jsonUser.userlevels) {
+    userlevelsToReturn = jsonUser.userlevels;
+  } else {
+    userlevelsToReturn = [];
+  }
   return {
     ...jsonUser,
-    userlevels: jsonUser.userlevels.map(({ userlevel }) => userlevel),
+    userlevels: userlevelsToReturn.map(({ userlevel }) => userlevel),
   };
 };
 
@@ -110,7 +117,7 @@ const deleteAllUsers = asyncHandler(async (_req, res) => {
     where: { username: "hal" },
   });
   if (hal) {
-    const jsonHal: IJsonUser = hal.toJSON();
+    const jsonHal: IJsonUserFromDbNoLevels = hal.toJSON();
     await UserAndlevel.destroy({
       where: { userId: { [Op.not]: jsonHal.id } },
     });
@@ -161,9 +168,9 @@ const getUser = asyncHandler(
     });
     if (!user) {
       throwNotFound(`user ${req.params.id} not found`);
-    } else {
-      res.status(200).json(userlevelsToArray(user));
+      return;
     }
+    res.status(200).json(userlevelsToArray(user));
   }
 );
 
@@ -212,7 +219,7 @@ const updateUser = asyncHandler(
       }
       await UserAndlevel.destroy({ where: { userId: id } });
       const userlevelsToSave = validatedInputLevelIds.map((levelId) => {
-        return { userlevelId: levelId, userId: id };
+        return { userlevelId: levelId, userId: Number(id) };
       });
       await UserAndlevel.bulkCreate(userlevelsToSave);
     }
