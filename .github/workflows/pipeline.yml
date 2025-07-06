@@ -5,7 +5,7 @@ on:
     branches:
       - dev
 jobs:
-  simple_deployment_pipeline:
+  massive_ci_pipeline:
     runs-on: ubuntu-latest
     env:
       DB: ${{ secrets.DB }}
