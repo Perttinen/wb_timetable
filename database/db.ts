@@ -7,17 +7,19 @@ dotenv.config();
 
 const sequelize: Sequelize =
   process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "test"
-    ? new Sequelize({
+    ? (console.log("dev database"),
+      new Sequelize({
         url: String(process.env.DB),
         dialect: PostgresDialect,
         ssl: true,
         logging: process.env.NODE_ENV === "test" ? false : console.log,
-      })
-    : new Sequelize({
+      }))
+    : (console.log("prod database"),
+      new Sequelize({
         url: String(process.env.LOCAL_DB),
         dialect: PostgresDialect,
         ssl: true,
-      });
+      }));
 
 const connectToDatabase = async () => {
   await sequelize.authenticate();
