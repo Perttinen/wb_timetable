@@ -1,6 +1,6 @@
 import { DataTypes } from "@sequelize/core";
 import { Line } from "../models";
-import type { Migration } from "../../backend/util/db";
+import type { Migration } from "../db";
 
 export const up: Migration = async ({ context: queryInterface }) => {
   await queryInterface.createTable("departures", {

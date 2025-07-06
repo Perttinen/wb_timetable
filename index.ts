@@ -1,5 +1,5 @@
 import startServer from "./backend/util/startServer";
-import db from "./backend/util/db";
+import db from "./database/db";
 
 const start = async () => {
   await db.connectToDatabase();

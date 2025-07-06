@@ -1,5 +1,5 @@
 import { DataTypes } from "@sequelize/core";
-import type { Migration } from "../../backend/util/db";
+import type { Migration } from "../db";
 
 export const up: Migration = async ({ context: queryInterface }) => {
   await queryInterface.addColumn("users", "disabled", {

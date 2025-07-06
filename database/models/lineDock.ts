@@ -6,7 +6,7 @@ import {
   CreationOptional,
 } from "@sequelize/core";
 
-import db from "../../backend/util/db";
+import db from "../db";
 
 import Dock from "./dock";
 import Line from "./line";
