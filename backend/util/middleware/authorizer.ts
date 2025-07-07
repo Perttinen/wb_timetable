@@ -41,6 +41,11 @@ const authorizationCheck = (values: IAuthorizationCheckEntry): boolean => {
 // Checks authorization
 const authorizer = (requiredLevel: string): RequestHandler =>
   asyncHandler(async (req, _res, next) => {
+    // For development cases
+    const skipAuthorizer = 1;
+    if (skipAuthorizer) {
+      return next();
+    }
     // Checks for authorization header
     const authHeader = req.get("authorization");
     if (!authHeader) {

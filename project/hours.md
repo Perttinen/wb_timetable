@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 53
+#### total hours 55
+
+7.7.2025 Front end skeleton with appbar and routes. Hours: 2, Total: 55
 
 5.7.2025 dock, line and departure => refactoring, tests etc. BACKEND READY!(?) Hours: 6, Total: 53
 

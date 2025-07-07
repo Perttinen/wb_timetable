@@ -18,7 +18,6 @@ const sequelize: Sequelize =
       new Sequelize({
         url: String(process.env.LOCAL_DB),
         dialect: PostgresDialect,
-        // ssl: true,
       }));
 
 const connectToDatabase = async () => {
