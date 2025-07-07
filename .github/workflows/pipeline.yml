@@ -23,6 +23,10 @@ jobs:
           echo "TEST_PW=${HAL_PW}" >> .env
       - name: Install dependencies
         run: npm install
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm install
       - name: Check style
         run: npm run lint
       - name: ApiTest

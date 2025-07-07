@@ -1,25 +1,28 @@
-// import React from 'react';
-import logo from "./logo.svg";
-import "./App.css";
+import { Route, Routes } from "react-router";
+import Docks from "./pages/Docks";
+import Lines from "./pages/Lines";
+import Schedule from "./pages/Schedule";
+import Login from "./pages/Login";
+import Users from "./pages/Users";
+import Timetables from "./pages/Timetables";
+import NavLayout from "./layouts/NavLayout";
 
 const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      {/* Public standalone pages */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/timetables" element={<Timetables />} />
+
+      {/* Routes with AppBar */}
+      <Route element={<NavLayout />}>
+        <Route path="/logged/schedule" element={<Schedule />} />
+        <Route path="/logged/timetables" element={<Timetables />} />
+        <Route path="/logged/docks" element={<Docks />} />
+        <Route path="/logged/lines" element={<Lines />} />
+        <Route path="/logged/users" element={<Users />} />
+      </Route>
+    </Routes>
   );
 };
 
