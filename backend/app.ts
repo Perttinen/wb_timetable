@@ -29,12 +29,11 @@ const DIST_PATH = path.resolve(__dirname, "../frontend/build");
 
 app.use(express.static(DIST_PATH));
 
-app.get("/*", (_req, res) => {
+app.get(/^\/(?!api).*/, (_req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
 });
 
 app.use(requestLogger);
-
 app.use(unknownEndpoint);
 app.use(errorHandler);
 
