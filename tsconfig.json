@@ -117,8 +117,6 @@
     "backend/**/*.ts",
     "tests/**/*.test.ts",
     "database/**/*.ts",
-    "index.ts",
-    "frontend/src/**/*.tsx",
-    "frontend/src/**/*.ts"
+    "index.ts"
   ]
 }
