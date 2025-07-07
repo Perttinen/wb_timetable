@@ -11,7 +11,7 @@ const App = () => {
   return (
     <Routes>
       {/* Public standalone pages */}
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Login />} />
       <Route path="/timetables" element={<Timetables />} />
 
       {/* Routes with AppBar */}
