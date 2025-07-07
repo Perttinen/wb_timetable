@@ -29,7 +29,7 @@ const DIST_PATH = path.resolve(__dirname, "../frontend/build");
 
 app.use(express.static(DIST_PATH));
 
-app.get("*", (_req, res) => {
+app.get("/*", (_req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
 });
 
