@@ -1,8 +1,10 @@
 ## Hours
 
-#### total hours 55
+#### total hours 61
 
-7.7.2025 Front end skeleton with appbar and routes. Hours: 2, Total: 55
+9.7.2025 Login page, login, loggedUser & logout (redux-rtk), some errorhandling. Hours: 6, Total: 61
+
+7.7.2025 Frontend skeleton with appbar and routes. Hours: 2, Total: 55
 
 5.7.2025 dock, line and departure => refactoring, tests etc. BACKEND READY!(?) Hours: 6, Total: 53
 

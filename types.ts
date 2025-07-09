@@ -83,11 +83,10 @@ export interface IJsonUserFlattenedLevels extends IUser {
   userlevels: string[];
 }
 
-export interface IJsonUserTokenFlattenedLevels extends IUser {
+export interface IJsonUserFlattenedLevels extends IUser {
   id: number;
   disabled: boolean;
   userlevels: string[];
-  token?: string;
 }
 
 export interface IJsonUserFromDb extends IUser {

@@ -1,7 +1,1 @@
-export const loginResponseBodyProperties = [
-  "token",
-  "id",
-  "username",
-  "disabled",
-  "userlevels",
-];
+export const userProperties = ["id", "username", "disabled", "userlevels"];

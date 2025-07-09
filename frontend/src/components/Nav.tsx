@@ -14,18 +14,38 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-
-const pages = ["Schedule", "Timetables", "Docks", "Lines", "Users"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { logout } from "../redux/auth/loggedUserSlice";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function ResponsiveAppBar() {
+  const loggedUser = useAppSelector((state) => state.loggedUser.user?.username);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const avatar = !loggedUser ? "?" : loggedUser[0].toUpperCase();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    dispatch(logout());
+    void navigate("/");
+    setAnchorElUser(null);
+  };
+
+  const showProfile = () => {
+    console.log("profile");
+    setAnchorElUser(null);
+  };
+
+  const pages = ["Schedule", "Timetables", "Docks", "Lines", "Users"];
+  const settings = [
+    { label: "Profile", function: () => showProfile() },
+    { label: "Logout", function: () => handleLogout() },
+  ];
   const theme = useTheme();
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -147,7 +167,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar>{avatar}</Avatar>
               </IconButton>
             </Tooltip>
             <Menu
@@ -167,9 +187,12 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting.label}
+                  onClick={() => setting.function()}
+                >
                   <Typography sx={{ textAlign: "center" }}>
-                    {setting}
+                    {setting.label}
                   </Typography>
                 </MenuItem>
               ))}

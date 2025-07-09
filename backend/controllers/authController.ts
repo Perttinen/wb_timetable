@@ -11,7 +11,7 @@ import {
   throwNotFound,
   throwValidationError,
 } from "../util/errorThrowers";
-import { IJsonUserTokenFlattenedLevels } from "../../types";
+import { IJsonUserFlattenedLevels } from "../../types";
 
 dotenv.config();
 
@@ -23,7 +23,7 @@ interface ILoginUser {
 const login = asyncHandler(
   async (
     req: Request<unknown, unknown, ILoginUser>,
-    res: Response<IJsonUserTokenFlattenedLevels>
+    res: Response<{ token: string; user: IJsonUserFlattenedLevels }>
   ) => {
     const { username, password: reqPwd } = req.body;
 
@@ -57,7 +57,7 @@ const login = asyncHandler(
         expiresIn: "3h",
       }
     );
-    res.status(200).json({ token, ...safeUser });
+    res.status(200).json({ token, user: safeUser });
   }
 );
 
