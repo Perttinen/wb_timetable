@@ -20,11 +20,19 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 function ResponsiveAppBar() {
-  const loggedUser = useAppSelector((state) => state.loggedUser.user?.username);
+  const loggedUser = useAppSelector((state) => state.loggedUser.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const avatar = !loggedUser ? "?" : loggedUser[0].toUpperCase();
+  const getPagesByUserlevels = (userlevels: string[]) => {
+    const pagesToShow = [];
+    if (userlevels.includes("user")) pagesToShow.push("Schedule", "Timetables");
+    if (userlevels.includes("admin"))
+      pagesToShow.push("Docks", "Lines", "Users");
+    return pagesToShow;
+  };
+
+  const avatar = !loggedUser ? "?" : loggedUser.username[0].toUpperCase();
 
   const handleLogout = () => {
     localStorage.clear();
@@ -38,7 +46,8 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const pages = ["Schedule", "Timetables", "Docks", "Lines", "Users"];
+  const pages = loggedUser ? getPagesByUserlevels(loggedUser.userlevels) : [];
+
   const settings = [
     { label: "Profile", function: () => showProfile() },
     { label: "Logout", function: () => handleLogout() },

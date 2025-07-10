@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 61
+#### total hours 66
+
+10.7.2025 Protected routes by userlevel. Nav buttons visible by userlevel. Hours: 2, Total: 63
 
 9.7.2025 Login page, login, loggedUser & logout (redux-rtk), some errorhandling. Hours: 6, Total: 61
 
