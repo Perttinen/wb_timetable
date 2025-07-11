@@ -61,6 +61,26 @@ const login = asyncHandler(
   }
 );
 
+const me = asyncHandler(
+  async (req, res: Response<IJsonUserFlattenedLevels>) => {
+    const dt = req.decodedToken;
+    console.log(dt);
+    const user = (await User.findByPk(req.decodedToken.id))?.toJSON();
+    if (!user || !dt) {
+      throwNotFound("user not found");
+      return;
+    }
+    const me = {
+      username: user.username,
+      id: user.id as number,
+      disabled: user.disabled,
+      userlevels: dt.userlevels as string[],
+    };
+    res.status(200).json(me);
+  }
+);
+
 export default {
   login,
+  me,
 };

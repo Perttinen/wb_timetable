@@ -5,6 +5,13 @@ export const loginApi = createApi({
   reducerPath: "loginApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "/api/auth",
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     login: builder.mutation<
@@ -17,7 +24,10 @@ export const loginApi = createApi({
         body: credentials,
       }),
     }),
+    getMe: builder.query<IJsonUserFlattenedLevels, void>({
+      query: () => "/me",
+    }),
   }),
 });
 
-export const { useLoginMutation } = loginApi;
+export const { useLoginMutation, useGetMeQuery } = loginApi;

@@ -6,30 +6,36 @@ import Login from "./pages/Login";
 import Users from "./pages/Users";
 import Timetables from "./pages/Timetables";
 import NavLayout from "./layouts/NavLayout";
-import { useAppSelector } from "./redux/hooks";
-import ProtectedLayout from "./layouts/ProtectedLayout";
+import { useAppSelector, useAppDispatch } from "./redux/hooks";
+import { useEffect } from "react";
+import { useGetMeQuery } from "./redux/auth/loginAPI";
+import { setCredentials } from "./redux/auth/loggedUserSlice";
+import LoggedLayout from "./layouts/LoggedLayout";
 
 const App = () => {
+  const dispatch = useAppDispatch();
   const loggedUser = useAppSelector((state) => state.loggedUser);
-  console.log(loggedUser);
-
-  const isAdmin = loggedUser?.user?.userlevels?.includes("admin");
-  const isUser = loggedUser?.user?.userlevels?.includes("user");
-
-  console.log("admin ", isAdmin);
-  console.log("user ", isUser);
+  const token = localStorage.getItem("token");
+  const { data } = useGetMeQuery(undefined, {
+    skip: !token,
+  });
+  useEffect(() => {
+    if (!loggedUser.user && token && data) {
+      dispatch(setCredentials({ user: data, token }));
+    }
+  }, [data, loggedUser, token, dispatch]);
 
   return (
     <Routes>
       {/* Public routes */}
       <Route path="/" element={<Login />} />
       <Route path="/timetables" element={<Timetables />} />
-      {/* Protected routes */}
+      {/* Logged user routes */}
       <Route element={<NavLayout />}>
-        <Route element={<ProtectedLayout preferredUserlevel="user" />}>
+        <Route element={<LoggedLayout preferredUserlevel="user" />}>
           <Route path="/logged/schedule" element={<Schedule />} />
           <Route path="/logged/timetables" element={<Timetables />} />
-          <Route element={<ProtectedLayout preferredUserlevel="admin" />}>
+          <Route element={<LoggedLayout preferredUserlevel="admin" />}>
             <Route path="/logged/docks" element={<Docks />} />
             <Route path="/logged/lines" element={<Lines />} />
             <Route path="/logged/users" element={<Users />} />

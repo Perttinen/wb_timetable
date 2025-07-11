@@ -2,6 +2,8 @@
 
 #### total hours 66
 
+11.7.2025 New endpoint api/auth/me. Gets logged user by token in refresh etc. Hours: 3, Total: 66
+
 10.7.2025 Protected routes by userlevel. Nav buttons visible by userlevel. Hours: 2, Total: 63
 
 9.7.2025 Login page, login, loggedUser & logout (redux-rtk), some errorhandling. Hours: 6, Total: 61
