@@ -1,6 +1,15 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { IJsonUserFlattenedLevels } from "../../../../types";
 
+interface ILoginResponse {
+  user: IJsonUserFlattenedLevels;
+  token: string;
+}
+interface ILoginRequest {
+  username: string;
+  password: string;
+}
+
 export const loginApi = createApi({
   reducerPath: "loginApi",
   baseQuery: fetchBaseQuery({
@@ -14,10 +23,7 @@ export const loginApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    login: builder.mutation<
-      { user: IJsonUserFlattenedLevels; token: string },
-      { username: string; password: string }
-    >({
+    login: builder.mutation<ILoginResponse, ILoginRequest>({
       query: (credentials) => ({
         url: "/login",
         method: "POST",

@@ -8,7 +8,7 @@ import Timetables from "./pages/Timetables";
 import NavLayout from "./layouts/NavLayout";
 import { useAppSelector, useAppDispatch } from "./redux/hooks";
 import { useEffect } from "react";
-import { useGetMeQuery } from "./redux/auth/loginAPI";
+import { useGetMeQuery } from "./redux/auth/loginApi";
 import { setCredentials } from "./redux/auth/loggedUserSlice";
 import LoggedLayout from "./layouts/LoggedLayout";
 
@@ -35,9 +35,9 @@ const App = () => {
         <Route element={<LoggedLayout preferredUserlevel="user" />}>
           <Route path="/logged/schedule" element={<Schedule />} />
           <Route path="/logged/timetables" element={<Timetables />} />
+          <Route path="/logged/docks" element={<Docks />} />
+          <Route path="/logged/lines" element={<Lines />} />
           <Route element={<LoggedLayout preferredUserlevel="admin" />}>
-            <Route path="/logged/docks" element={<Docks />} />
-            <Route path="/logged/lines" element={<Lines />} />
             <Route path="/logged/users" element={<Users />} />
           </Route>
         </Route>

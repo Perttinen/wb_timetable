@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 66
+#### total hours 69
+
+12.7.2025 Redux initializer for lines, docks and users based on userlevel. Logout to clear store. Hours 3, Total: 69
 
 11.7.2025 New endpoint api/auth/me. Gets logged user by token in refresh etc. Hours: 3, Total: 66
 
