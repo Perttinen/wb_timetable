@@ -27,8 +27,6 @@ jobs:
         run: |
           cd frontend
           npm install
-      - name: Wait before linting
-        run: sleep 30
       - name: Check style
         run: npm run lint
       - name: ApiTest
