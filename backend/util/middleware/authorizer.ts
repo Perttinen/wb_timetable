@@ -31,12 +31,13 @@ interface IAuthorizationCheckEntry {
 const authorizationCheck = (values: IAuthorizationCheckEntry): boolean => {
   const { userId, reqId, userlevels, requiredLevel, reqUrl } = values;
   if (userlevels.includes("hal")) return true;
-  if (userlevels.includes(requiredLevel)) return true;
+
   if (requiredLevel === "admin/user") {
     if (reqUrl.endsWith("/api/auth/me")) return true;
     if (userlevels.includes("admin")) return true;
     if (reqId && userId === reqId) return true;
   }
+  if (userlevels.includes(requiredLevel)) return true;
   return false;
 };
 

@@ -15,7 +15,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { logout } from "../redux/auth/loggedUserSlice";
+import { logout } from "../redux/auth/logoutActions";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -26,9 +26,9 @@ function ResponsiveAppBar() {
 
   const getPagesByUserlevels = (userlevels: string[]) => {
     const pagesToShow = [];
-    if (userlevels.includes("user")) pagesToShow.push("Schedule", "Timetables");
-    if (userlevels.includes("admin"))
-      pagesToShow.push("Docks", "Lines", "Users");
+    if (userlevels.includes("user"))
+      pagesToShow.push("Timetables", "Schedule", "Docks", "Lines");
+    if (userlevels.includes("admin")) pagesToShow.push("Users");
     return pagesToShow;
   };
 

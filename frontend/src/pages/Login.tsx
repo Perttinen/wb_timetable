@@ -2,8 +2,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-
-import { useLoginMutation } from "../redux/auth/loginAPI";
+import { useLoginMutation } from "../redux/auth/loginApi";
 import { useAppDispatch } from "../redux/hooks";
 import { setCredentials } from "../redux/auth/loggedUserSlice";
 import { useNavigate } from "react-router-dom";

@@ -143,6 +143,7 @@ describe("API", () => {
           userlevel: ["user"],
         })
         .set("Authorization", `Bearer ${testAdmin.token}`);
+
       const body = response.body as IJsonUserFlattenedLevels;
       testUser.user = body;
       expect(response.status).toBe(201);
