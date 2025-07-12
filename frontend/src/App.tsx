@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router";
+import { Route, Routes } from "react-router-dom";
 import Docks from "./pages/Docks";
 import Lines from "./pages/Lines";
 import Schedule from "./pages/Schedule";
@@ -6,21 +6,41 @@ import Login from "./pages/Login";
 import Users from "./pages/Users";
 import Timetables from "./pages/Timetables";
 import NavLayout from "./layouts/NavLayout";
+import { useAppSelector, useAppDispatch } from "./redux/hooks";
+import { useEffect } from "react";
+import { useGetMeQuery } from "./redux/auth/loginAPI";
+import { setCredentials } from "./redux/auth/loggedUserSlice";
+import LoggedLayout from "./layouts/LoggedLayout";
 
 const App = () => {
+  const dispatch = useAppDispatch();
+  const loggedUser = useAppSelector((state) => state.loggedUser);
+  const token = localStorage.getItem("token");
+  const { data } = useGetMeQuery(undefined, {
+    skip: !token,
+  });
+  useEffect(() => {
+    if (!loggedUser.user && token && data) {
+      dispatch(setCredentials({ user: data, token }));
+    }
+  }, [data, loggedUser, token, dispatch]);
+
   return (
     <Routes>
-      {/* Public standalone pages */}
-      <Route path="/login" element={<Login />} />
+      {/* Public routes */}
+      <Route path="/" element={<Login />} />
       <Route path="/timetables" element={<Timetables />} />
-
-      {/* Routes with AppBar */}
+      {/* Logged user routes */}
       <Route element={<NavLayout />}>
-        <Route path="/logged/schedule" element={<Schedule />} />
-        <Route path="/logged/timetables" element={<Timetables />} />
-        <Route path="/logged/docks" element={<Docks />} />
-        <Route path="/logged/lines" element={<Lines />} />
-        <Route path="/logged/users" element={<Users />} />
+        <Route element={<LoggedLayout preferredUserlevel="user" />}>
+          <Route path="/logged/schedule" element={<Schedule />} />
+          <Route path="/logged/timetables" element={<Timetables />} />
+          <Route element={<LoggedLayout preferredUserlevel="admin" />}>
+            <Route path="/logged/docks" element={<Docks />} />
+            <Route path="/logged/lines" element={<Lines />} />
+            <Route path="/logged/users" element={<Users />} />
+          </Route>
+        </Route>
       </Route>
     </Routes>
   );

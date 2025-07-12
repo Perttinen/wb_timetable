@@ -21,19 +21,21 @@ interface IAuthObject extends jwt.JwtPayload {
 
 interface IAuthorizationCheckEntry {
   userId: number;
-  reqId: number;
+  reqId: number | null;
   userlevels: string[];
   requiredLevel: string;
+  reqUrl: string;
 }
 
 // Check if user is allowed to route
 const authorizationCheck = (values: IAuthorizationCheckEntry): boolean => {
-  const { userId, reqId, userlevels, requiredLevel } = values;
+  const { userId, reqId, userlevels, requiredLevel, reqUrl } = values;
   if (userlevels.includes("hal")) return true;
   if (userlevels.includes(requiredLevel)) return true;
   if (requiredLevel === "admin/user") {
+    if (reqUrl.endsWith("/api/auth/me")) return true;
     if (userlevels.includes("admin")) return true;
-    if (userId === reqId) return true;
+    if (reqId && userId === reqId) return true;
   }
   return false;
 };
@@ -46,6 +48,7 @@ const authorizer = (requiredLevel: string): RequestHandler =>
     if (skipAuthorizer) {
       return next();
     }
+    const reqUrl = req.originalUrl;
     // Checks for authorization header
     const authHeader = req.get("authorization");
     if (!authHeader) {
@@ -68,7 +71,7 @@ const authorizer = (requiredLevel: string): RequestHandler =>
       where: { id: Number(id) },
     });
     if (!dbUser) {
-      throwNotFound(`user ${req.params.id} not found`);
+      throwNotFound(`user not found`);
       return;
     }
     const user: IJsonUserFromDbNoLevels = dbUser.toJSON();
@@ -77,11 +80,13 @@ const authorizer = (requiredLevel: string): RequestHandler =>
       return;
     }
     // Check authorization and add decoded token to reqest
+
     const authCheckObj = {
       userId: Number(id),
-      reqId: Number(req.params.id),
+      reqId: Number(req.params.id) || null,
       userlevels,
       requiredLevel,
+      reqUrl,
     };
     if (!authorizationCheck(authCheckObj)) {
       throwAuthError("unauthorized");
