@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "start": "cross-env NODE_ENV=dev ts-node index.ts",
-    "build": "cd frontend && npm install && npm run build"
+    "build": "cross-env NODE_ENV=production cd frontend && npm install && npm run build"
   },
   "author": "",
   "license": "ISC",
