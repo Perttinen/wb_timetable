@@ -8,5 +8,10 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["backend/**/*.ts", "database/**/*.ts", "index.ts"]
+  "include": [
+    "backend/**/*.ts",
+    "tests/**/*.test.ts",
+    "database/**/*.ts",
+    "index.ts"
+  ]
 }
