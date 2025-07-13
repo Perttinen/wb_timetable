@@ -25,7 +25,7 @@ app.use("/api/dock", dockRouter);
 app.use("/api/line", lineRouter);
 app.use("/api/departure", departureRouter);
 
-const DIST_PATH = path.resolve(__dirname, "../frontend/build");
+const DIST_PATH = path.join(process.cwd(), "frontend", "build");
 
 app.use(express.static(DIST_PATH));
 
