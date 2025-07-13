@@ -30,7 +30,8 @@ const DIST_PATH = path.resolve(__dirname, "../frontend/build");
 app.use(express.static(DIST_PATH));
 
 app.get(/^\/(?!api).*/, (_req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+  const indexPath = path.join(process.cwd(), "frontend", "build", "index.html");
+  res.sendFile(indexPath);
 });
 
 app.use(requestLogger);
