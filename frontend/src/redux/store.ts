@@ -29,6 +29,7 @@ const rootReducer = (
   }
   return appReducer(state, action);
 };
+console.log(process.env.NODE_ENV);
 
 export const store = configureStore({
   devTools: Boolean(process.env.REDUX_TOOLS),
