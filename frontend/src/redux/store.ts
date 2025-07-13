@@ -31,7 +31,7 @@ const rootReducer = (
 };
 
 export const store = configureStore({
-  devTools: process.env.NODE_ENV !== "production",
+  devTools: Boolean(process.env.REDUX_TOOLS),
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
