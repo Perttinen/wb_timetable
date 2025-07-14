@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { apiQuery } from "../apiQuery";
 
 interface IDock {
   id: number | null;
@@ -7,19 +8,13 @@ interface IDock {
 
 export const docksApi = createApi({
   reducerPath: "docksApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/api/dock",
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: apiQuery,
   endpoints: (builder) => ({
     getDocks: builder.query<IDock[], void>({
-      query: () => "/",
+      query: () => ({
+        url: "/dock/",
+        method: "GET",
+      }),
     }),
   }),
 });

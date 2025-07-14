@@ -2,9 +2,11 @@
 
 #### total hours 69,5
 
-13.7.2025 Redux devtools disabled in prod. Hours 0,5, Total: 69,5
+14.7.2025 RTK api errorhandling centralized. Hours: 2,5, Total: 72
 
-12.7.2025 Redux initializer for lines, docks and users based on userlevel. Logout to clear store. Hours 3, Total: 69
+13.7.2025 Redux devtools disabled in prod. Hours: 0,5, Total: 69,5
+
+12.7.2025 Redux initializer for lines, docks and users based on userlevel. Logout to clear store. Hours: 3, Total: 69
 
 11.7.2025 New endpoint api/auth/me. Gets logged user by token in refresh etc. Hours: 3, Total: 66
 

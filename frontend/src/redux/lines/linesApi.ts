@@ -1,21 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { apiQuery } from "../apiQuery";
 import { ILineReturnable } from "../../../../types";
 
 export const linesApi = createApi({
   reducerPath: "linesApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/api/line",
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: apiQuery,
   endpoints: (builder) => ({
     getLines: builder.query<ILineReturnable[], void>({
-      query: () => "/",
+      query: () => ({
+        url: "/line",
+        method: "GET",
+      }),
     }),
   }),
 });
