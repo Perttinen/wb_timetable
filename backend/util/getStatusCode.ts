@@ -9,6 +9,7 @@ const getStatusCode = (errorName: string) => {
   errorStatusMap.set("ValidationError", 422);
   errorStatusMap.set("NotFoundError", 404);
   errorStatusMap.set("JsonWebTokenError", 401);
+  errorStatusMap.set("TokenExpiredError", 401);
   errorStatusMap.set("AuthError", 401);
   errorStatusMap.set("SequelizeValidationError", 422);
 

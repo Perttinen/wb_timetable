@@ -11,18 +11,15 @@ const useInitialize = (): void => {
   const dispatch = useAppDispatch();
   const docks = useGetDocksQuery();
   const lines = useGetLinesQuery();
-  const users = useGetUsersQuery();
-  console.log(users);
 
   const loggedUser = useAppSelector((state) => state.loggedUser);
+  const shouldFetchUsers = loggedUser.user?.userlevels.includes("admin");
+  const users = useGetUsersQuery(undefined, { skip: !shouldFetchUsers });
+
   useEffect(() => {
-    if (docks.data && lines.data && loggedUser.user) {
-      dispatch(setDocks(docks.data));
-      dispatch(setLines(lines.data));
-      if (users.data) {
-        dispatch(setUsers(users.data));
-      }
-    }
+    if (docks.data) dispatch(setDocks(docks.data));
+    if (lines.data) dispatch(setLines(lines.data));
+    if (users.data) dispatch(setUsers(users.data));
   }, [docks, lines, loggedUser, users, dispatch]);
 };
 

@@ -6,25 +6,9 @@ import Login from "./pages/Login";
 import Users from "./pages/Users";
 import Timetables from "./pages/Timetables";
 import NavLayout from "./layouts/NavLayout";
-import { useAppSelector, useAppDispatch } from "./redux/hooks";
-import { useEffect } from "react";
-import { useGetMeQuery } from "./redux/auth/loginApi";
-import { setCredentials } from "./redux/auth/loggedUserSlice";
 import LoggedLayout from "./layouts/LoggedLayout";
 
 const App = () => {
-  const dispatch = useAppDispatch();
-  const loggedUser = useAppSelector((state) => state.loggedUser);
-  const token = localStorage.getItem("token");
-  const { data } = useGetMeQuery(undefined, {
-    skip: !token,
-  });
-  useEffect(() => {
-    if (!loggedUser.user && token && data) {
-      dispatch(setCredentials({ user: data, token }));
-    }
-  }, [data, loggedUser, token, dispatch]);
-
   return (
     <Routes>
       {/* Public routes */}
