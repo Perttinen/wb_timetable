@@ -34,7 +34,6 @@ const Docks = () => {
                 {dock.name}
               </TableCell>
               <TableCell align="right">
-                {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
                 <IconButton onClick={() => handleDeleteDock(Number(dock.id))}>
                   <DeleteIcon />
                 </IconButton>
