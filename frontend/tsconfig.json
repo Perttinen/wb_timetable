@@ -4,7 +4,8 @@
     "outDir": "build",
     "jsx": "react-jsx",
     "module": "ESNext",
-    "target": "ESNext"
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"]
   },
   "include": ["src"]
 }

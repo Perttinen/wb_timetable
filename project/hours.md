@@ -1,8 +1,10 @@
 ## Hours
 
-#### total hours 69,5
+#### total hours 76
 
-14.7.2025 RTK api errorhandling centralized. Hours: 2,5, Total: 72
+17.7.2025 Worked with docks & scheduling, both ends. Hours: 3, Total: 76
+
+14.7.2025 RTK api errorhandling centralized. Hours: 3,5, Total: 73
 
 13.7.2025 Redux devtools disabled in prod. Hours: 0,5, Total: 69,5
 

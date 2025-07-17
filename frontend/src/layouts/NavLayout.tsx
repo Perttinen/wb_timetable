@@ -24,7 +24,9 @@ const NavLayout = () => {
   return (
     <>
       <ResponsiveAppBar />
+      {/* <Container sx={{ outline: "2px solid blue", marginTop: 2 }} maxWidth="xl"> */}
       <Outlet />
+      {/* </Container> */}
     </>
   );
 };
