@@ -18,6 +18,7 @@ const App = () => {
       <Route element={<NavLayout />}>
         <Route element={<LoggedLayout preferredUserlevel="user" />}>
           <Route path="/logged/schedule" element={<Schedule />} />
+
           <Route path="/logged/timetables" element={<Timetables />} />
           <Route path="/logged/docks" element={<Docks />} />
           <Route path="/logged/lines" element={<Lines />} />

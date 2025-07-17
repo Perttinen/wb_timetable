@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 
-import { IBigLine, IDock, ILine, ILineReturnable } from "../../types";
+import { IDock, ILine, ILineReturnable } from "../../types";
 import { Dock, Line, LineDock } from "../../database/models";
 import { throwNotFound, throwValidationError } from "../util/errorThrowers";
+import { lineIncludes } from "./commonFuncs";
+import { createReturnableLine } from "./commonFuncs";
 
 interface ILineToAdd {
   startDockId: number;
@@ -25,46 +27,28 @@ const dockIdsAreValid = async (line: ILineToAdd): Promise<boolean> => {
   return idsToValidate.every((id) => validDockIds.includes(id));
 };
 
-const lineIncludes = [
-  {
-    association: "startDock",
-    attributes: ["id", "name"],
-  },
-  {
-    association: "endDock",
-    attributes: ["id", "name"],
-  },
-  {
-    association: "docks",
-    attributes: ["id", "name"],
-    through: {
-      attributes: ["delayFromStart"],
-    },
-  },
-];
-
-const createReturnableLine = (line: Line): ILineReturnable | void => {
-  const jsonLine: IBigLine = line.toJSON();
-  if (jsonLine.docks && jsonLine.endDock && jsonLine.startDock) {
-    const stopDocks = jsonLine.docks.map((dock) => ({
-      id: dock.id,
-      name: dock.name,
-      delayFromStart: dock.lineDock.delayFromStart,
-    }));
-    return {
-      id: jsonLine.id,
-      startDock: {
-        name: jsonLine.startDock.name,
-        id: jsonLine.startDock.id,
-      },
-      endDock: {
-        name: jsonLine.endDock.name,
-        id: jsonLine.endDock.id,
-      },
-      stopDocks,
-    };
-  }
-};
+// const createReturnableLine = (line: Line): ILineReturnable | void => {
+//   const jsonLine: IBigLine = line.toJSON();
+//   if (jsonLine.docks && jsonLine.endDock && jsonLine.startDock) {
+//     const stopDocks = jsonLine.docks.map((dock) => ({
+//       id: dock.id,
+//       name: dock.name,
+//       delayFromStart: dock.lineDock.delayFromStart,
+//     }));
+//     return {
+//       id: jsonLine.id,
+//       startDock: {
+//         name: jsonLine.startDock.name,
+//         id: jsonLine.startDock.id,
+//       },
+//       endDock: {
+//         name: jsonLine.endDock.name,
+//         id: jsonLine.endDock.id,
+//       },
+//       stopDocks,
+//     };
+//   }
+// };
 
 const createNewLine = asyncHandler(
   async (

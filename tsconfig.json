@@ -6,7 +6,8 @@
     "types": ["jest"],
     "noUnusedLocals": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "lib": ["esnext"]
   },
   "include": [
     "backend/**/*.ts",

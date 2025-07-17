@@ -6,6 +6,7 @@ const getStatusCode = (errorName: string) => {
 
   errorStatusMap.set("CastError", 400);
   errorStatusMap.set("SequelizeUniqueConstraintError", 422);
+  errorStatusMap.set("SequelizeForeignKeyConstraintError", 422);
   errorStatusMap.set("ValidationError", 422);
   errorStatusMap.set("NotFoundError", 404);
   errorStatusMap.set("JsonWebTokenError", 401);

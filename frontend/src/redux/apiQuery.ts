@@ -31,7 +31,6 @@ export const apiQuery = async (
   extraOptions: Record<string, unknown>
 ) => {
   const result = await baseQuery(args, api, extraOptions);
-  console.log("result: ", result);
 
   if ("error" in result && result.error) {
     const { data } = result.error;

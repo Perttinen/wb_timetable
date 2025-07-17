@@ -16,7 +16,13 @@ export const docksApi = createApi({
         method: "GET",
       }),
     }),
+    deleteDock: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `/dock/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
-export const { useGetDocksQuery } = docksApi;
+export const { useGetDocksQuery, useDeleteDockMutation } = docksApi;

@@ -15,8 +15,11 @@ const docksSlice = createSlice({
       state.length = 0;
       state.push(...action.payload);
     },
+    deleteDock: (state, action: PayloadAction<number>) => {
+      return state.filter((dock) => dock.id !== action.payload);
+    },
   },
 });
 
-export const { setDocks } = docksSlice.actions;
+export const { setDocks, deleteDock } = docksSlice.actions;
 export const docksReducer = docksSlice.reducer;
