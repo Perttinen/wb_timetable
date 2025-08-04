@@ -5,7 +5,7 @@ const Schedule = () => {
   const navigate = useNavigate();
 
   const handleSelectLine = (lineId: number) => {
-    navigate(`/logged/schedule/${lineId}`);
+    void navigate(`/logged/schedule/${lineId}`);
   };
 
   return <LineSelector onSelectLine={handleSelectLine} caption="SELECT LINE" />;

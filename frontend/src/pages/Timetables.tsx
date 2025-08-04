@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
-import { useEffect, useState } from "react";
 
 interface IDock {
   id: number | null;
@@ -22,7 +21,7 @@ const Timetables = () => {
     const dockTimetablePath = isLoggedRoute
       ? `/logged/timetables/${dockName}`
       : `/timetables/${dockName}`;
-    navigate(dockTimetablePath);
+    void navigate(dockTimetablePath);
   };
 
   return (
