@@ -1,17 +1,10 @@
-import Button from "@mui/material/Button";
+import { useParams } from "react-router-dom";
 
-type ScheduleLineProps = {
-  setScheduleLineId: React.Dispatch<React.SetStateAction<number | null>>;
-  lineId: number;
-};
+const ScheduleLine = () => {
+  const { lineId } = useParams<{ lineId: string }>();
 
-const ScheduleLine = ({ setScheduleLineId, lineId }: ScheduleLineProps) => {
-  return (
-    <div>
-      <Button onClick={() => setScheduleLineId(null)}>back</Button>
-      {lineId}
-    </div>
-  );
+  if (!lineId) return <div>No line selected</div>;
+  return <div>{lineId}</div>;
 };
 
 export default ScheduleLine;

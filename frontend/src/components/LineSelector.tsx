@@ -1,34 +1,24 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { ILineReturnable } from "../../../types";
 import { useAppSelector } from "../redux/hooks";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 
-interface IDock {
-  id: number | null;
-  name: string | null;
+interface Props {
+  onSelectLine: (lineId: number) => void;
+  caption: string;
 }
 
-const Timetables = () => {
+const LineSelector = ({ onSelectLine, caption }: Props) => {
   const theme = useTheme();
-  const docks: IDock[] = useAppSelector((state) => state.docks);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const isLoggedRoute = location.pathname.includes("logged");
-
-  const handleSelectTimetable = (dockName: string | null) => {
-    const dockTimetablePath = isLoggedRoute
-      ? `/logged/timetables/${dockName}`
-      : `/timetables/${dockName}`;
-    void navigate(dockTimetablePath);
-  };
+  const lines: ILineReturnable[] = useAppSelector((state) => state.lines);
 
   return (
     <Box width={"100%"}>
       <Box display={"flex"} justifyContent={"center"} width={"100%"}>
         <Typography color={theme.palette.primary.dark} fontSize={"1.8rem"}>
-          SELECT DOCK
+          {caption}
         </Typography>
       </Box>
       <Box
@@ -37,10 +27,10 @@ const Timetables = () => {
         gap={2}
         sx={{ marginX: 2 }}
       >
-        {docks.map((dock) => (
+        {lines.map((line) => (
           <Button
-            key={dock.id}
-            onClick={() => handleSelectTimetable(dock.name)}
+            key={line.id}
+            onClick={() => onSelectLine(line.id)}
             fullWidth
             variant="contained"
             sx={{
@@ -49,7 +39,16 @@ const Timetables = () => {
               alignItems: "flex-start",
             }}
           >
-            <Typography sx={{ fontSize: "1rem" }}>{dock.name}</Typography>
+            <Typography sx={{ fontSize: "1rem" }}>
+              {line.startDock.name} - {line.endDock.name}
+            </Typography>
+            <Typography sx={{ fontSize: "0.8rem" }}>
+              {line.stopDocks?.length
+                ? `via: ${line.stopDocks
+                    .map((stopDock) => stopDock.name)
+                    .join(" | ")}`
+                : "\u00A0"}
+            </Typography>
           </Button>
         ))}
       </Box>
@@ -57,4 +56,4 @@ const Timetables = () => {
   );
 };
 
-export default Timetables;
+export default LineSelector;

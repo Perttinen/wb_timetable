@@ -1,48 +1,50 @@
-import TableContainer from "@mui/material/TableContainer";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
-import Paper from "@mui/material/Paper";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useDeleteDockMutation } from "../redux/docks/docksApi";
-import { deleteDock } from "../redux/docks/docksSlice";
+import { useAppSelector } from "../redux/hooks";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
 
 const Docks = () => {
+  const theme = useTheme();
   const docks = useAppSelector((state) => state.docks);
-  const [deleteDockMutation] = useDeleteDockMutation();
-  const dispatch = useAppDispatch();
-
-  const handleDeleteDock = async (dockId: number) => {
-    try {
-      await deleteDockMutation(dockId).unwrap();
-      dispatch(deleteDock(dockId));
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 200 }} size="small" aria-label="a dense table">
-        <TableBody>
-          {docks.map((dock) => (
-            <TableRow key={dock.id}>
-              <TableCell component="th" scope="row">
-                {dock.name}
-              </TableCell>
-              <TableCell align="right">
-                <IconButton onClick={() => handleDeleteDock(Number(dock.id))}>
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Box width={"100%"}>
+      <Box display={"flex"} justifyContent={"center"} width={"100%"}>
+        <Typography color={theme.palette.primary.dark} fontSize={"1.8rem"}>
+          DOCKS
+        </Typography>
+      </Box>
+      <Box
+        display={"flex"}
+        flexDirection={"column"}
+        gap={2}
+        sx={{ marginX: 2 }}
+      >
+        {docks.map((dock) => (
+          <Button
+            key={dock.id}
+            onClick={() => console.log(dock.id)}
+            fullWidth
+            variant="contained"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+            }}
+          >
+            <Typography sx={{ fontSize: "1rem" }}>{dock.name}</Typography>
+            {/* <Typography sx={{ fontSize: "0.8rem" }}>
+              {line.stopDocks?.length
+                ? `via: ${line.stopDocks
+                    .map((stopDock) => stopDock.name)
+                    .join(" | ")}`
+                : "\u00A0"}
+            </Typography> */}
+          </Button>
+        ))}
+      </Box>
+    </Box>
   );
 };
 

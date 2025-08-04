@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { useGetMeQuery } from "../redux/auth/loginApi";
 import { useEffect } from "react";
 import { setCredentials } from "../redux/auth/loggedUserSlice";
+import Box from "@mui/material/Box";
 
 const NavLayout = () => {
   const dispatch = useAppDispatch();
@@ -24,9 +25,9 @@ const NavLayout = () => {
   return (
     <>
       <ResponsiveAppBar />
-      {/* <Container sx={{ outline: "2px solid blue", marginTop: 2 }} maxWidth="xl"> */}
-      <Outlet />
-      {/* </Container> */}
+      <Box maxWidth="lg" mx="auto">
+        <Outlet />
+      </Box>
     </>
   );
 };
