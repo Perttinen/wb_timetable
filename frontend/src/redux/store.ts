@@ -8,16 +8,20 @@ import { linesApi } from "./lines/linesApi";
 import { usersApi } from "./users/usersApi";
 import { usersReducer } from "./users/usersSlice";
 import { logout } from "./auth/logoutActions";
+import { timetableReducer } from "./timetable/timetableSlice";
+import { timetableApi } from "./timetable/timetableApi";
 
 const appReducer = combineReducers({
   loggedUser: loggedUserReducer,
   docks: docksReducer,
   lines: linesReducer,
   users: usersReducer,
+  timetable: timetableReducer,
   [loginApi.reducerPath]: loginApi.reducer,
   [docksApi.reducerPath]: docksApi.reducer,
   [linesApi.reducerPath]: linesApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
+  [timetableApi.reducerPath]: timetableApi.reducer,
 });
 
 const rootReducer = (
@@ -35,6 +39,7 @@ export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
+      .concat(timetableApi.middleware)
       .concat(loginApi.middleware)
       .concat(docksApi.middleware)
       .concat(linesApi.middleware)

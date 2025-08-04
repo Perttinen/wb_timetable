@@ -149,10 +149,17 @@ const get20DeparturesByDockName = asyncHandler(
         via: line.via,
       };
     });
-    const comingDepartures = dockDepartures.filter(
+    const upcomingDepartures = dockDepartures.filter(
       (departure) => departure.startTime > new Date(Date.now())
     );
-    res.status(200).json(comingDepartures.slice(0, 20));
+
+    res
+      .status(200)
+      .json(
+        upcomingDepartures
+          .slice(0, 20)
+          .sort((a, b) => a.startTime.getTime() - b.startTime.getTime())
+      );
   }
 );
 

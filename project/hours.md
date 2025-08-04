@@ -1,6 +1,10 @@
 ## Hours
 
-#### total hours 76
+#### total hours 83
+
+4.8.2025 DockTimetable.tsx. Hours: 6, Total: 83
+
+31.7.2025 Isolated LineSelector.tsx. Hours: 1, Total: 77
 
 17.7.2025 Worked with docks & scheduling, both ends. Hours: 3, Total: 76
 

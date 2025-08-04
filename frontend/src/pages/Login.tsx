@@ -36,7 +36,7 @@ const Login = () => {
         const result = await login(values).unwrap();
         localStorage.setItem("token", result.token);
         dispatch(setCredentials(result));
-        void navigate("/logged/schedule");
+        void navigate("/logged/timetables");
       } catch (err) {
         console.error("Kirjautuminen epäonnistui:", err);
       }
