@@ -14,6 +14,9 @@ import { useAppDispatch } from "./redux/hooks";
 import { useGetDocksQuery } from "./redux/docks/docksApi";
 import { useEffect } from "react";
 import { setDocks } from "./redux/docks/docksSlice";
+import ChangeLineSelector from "./pages/ChangeLineSelector";
+import ChangeLine from "./pages/ChangeLine";
+import CreateLine from "./pages/CreateLine";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -43,6 +46,9 @@ const App = () => {
           />
           <Route path="/logged/docks" element={<Docks />} />
           <Route path="/logged/lines" element={<Lines />} />
+          <Route path="/logged/lines/change" element={<ChangeLineSelector />} />
+          <Route path="/logged/lines/change/:lineId" element={<ChangeLine />} />
+          <Route path="/logged/lines/create" element={<CreateLine />} />
           <Route element={<LoggedLayout preferredUserlevel="admin" />}>
             <Route path="/logged/users" element={<Users />} />
           </Route>

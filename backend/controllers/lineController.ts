@@ -1,17 +1,11 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 
-import { IDock, ILine, ILineReturnable } from "../../types";
+import { IDock, ILine, ILineReturnable, ILineToAdd } from "../../types";
 import { Dock, Line, LineDock } from "../../database/models";
 import { throwNotFound, throwValidationError } from "../util/errorThrowers";
 import { lineIncludes } from "./commonFuncs";
 import { createReturnableLine } from "./commonFuncs";
-
-interface ILineToAdd {
-  startDockId: number;
-  stops: { dockId: number; delayFromStart: number }[];
-  endDockId: number;
-}
 
 const dockIdsAreValid = async (line: ILineToAdd): Promise<boolean> => {
   const idsToValidate = [

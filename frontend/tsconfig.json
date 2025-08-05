@@ -5,7 +5,8 @@
     "jsx": "react-jsx",
     "module": "ESNext",
     "target": "ESNext",
-    "lib": ["dom", "dom.iterable", "esnext"]
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["react", "react-dom"]
   },
   "include": ["src"]
 }

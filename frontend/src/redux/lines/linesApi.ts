@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { apiQuery } from "../apiQuery";
-import { ILineReturnable } from "../../../../types";
+import { ILineReturnable, ILineToAdd } from "../../../../types";
 
 export const linesApi = createApi({
   reducerPath: "linesApi",
@@ -12,7 +12,14 @@ export const linesApi = createApi({
         method: "GET",
       }),
     }),
+    addLine: builder.mutation<ILineReturnable, ILineToAdd>({
+      query: (newLine) => ({
+        url: "/line",
+        method: "POST",
+        body: newLine,
+      }),
+    }),
   }),
 });
 
-export const { useGetLinesQuery } = linesApi;
+export const { useGetLinesQuery, useAddLineMutation } = linesApi;
