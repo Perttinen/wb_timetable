@@ -72,7 +72,10 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="sticky"
+      // sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    >
       <Container maxWidth="lg">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />

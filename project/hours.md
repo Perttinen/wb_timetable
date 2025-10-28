@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 95
+#### total hours 97,5
+
+28.10.2025 Perfect outlook for timetable views. Isolated infocell. Hours: 2,5, Total: 97,5
 
 5.8.2025 CreateLine.tsx, Lines.tsx + small some jobs. Hours: 12, Total: 95
 
