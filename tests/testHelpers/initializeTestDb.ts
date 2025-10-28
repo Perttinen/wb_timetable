@@ -58,12 +58,12 @@ const create4Lines = async (docks: IDock[]) => {
   );
 
   const stops = [
-    { lineId: createdLines[0].id, dockId: docks[12].id, delayFromStart: 10 },
-    { lineId: createdLines[1].id, dockId: docks[0].id, delayFromStart: 15 },
-    { lineId: createdLines[1].id, dockId: docks[5].id, delayFromStart: 30 },
-    { lineId: createdLines[2].id, dockId: docks[0].id, delayFromStart: 25 },
-    { lineId: createdLines[2].id, dockId: docks[5].id, delayFromStart: 35 },
-    { lineId: createdLines[2].id, dockId: docks[6].id, delayFromStart: 45 },
+    { lineId: createdLines[0].id, dockId: docks[12].id, delayFromStart: 11 },
+    { lineId: createdLines[1].id, dockId: docks[0].id, delayFromStart: 22 },
+    { lineId: createdLines[1].id, dockId: docks[5].id, delayFromStart: 33 },
+    { lineId: createdLines[2].id, dockId: docks[0].id, delayFromStart: 24 },
+    { lineId: createdLines[2].id, dockId: docks[5].id, delayFromStart: 42 },
+    { lineId: createdLines[2].id, dockId: docks[6].id, delayFromStart: 63 },
   ];
   await LineDock.bulkCreate(stops);
   return createdLines.map((l) => l.id);
@@ -71,7 +71,7 @@ const create4Lines = async (docks: IDock[]) => {
 
 const create10Departures = async (lineIds: number[]) => {
   const depaerturesToAdd: { lineId: number; start: Date }[] = [];
-  for (let i = 0; i < 20; i++) {
+  for (let i = 1; i < 21; i++) {
     const now = new Date(Date.now());
     const departures = [
       {
@@ -115,6 +115,7 @@ const create10Departures = async (lineIds: number[]) => {
         start: new Date(new Date(Date.now()).setDate(now.getDate() + i)),
       },
     ];
+    console.log(departures);
     depaerturesToAdd.push(...departures);
   }
 

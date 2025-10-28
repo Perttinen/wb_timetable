@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 97,5
+#### total hours 98
+
+28.10.2025 Fixed issue "Testdata creates duplicates". Hours: 0,5, Total: 98
 
 28.10.2025 Perfect outlook for timetable views. Isolated infocell. Hours: 2,5, Total: 97,5
 
