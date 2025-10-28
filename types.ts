@@ -134,3 +134,9 @@ export interface IUserlevel {
   id: number;
   userlevel: string;
 }
+
+export interface ILineToAdd {
+  startDockId: number;
+  stops: { dockId: number; delayFromStart: number }[];
+  endDockId: number;
+}

@@ -4,7 +4,7 @@
 // /timetables/:dockName
 
 import { Fragment, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useGetTimetableQuery } from "../redux/timetable/timetableApi";
 import { useEffect } from "react";
 import { IDepartureForTimetable } from "../../../types";
@@ -16,6 +16,29 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Stack from "@mui/material/Stack";
 import dayjs from "dayjs";
+import TableHead from "@mui/material/TableHead";
+import Paper from "@mui/material/Paper";
+
+const InfoCell = ({
+  text,
+  borderBottom,
+}: {
+  text: string;
+  borderBottom: "1" | "0";
+}) => {
+  return (
+    <TableCell
+      sx={{
+        color: "red",
+        lineHeight: "inherit",
+        fontSize: "inherit",
+        borderBottom,
+      }}
+    >
+      {text}
+    </TableCell>
+  );
+};
 
 const DepartureWithViaRow = ({
   departure,
@@ -34,17 +57,7 @@ const DepartureWithViaRow = ({
         >
           {departure.destination.toUpperCase()}
         </TableCell>
-        <TableCell
-          rowSpan={2}
-          sx={{
-            color: "darkorange",
-            borderBottom: "inherit",
-            bgcolor: "black",
-            fontSize: "inherit",
-          }}
-        >
-          infocell
-        </TableCell>
+        <InfoCell text="extra" borderBottom="0" />
         <TableCell
           rowSpan={2}
           sx={{
@@ -97,7 +110,7 @@ const DepartureWithViaRow = ({
 const DepartureRow = ({ departure }: { departure: IDepartureForTimetable }) => {
   return (
     <>
-      <TableRow sx={{ lineHeight: "50px" }}>
+      <TableRow sx={{ lineHeight: "50px", borderBottom: "1" }}>
         <TableCell
           sx={{
             color: "inherit",
@@ -107,16 +120,7 @@ const DepartureRow = ({ departure }: { departure: IDepartureForTimetable }) => {
         >
           {departure.destination.toUpperCase()}
         </TableCell>
-        <TableCell
-          sx={{
-            color: "darkorange",
-            bgcolor: "black",
-            lineHeight: "inherit",
-            fontSize: "inherit",
-          }}
-        >
-          infocell
-        </TableCell>
+        <InfoCell text="cancelled" borderBottom="1" />
         <TableCell
           sx={{
             color: "inherit",
@@ -139,7 +143,7 @@ const DateRow = ({ departure }: { departure: IDepartureForTimetable }) => {
         align="center"
         sx={{
           lineHeight: "50px",
-          color: "magenta",
+          color: "inherit",
           fontSize: "inherit",
         }}
       >
@@ -149,7 +153,11 @@ const DateRow = ({ departure }: { departure: IDepartureForTimetable }) => {
   );
 };
 
-const DockTimetable = () => {
+interface Props {
+  fullwidth: boolean;
+}
+
+const DockTimetable = ({ fullwidth }: Props) => {
   const { dockName } = useParams<{ dockName: string }>();
   const { data: departures, isLoading } = useGetTimetableQuery(dockName!, {
     skip: !dockName,
@@ -159,27 +167,60 @@ const DockTimetable = () => {
     IDepartureForTimetable[] | []
   >([]);
 
+  const url = useLocation();
+
+  const height = url.pathname.includes("logged")
+    ? { xs: "calc(100dvh - 56px)", sm: "calc(100vh - 64px)" }
+    : { xs: "100dvh" };
+
   useEffect(() => {
     if (departures) setTimetableData(departures);
   }, [departures]);
-
-  // window.scrollTo(0, 0);
 
   if (departures?.length === 0) {
     return <>{`No upcoming departures from ${dockName}`}</>;
   }
 
   return (
-    <div>
+    <>
       {!isLoading && departures ? (
-        <TableContainer sx={{ bgcolor: "black", paddingX: "10px" }}>
-          <Table padding="none">
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderRadius: "0",
+            bgcolor: "darkblue",
+            width: "100%",
+            maxWidth: fullwidth ? "100%" : 1200,
+            margin: "0 auto",
+            height,
+          }}
+        >
+          <Table padding="none" stickyHeader>
             <colgroup>
               <col width="62%" />
               <col width="30%" />
               <col width="8%" />
             </colgroup>
-            <TableBody sx={{ color: "yellow", fontSize: "1.3rem" }}>
+            <TableHead>
+              <TableRow sx={{ borderBottom: 0 }}>
+                <TableCell
+                  colSpan={3}
+                  height={50}
+                  sx={{
+                    color: "lightgrey",
+                    fontSize: "2rem",
+                    fontWeight: "bold",
+                    bgcolor: "darkblue",
+                    textAlign: "center",
+                  }}
+                >
+                  {dockName}
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody
+              sx={{ color: "lightgoldenrodyellow", fontSize: "1.3rem" }}
+            >
               {timetableData.map((departure, index, arr) => (
                 <Fragment key={index}>
                   {/* print date row when date changes or start is after today   */}
@@ -207,7 +248,7 @@ const DockTimetable = () => {
       ) : (
         <div>loading</div>
       )}
-    </div>
+    </>
   );
 };
 

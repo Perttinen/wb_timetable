@@ -19,7 +19,7 @@ import { logout } from "../redux/auth/logoutActions";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function ResponsiveAppBar() {
+function Navbar() {
   const loggedUser = useAppSelector((state) => state.loggedUser.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -72,7 +72,10 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="sticky"
+      // sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    >
       <Container maxWidth="lg">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -212,4 +215,4 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
-export default ResponsiveAppBar;
+export default Navbar;
