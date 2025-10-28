@@ -31,18 +31,19 @@ const App = () => {
       {/* Public routes */}
       <Route path="/" element={<Login />} />
       <Route path="/timetables" element={<Timetables />} />
-
-      <Route path="/timetables/:dockName" element={<DockTimetable />} />
+      <Route
+        path="/timetables/:dockName"
+        element={<DockTimetable fullwidth={true} />}
+      />
       {/* Logged user routes */}
       <Route element={<NavLayout />}>
         <Route element={<LoggedLayout preferredUserlevel="user" />}>
           <Route path="/logged/schedule" element={<Schedule />} />
           <Route path="/logged/schedule/:lineId" element={<ScheduleLine />} />
-
           <Route path="/logged/timetables" element={<Timetables />} />
           <Route
             path="/logged/timetables/:dockName"
-            element={<DockTimetable />}
+            element={<DockTimetable fullwidth={false} />}
           />
           <Route path="/logged/docks" element={<Docks />} />
           <Route path="/logged/lines" element={<Lines />} />

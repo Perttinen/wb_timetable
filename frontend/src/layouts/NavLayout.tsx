@@ -1,11 +1,10 @@
-import ResponsiveAppBar from "../components/Nav";
 import { Outlet } from "react-router-dom";
 import useInitialize from "../redux/initialize";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { useGetMeQuery } from "../redux/auth/loginApi";
 import { useEffect } from "react";
 import { setCredentials } from "../redux/auth/loggedUserSlice";
-import Box from "@mui/material/Box";
+import Navbar from "../components/Navbar";
 
 const NavLayout = () => {
   const dispatch = useAppDispatch();
@@ -23,12 +22,10 @@ const NavLayout = () => {
   useInitialize();
 
   return (
-    <>
-      <ResponsiveAppBar />
-      <Box maxWidth="lg" mx="auto">
-        <Outlet />
-      </Box>
-    </>
+    <div>
+      <Navbar />
+      <Outlet />
+    </div>
   );
 };
 

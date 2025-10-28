@@ -19,7 +19,7 @@ import { logout } from "../redux/auth/logoutActions";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function ResponsiveAppBar() {
+function Navbar() {
   const loggedUser = useAppSelector((state) => state.loggedUser.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -212,4 +212,4 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
-export default ResponsiveAppBar;
+export default Navbar;

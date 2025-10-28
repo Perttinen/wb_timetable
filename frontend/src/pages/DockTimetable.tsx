@@ -149,7 +149,11 @@ const DateRow = ({ departure }: { departure: IDepartureForTimetable }) => {
   );
 };
 
-const DockTimetable = () => {
+interface Props {
+  fullwidth: boolean;
+}
+
+const DockTimetable = ({ fullwidth }: Props) => {
   const { dockName } = useParams<{ dockName: string }>();
   const { data: departures, isLoading } = useGetTimetableQuery(dockName!, {
     skip: !dockName,
@@ -163,16 +167,23 @@ const DockTimetable = () => {
     if (departures) setTimetableData(departures);
   }, [departures]);
 
-  // window.scrollTo(0, 0);
-
   if (departures?.length === 0) {
     return <>{`No upcoming departures from ${dockName}`}</>;
   }
 
   return (
-    <div>
+    <>
       {!isLoading && departures ? (
-        <TableContainer sx={{ bgcolor: "black", paddingX: "10px" }}>
+        <TableContainer
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            bgcolor: "black",
+            width: "100%",
+            maxWidth: fullwidth ? "100%" : 1200,
+            margin: "0 auto",
+          }}
+        >
           <Table padding="none">
             <colgroup>
               <col width="62%" />
@@ -207,7 +218,7 @@ const DockTimetable = () => {
       ) : (
         <div>loading</div>
       )}
-    </div>
+    </>
   );
 };
 
