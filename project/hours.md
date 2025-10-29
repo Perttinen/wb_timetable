@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 98
+#### total hours 103
+
+29.10.2025 Create & change docks applied. Small improvements to outlook. Hours: 5, Total: 103
 
 28.10.2025 Fixed issue "Testdata creates duplicates". Hours: 0,5, Total: 98
 
