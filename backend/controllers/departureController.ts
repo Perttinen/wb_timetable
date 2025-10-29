@@ -87,7 +87,7 @@ const getDeparturesByLineId = asyncHandler(
 const get20DeparturesByDockName = asyncHandler(
   async (req: Request, res: Response<IDepartureForTimetable[]>) => {
     const dockDb = await Dock.findOne({
-      where: { name: req.params.dockName },
+      where: { id: req.params.dockId },
     });
     if (!dockDb) {
       throwNotFound(`dock name ${req.params.dockName} not found in db`);

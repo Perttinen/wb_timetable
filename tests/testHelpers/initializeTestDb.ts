@@ -115,7 +115,6 @@ const create10Departures = async (lineIds: number[]) => {
         start: new Date(new Date(Date.now()).setDate(now.getDate() + i)),
       },
     ];
-    console.log(departures);
     depaerturesToAdd.push(...departures);
   }
 

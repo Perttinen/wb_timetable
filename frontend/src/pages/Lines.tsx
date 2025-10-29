@@ -12,7 +12,7 @@ const Lines = () => {
   };
 
   return (
-    <Box width={"100%"}>
+    <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
       <Box display={"flex"} flexDirection={"column"} gap={2} sx={{ margin: 2 }}>
         <Button
           onClick={handleCreateLine}

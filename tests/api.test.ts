@@ -422,9 +422,9 @@ describe("API", () => {
 
       expect(response.status).toBe(200);
     });
-    test("get next 20 departures by dock name, GET /api/departure/timetable/:dockName", async () => {
+    test("get next 20 departures by dock id, GET /api/departure/timetable/:dockId", async () => {
       const response = await request(app).get(
-        `/api/departure/timetable/${docks[0].name}`
+        `/api/departure/timetable/${docks[0].id}`
       );
       expect(response.status).toBe(200);
     });

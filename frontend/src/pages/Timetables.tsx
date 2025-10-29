@@ -12,20 +12,26 @@ interface IDock {
 
 const Timetables = () => {
   const theme = useTheme();
-  const docks: IDock[] = useAppSelector((state) => state.docks);
   const navigate = useNavigate();
   const location = useLocation();
   const isLoggedRoute = location.pathname.includes("logged");
 
-  const handleSelectTimetable = (dockName: string | null) => {
+  // const dbdocks = useGetDocksQuery();
+  // useEffect(() => {
+  //   if (dbdocks.data) dispatch(setDocks(dbdocks.data));
+  // }, [dbdocks]);
+
+  const docks: IDock[] = useAppSelector((state) => state.docks);
+
+  const handleSelectTimetable = (dockId: number | null) => {
     const dockTimetablePath = isLoggedRoute
-      ? `/logged/timetables/${dockName}`
-      : `/timetables/${dockName}`;
+      ? `/logged/timetables/${dockId}`
+      : `/timetables/${dockId}`;
     void navigate(dockTimetablePath);
   };
 
   return (
-    <Box width={"100%"}>
+    <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
       <Box display={"flex"} justifyContent={"center"} width={"100%"}>
         <Typography color={theme.palette.primary.dark} fontSize={"1.8rem"}>
           SELECT DOCK
@@ -40,7 +46,7 @@ const Timetables = () => {
         {docks.map((dock) => (
           <Button
             key={dock.id}
-            onClick={() => handleSelectTimetable(dock.name)}
+            onClick={() => handleSelectTimetable(dock.id)}
             fullWidth
             variant="contained"
             sx={{

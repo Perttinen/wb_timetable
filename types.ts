@@ -55,6 +55,9 @@ export interface IDock {
   id: number;
   name: string;
 }
+export interface IDockname {
+  name: string;
+}
 
 export interface IFormattedLine {
   lineId: number;

@@ -3,10 +3,9 @@
 // /logged/timetables/:dockName
 // /timetables/:dockName
 
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useGetTimetableQuery } from "../redux/timetable/timetableApi";
-import { useEffect } from "react";
 import { IDepartureForTimetable } from "../../../types";
 import Typography from "@mui/material/Typography";
 import TableContainer from "@mui/material/TableContainer";
@@ -18,6 +17,8 @@ import Stack from "@mui/material/Stack";
 import dayjs from "dayjs";
 import TableHead from "@mui/material/TableHead";
 import Paper from "@mui/material/Paper";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { setTimetable } from "../redux/timetable/timetableSlice";
 
 const InfoCell = ({
   text,
@@ -158,32 +159,37 @@ interface Props {
 }
 
 const DockTimetable = ({ fullwidth }: Props) => {
-  const { dockName } = useParams<{ dockName: string }>();
-  const { data: departures, isLoading } = useGetTimetableQuery(dockName!, {
-    skip: !dockName,
+  const { dockId } = useParams<{ dockId: string }>();
+  console.log("id: ", dockId);
+
+  const dock = useAppSelector((state) =>
+    state.docks.find((d) => d.id === Number(dockId))
+  );
+
+  const dispatch = useAppDispatch();
+
+  const { data: departures, isLoading } = useGetTimetableQuery(dockId!, {
+    skip: !dockId,
   });
 
-  const [timetableData, setTimetableData] = useState<
-    IDepartureForTimetable[] | []
-  >([]);
+  console.log(departures);
 
+  if (departures) {
+    dispatch(setTimetable(departures));
+  }
   const url = useLocation();
 
   const height = url.pathname.includes("logged")
     ? { xs: "calc(100dvh - 56px)", sm: "calc(100vh - 64px)" }
     : { xs: "100dvh" };
 
-  useEffect(() => {
-    if (departures) setTimetableData(departures);
-  }, [departures]);
-
   if (departures?.length === 0) {
-    return <>{`No upcoming departures from ${dockName}`}</>;
+    return <>{`No upcoming departures from ${dockId}`}</>;
   }
 
   return (
     <>
-      {!isLoading && departures ? (
+      {!isLoading && departures && dock ? (
         <TableContainer
           component={Paper}
           sx={{
@@ -214,14 +220,14 @@ const DockTimetable = ({ fullwidth }: Props) => {
                     textAlign: "center",
                   }}
                 >
-                  {dockName}
+                  {dock.name}
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody
               sx={{ color: "lightgoldenrodyellow", fontSize: "1.3rem" }}
             >
-              {timetableData.map((departure, index, arr) => (
+              {departures.map((departure, index, arr) => (
                 <Fragment key={index}>
                   {/* print date row when date changes or start is after today   */}
                   {((index > 0 &&

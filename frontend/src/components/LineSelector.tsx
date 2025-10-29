@@ -15,7 +15,7 @@ const LineSelector = ({ onSelectLine, caption }: Props) => {
   const lines: ILineReturnable[] = useAppSelector((state) => state.lines);
 
   return (
-    <Box width={"100%"}>
+    <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
       <Box display={"flex"} justifyContent={"center"} width={"100%"}>
         <Typography color={theme.palette.primary.dark} fontSize={"1.8rem"}>
           {caption}
