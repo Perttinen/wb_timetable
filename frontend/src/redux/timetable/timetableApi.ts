@@ -7,8 +7,8 @@ export const timetableApi = createApi({
   baseQuery: apiQuery,
   endpoints: (builder) => ({
     getTimetable: builder.query<IDepartureForTimetable[], string>({
-      query: (dockName) => ({
-        url: `/departure/timetable/${dockName}`,
+      query: (dockId) => ({
+        url: `/departure/timetable/${dockId}`,
         method: "GET",
       }),
     }),

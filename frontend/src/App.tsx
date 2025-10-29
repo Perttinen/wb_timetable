@@ -17,10 +17,13 @@ import { setDocks } from "./redux/docks/docksSlice";
 import ChangeLineSelector from "./pages/ChangeLineSelector";
 import ChangeLine from "./pages/ChangeLine";
 import CreateLine from "./pages/CreateLine";
+import CreateDock from "./pages/CreateDock";
+import ChangeDock from "./pages/ChangeDock";
 
 const App = () => {
   const dispatch = useAppDispatch();
   const docks = useGetDocksQuery();
+  console.log(docks.data);
 
   useEffect(() => {
     if (docks.data) dispatch(setDocks(docks.data));
@@ -42,10 +45,12 @@ const App = () => {
           <Route path="/logged/schedule/:lineId" element={<ScheduleLine />} />
           <Route path="/logged/timetables" element={<Timetables />} />
           <Route
-            path="/logged/timetables/:dockName"
+            path="/logged/timetables/:dockId"
             element={<DockTimetable fullwidth={false} />}
           />
           <Route path="/logged/docks" element={<Docks />} />
+          <Route path="/logged/docks/create" element={<CreateDock />} />
+          <Route path="/logged/docks/change/:dockId" element={<ChangeDock />} />
           <Route path="/logged/lines" element={<Lines />} />
           <Route path="/logged/lines/change" element={<ChangeLineSelector />} />
           <Route path="/logged/lines/change/:lineId" element={<ChangeLine />} />

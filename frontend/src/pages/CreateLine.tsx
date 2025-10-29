@@ -78,7 +78,6 @@ const CreateLine = () => {
 
   const handleSubmit = async (values: RouteFormValuesType) => {
     try {
-      console.log(values);
       if (docksAreUnique(values)) {
         const response = await addLine(values).unwrap();
         await refetch();

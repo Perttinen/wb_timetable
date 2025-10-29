@@ -59,12 +59,15 @@ type FormMainContainerProps = PropsWithChildren<{
 const FormMainContainer = (props: FormMainContainerProps) => {
   return (
     <Box
+      width={"100%"}
+      justifySelf={"center"}
       sx={{
         border: 1,
         marginBottom: "10px",
         padding: "5px",
         borderRadius: "5px",
         backgroundColor: "#b0cbf5",
+        maxWidth: "md",
       }}
     >
       {props.caption && (
