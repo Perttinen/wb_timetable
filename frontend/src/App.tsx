@@ -10,10 +10,6 @@ import LoggedLayout from "./layouts/LoggedLayout";
 import ScheduleLine from "./pages/ScheduleLine";
 import Schedule from "./pages/Schedule";
 import DockTimetable from "./pages/DockTimetable";
-import { useAppDispatch } from "./redux/hooks";
-import { useGetDocksQuery } from "./redux/docks/docksApi";
-import { useEffect } from "react";
-import { setDocks } from "./redux/docks/docksSlice";
 import ChangeLineSelector from "./pages/ChangeLineSelector";
 import ChangeLine from "./pages/ChangeLine";
 import CreateLine from "./pages/CreateLine";
@@ -21,14 +17,6 @@ import CreateDock from "./pages/CreateDock";
 import ChangeDock from "./pages/ChangeDock";
 
 const App = () => {
-  const dispatch = useAppDispatch();
-  const docks = useGetDocksQuery();
-  console.log(docks.data);
-
-  useEffect(() => {
-    if (docks.data) dispatch(setDocks(docks.data));
-  }, [docks]);
-
   return (
     <Routes>
       {/* Public routes */}

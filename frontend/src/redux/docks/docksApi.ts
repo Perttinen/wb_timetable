@@ -10,13 +10,14 @@ interface IDock {
 export const docksApi = createApi({
   reducerPath: "docksApi",
   baseQuery: apiQuery,
-  tagTypes: ["Dock", "Timetable"],
+  tagTypes: ["Dock"],
   endpoints: (builder) => ({
     getDocks: builder.query<IDock[], void>({
       query: () => ({
         url: "/dock/",
         method: "GET",
       }),
+      providesTags: ["Dock"],
     }),
     deleteDock: builder.mutation<void, number>({
       query: (id) => ({
@@ -30,6 +31,7 @@ export const docksApi = createApi({
         method: "POST",
         body: newDock,
       }),
+      invalidatesTags: ["Dock"],
     }),
     changeDock: builder.mutation<IDock, IDock>({
       query: (Dock) => ({
@@ -37,11 +39,9 @@ export const docksApi = createApi({
         method: "PATCH",
         body: Dock,
       }),
-      invalidatesTags: (result, error, dock) => [
-        { type: "Timetable", id: dock.id ?? undefined },
-        { type: "Dock", id: dock.id ?? undefined },
-      ],
+      invalidatesTags: ["Dock"],
     }),
+
     getDock: builder.query<IDock, number>({
       query: (id) => ({
         url: `/dock/${id}`,

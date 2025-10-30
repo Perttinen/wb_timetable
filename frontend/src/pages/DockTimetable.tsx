@@ -17,8 +17,7 @@ import Stack from "@mui/material/Stack";
 import dayjs from "dayjs";
 import TableHead from "@mui/material/TableHead";
 import Paper from "@mui/material/Paper";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { setTimetable } from "../redux/timetable/timetableSlice";
+import { useGetDockQuery } from "../redux/docks/docksApi";
 
 const InfoCell = ({
   text,
@@ -160,23 +159,13 @@ interface Props {
 
 const DockTimetable = ({ fullwidth }: Props) => {
   const { dockId } = useParams<{ dockId: string }>();
-  console.log("id: ", dockId);
 
-  const dock = useAppSelector((state) =>
-    state.docks.find((d) => d.id === Number(dockId))
+  const { data: dock, isLoading: isLoadingDock } = useGetDockQuery(
+    Number(dockId)
   );
 
-  const dispatch = useAppDispatch();
+  const { data: departures, isLoading } = useGetTimetableQuery(String(dockId));
 
-  const { data: departures, isLoading } = useGetTimetableQuery(dockId!, {
-    skip: !dockId,
-  });
-
-  console.log(departures);
-
-  if (departures) {
-    dispatch(setTimetable(departures));
-  }
   const url = useLocation();
 
   const height = url.pathname.includes("logged")
@@ -189,7 +178,7 @@ const DockTimetable = ({ fullwidth }: Props) => {
 
   return (
     <>
-      {!isLoading && departures && dock ? (
+      {!isLoading && !isLoadingDock && departures && dock ? (
         <TableContainer
           component={Paper}
           sx={{

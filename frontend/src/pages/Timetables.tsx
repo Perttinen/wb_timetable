@@ -1,14 +1,9 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAppSelector } from "../redux/hooks";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
-
-interface IDock {
-  id: number | null;
-  name: string | null;
-}
+import { useGetDocksQuery } from "../redux/docks/docksApi";
 
 const Timetables = () => {
   const theme = useTheme();
@@ -16,12 +11,11 @@ const Timetables = () => {
   const location = useLocation();
   const isLoggedRoute = location.pathname.includes("logged");
 
-  // const dbdocks = useGetDocksQuery();
-  // useEffect(() => {
-  //   if (dbdocks.data) dispatch(setDocks(dbdocks.data));
-  // }, [dbdocks]);
+  const { data: docks, isLoading } = useGetDocksQuery();
 
-  const docks: IDock[] = useAppSelector((state) => state.docks);
+  // useEffect(() => {
+  //   if (docks) dispatch(setDocks(docks));
+  // }, [docks]);
 
   const handleSelectTimetable = (dockId: number | null) => {
     const dockTimetablePath = isLoggedRoute
@@ -31,35 +25,41 @@ const Timetables = () => {
   };
 
   return (
-    <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
-      <Box display={"flex"} justifyContent={"center"} width={"100%"}>
-        <Typography color={theme.palette.primary.dark} fontSize={"1.8rem"}>
-          SELECT DOCK
-        </Typography>
-      </Box>
-      <Box
-        display={"flex"}
-        flexDirection={"column"}
-        gap={2}
-        sx={{ marginX: 2 }}
-      >
-        {docks.map((dock) => (
-          <Button
-            key={dock.id}
-            onClick={() => handleSelectTimetable(dock.id)}
-            fullWidth
-            variant="contained"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-            }}
+    <>
+      {!isLoading && docks ? (
+        <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
+          <Box display={"flex"} justifyContent={"center"} width={"100%"}>
+            <Typography color={theme.palette.primary.dark} fontSize={"1.8rem"}>
+              SELECT DOCK
+            </Typography>
+          </Box>
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            gap={2}
+            sx={{ marginX: 2 }}
           >
-            <Typography sx={{ fontSize: "1rem" }}>{dock.name}</Typography>
-          </Button>
-        ))}
-      </Box>
-    </Box>
+            {docks.map((dock) => (
+              <Button
+                key={dock.id}
+                onClick={() => handleSelectTimetable(dock.id)}
+                fullWidth
+                variant="contained"
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+              >
+                <Typography sx={{ fontSize: "1rem" }}>{dock.name}</Typography>
+              </Button>
+            ))}
+          </Box>
+        </Box>
+      ) : (
+        <div>Loading...</div>
+      )}
+    </>
   );
 };
 

@@ -11,23 +11,14 @@ import {
 } from "../components/SmallOnes";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { setDocks } from "../redux/docks/docksSlice";
 
 const ChangeDock = () => {
   const { dockId } = useParams<{ dockId: string }>();
-  const { data: dock, isLoading, refetch } = useGetDockQuery(Number(dockId));
-  const docks = useAppSelector((state) => state.docks);
+  const { data: dock, isLoading } = useGetDockQuery(Number(dockId));
 
   const navigate = useNavigate();
 
-  const dispatch = useAppDispatch();
-
-  const [
-    changeDock,
-    // commented for linter.
-    // , { isLoading, error }
-  ] = useChangeDockMutation();
+  const [changeDock] = useChangeDockMutation();
 
   const dockSchema = Yup.object().shape({
     name: Yup.string()
@@ -47,17 +38,11 @@ const ChangeDock = () => {
 
     try {
       if (typeof values.name === "string" && dock) {
-        const updatedDock = await changeDock({
+        await changeDock({
           name: values.name,
           id: dock.id,
-        }).unwrap();
-        dispatch(
-          setDocks(
-            docks.map((d) => (d.id === updatedDock.id ? updatedDock : d))
-          )
-        );
-        await refetch();
-        console.log("Dock changed:", updatedDock);
+        });
+        void navigate("/logged/docks");
       }
     } catch (err) {
       console.error("Failed to change dock", err);
@@ -72,9 +57,7 @@ const ChangeDock = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={dockSchema}
-            onSubmit={async (values) => {
-              await handleSubmit(values);
-            }}
+            onSubmit={handleSubmit}
             enableReinitialize={true}
           >
             <Form>

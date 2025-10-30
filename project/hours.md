@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 103
+#### total hours 106
+
+30.10.2025 Synchronized all (not login) states to rtk query cache. Hours: 3, Total: 106
 
 29.10.2025 Create & change docks applied. Small improvements to outlook. Hours: 5, Total: 103
 
