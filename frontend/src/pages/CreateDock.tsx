@@ -8,20 +8,12 @@ import {
 import * as Yup from "yup";
 import { useNavigate } from "react-router";
 import { IDockname } from "../../../types";
-import { useAddDockMutation, useGetDocksQuery } from "../redux/docks/docksApi";
-import { useAppDispatch } from "../redux/hooks";
-import { setDocks } from "../redux/docks/docksSlice";
+import { useAddDockMutation } from "../redux/api";
 
 const CreateDock = () => {
   const navigate = useNavigate();
 
-  const dispatch = useAppDispatch();
-
-  const [
-    addDock,
-    // commented for linter.
-    // , { isLoading, error }
-  ] = useAddDockMutation();
+  const [addDock] = useAddDockMutation();
 
   const dockSchema = Yup.object().shape({
     name: Yup.string()
@@ -34,19 +26,11 @@ const CreateDock = () => {
     name: "",
   };
 
-  const { data: docksData, refetch } = useGetDocksQuery();
-
   const handleSubmit = async (values: IDockname) => {
     console.log(values.name);
     try {
-      //   if (docksAreUnique(values)) {
-      const response = await addDock(values).unwrap();
-      await refetch();
-      if (docksData) dispatch(setDocks(docksData));
-      console.log("Dock added:", response);
-      //   } else {
-      //     setErrorMsg("All docks should be unique!");
-      //   }
+      await addDock(values);
+      void navigate("/logged/docks");
     } catch (err) {
       console.error("Failed to add dock", err);
     }
@@ -57,9 +41,7 @@ const CreateDock = () => {
       <Formik
         initialValues={initialValues}
         validationSchema={dockSchema}
-        onSubmit={async (values) => {
-          await handleSubmit(values);
-        }}
+        onSubmit={handleSubmit}
         enableReinitialize={true}
       >
         <Form>

@@ -1,14 +1,21 @@
 import { useParams } from "react-router-dom";
-import { useAppSelector } from "../redux/hooks";
+import { useGetLineQuery } from "../redux/api";
 
 const ChangeLine = () => {
   const { lineId } = useParams<{ lineId: string }>();
 
-  const lineToChange = useAppSelector((state) => state.lines).find(
-    (line) => line.id === Number(lineId)
-  );
+  const { data: line, isLoading } = useGetLineQuery(Number(lineId));
 
-  return <>{lineToChange?.startDock.name}</>;
+  return (
+    <>
+      {" "}
+      {!isLoading && line ? (
+        <div>{line.startDock.name}</div>
+      ) : (
+        <div>Loading...</div>
+      )}
+    </>
+  );
 };
 
 export default ChangeLine;

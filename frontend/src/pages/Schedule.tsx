@@ -3,7 +3,6 @@ import LineSelector from "../components/LineSelector";
 
 const Schedule = () => {
   const navigate = useNavigate();
-
   const handleSelectLine = (lineId: number) => {
     void navigate(`/logged/schedule/${lineId}`);
   };

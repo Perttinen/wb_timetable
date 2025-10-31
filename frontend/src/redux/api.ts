@@ -1,0 +1,104 @@
+import { createApi } from "@reduxjs/toolkit/query/react";
+import {
+  IDepartureForTimetable,
+  IDockname,
+  IJsonUserFlattenedLevels,
+  ILineReturnable,
+  ILineToAdd,
+} from "../../../types";
+import { apiQuery } from "./apiQuery";
+
+interface IDock {
+  id: number | null;
+  name: string | null;
+}
+
+export const api = createApi({
+  reducerPath: "api",
+  baseQuery: apiQuery,
+  tagTypes: ["Dock", "Timetable"],
+  endpoints: (builder) => ({
+    // DOCK
+    getDocks: builder.query<IDock[], void>({
+      query: () => ({
+        url: "/dock/",
+        method: "GET",
+      }),
+      providesTags: ["Dock"],
+    }),
+    deleteDock: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `/dock/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    addDock: builder.mutation<IDock, IDockname>({
+      query: (newDock) => ({
+        url: "/dock",
+        method: "POST",
+        body: newDock,
+      }),
+      invalidatesTags: ["Dock"],
+    }),
+    changeDock: builder.mutation<IDock, IDock>({
+      query: (Dock) => ({
+        url: "/dock",
+        method: "PATCH",
+        body: Dock,
+      }),
+      invalidatesTags: ["Dock", "Timetable"],
+    }),
+
+    getDock: builder.query<IDock, number>({
+      query: (id) => ({
+        url: `/dock/${id}`,
+        method: "GET",
+      }),
+    }),
+    //TIMETABLE
+    getTimetable: builder.query<IDepartureForTimetable[], string>({
+      query: (dockId) => ({
+        url: `/departure/timetable/${dockId}`,
+        method: "GET",
+      }),
+      providesTags: ["Timetable"],
+    }),
+    //LINE
+    getLines: builder.query<ILineReturnable[], void>({
+      query: () => ({
+        url: "/line",
+        method: "GET",
+      }),
+    }),
+    getLine: builder.query<ILineReturnable, number>({
+      query: (id) => ({
+        url: `/line/${id}`,
+        method: "GET",
+      }),
+    }),
+    addLine: builder.mutation<ILineReturnable, ILineToAdd>({
+      query: (newLine) => ({
+        url: "/line",
+        method: "POST",
+        body: newLine,
+      }),
+    }),
+    //USER
+    getUsers: builder.query<IJsonUserFlattenedLevels[], void>({
+      query: () => ({ url: "/user", method: "GET" }),
+    }),
+  }),
+});
+
+export const {
+  useGetDocksQuery,
+  useDeleteDockMutation,
+  useAddDockMutation,
+  useGetDockQuery,
+  useChangeDockMutation,
+  useGetTimetableQuery,
+  useAddLineMutation,
+  useGetLinesQuery,
+  useGetLineQuery,
+  useGetUsersQuery,
+} = api;

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const Lines = () => {
   const navigate = useNavigate();
+
   const handleChangeLine = () => {
     void navigate("/logged/lines/change");
   };

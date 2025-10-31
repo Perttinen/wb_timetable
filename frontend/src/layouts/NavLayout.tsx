@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import useInitialize from "../redux/initialize";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { useGetMeQuery } from "../redux/auth/loginApi";
 import { useEffect } from "react";
@@ -18,8 +17,6 @@ const NavLayout = () => {
       dispatch(setCredentials({ user: data, token }));
     }
   }, [data, loggedUser, token, dispatch]);
-
-  useInitialize();
 
   return (
     <div>
