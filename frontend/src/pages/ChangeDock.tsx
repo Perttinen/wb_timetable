@@ -13,7 +13,6 @@ import {
   useDeleteDockMutation,
   useGetDockQuery,
 } from "../redux/api";
-import { Button } from "@mui/material";
 
 const ChangeDock = () => {
   const { dockId } = useParams<{ dockId: string }>();
@@ -29,12 +28,6 @@ const ChangeDock = () => {
       .max(32, "Name must be 2-32 charecters!")
       .required("Name is required!"),
   });
-
-  const dockName = dock ? dock.name : "";
-
-  // const initialValues = {
-  //   name: dockName,
-  // };
 
   const handleSubmit = async (values: { name: string | null }) => {
     console.log("sub");
@@ -53,7 +46,7 @@ const ChangeDock = () => {
     console.log(values);
   };
 
-  const [deleteDock, { error }] = useDeleteDockMutation();
+  const [deleteDock] = useDeleteDockMutation();
   const handleDelete = async () => {
     try {
       if (dock?.id) {
@@ -63,24 +56,7 @@ const ChangeDock = () => {
         void navigate("/logged/docks");
       }
     } catch (e) {
-      // e is likely a FetchBaseQueryError or SerializedError
-      if (
-        typeof e === "object" &&
-        e !== null &&
-        "data" in e &&
-        typeof e.data === "object" &&
-        e.data !== null &&
-        "error" in e.data &&
-        typeof e.data.error === "object"
-      ) {
-        const { name, message } = e.data.error as {
-          name: string;
-          message: string;
-        };
-        console.error(`Delete failed [${name}]: ${message}`);
-      } else {
-        console.error("Unexpected error:", e);
-      }
+      console.error("Unexpected error:", e);
     }
   };
 
