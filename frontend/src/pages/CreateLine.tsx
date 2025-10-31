@@ -2,7 +2,7 @@ import { Alert, Box, Button, Snackbar } from "@mui/material";
 import { FieldArray, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
-import { useAddLineMutation, useGetLinesQuery } from "../redux/lines/linesApi";
+
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -12,7 +12,11 @@ import {
   FormMainContainer,
   SaveAndCancelButtons,
 } from "../components/SmallOnes";
-import { useGetDocksQuery } from "../redux/docks/docksApi";
+import {
+  useAddLineMutation,
+  useGetDocksQuery,
+  useGetLinesQuery,
+} from "../redux/api";
 
 const CreateLine = () => {
   const [errorMsg, setErrorMsg] = useState("");

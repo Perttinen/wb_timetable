@@ -1,27 +1,13 @@
 import { Action, combineReducers, configureStore } from "@reduxjs/toolkit";
 import { loggedUserReducer } from "./auth/loggedUserSlice";
 import { loginApi } from "./auth/loginApi";
-import { docksReducer } from "./docks/docksSlice";
-import { docksApi } from "./docks/docksApi";
-import { linesReducer } from "./lines/linesSlice";
-import { linesApi } from "./lines/linesApi";
-import { usersApi } from "./users/usersApi";
-import { usersReducer } from "./users/usersSlice";
 import { logout } from "./auth/logoutActions";
-import { timetableReducer } from "./timetable/timetableSlice";
-import { timetableApi } from "./timetable/timetableApi";
+import { api } from "./api";
 
 const appReducer = combineReducers({
   loggedUser: loggedUserReducer,
-  docks: docksReducer,
-  lines: linesReducer,
-  users: usersReducer,
-  timetable: timetableReducer,
   [loginApi.reducerPath]: loginApi.reducer,
-  [docksApi.reducerPath]: docksApi.reducer,
-  [linesApi.reducerPath]: linesApi.reducer,
-  [usersApi.reducerPath]: usersApi.reducer,
-  [timetableApi.reducerPath]: timetableApi.reducer,
+  [api.reducerPath]: api.reducer,
 });
 
 const rootReducer = (
@@ -38,12 +24,7 @@ export const store = configureStore({
   devTools: process.env.NODE_ENV === "development" ? true : false,
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware()
-      .concat(timetableApi.middleware)
-      .concat(loginApi.middleware)
-      .concat(docksApi.middleware)
-      .concat(linesApi.middleware)
-      .concat(usersApi.middleware),
+    getDefaultMiddleware().concat(api.middleware).concat(loginApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

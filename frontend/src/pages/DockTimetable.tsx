@@ -5,7 +5,7 @@
 
 import { Fragment } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import { useGetTimetableQuery } from "../redux/timetable/timetableApi";
+
 import { IDepartureForTimetable } from "../../../types";
 import Typography from "@mui/material/Typography";
 import TableContainer from "@mui/material/TableContainer";
@@ -17,7 +17,7 @@ import Stack from "@mui/material/Stack";
 import dayjs from "dayjs";
 import TableHead from "@mui/material/TableHead";
 import Paper from "@mui/material/Paper";
-import { useGetDockQuery } from "../redux/docks/docksApi";
+import { useGetDockQuery, useGetTimetableQuery } from "../redux/api";
 
 const InfoCell = ({
   text,

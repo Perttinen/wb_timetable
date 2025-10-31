@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
-import { useGetDocksQuery } from "../redux/docks/docksApi";
+import { useGetDocksQuery } from "../redux/api";
 
 const Timetables = () => {
   const theme = useTheme();

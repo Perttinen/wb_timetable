@@ -23,7 +23,7 @@ const App = () => {
       <Route path="/" element={<Login />} />
       <Route path="/timetables" element={<Timetables />} />
       <Route
-        path="/timetables/:dockName"
+        path="/timetables/:dockId"
         element={<DockTimetable fullwidth={true} />}
       />
       {/* Logged user routes */}

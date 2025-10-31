@@ -18,8 +18,6 @@ const NavLayout = () => {
     }
   }, [data, loggedUser, token, dispatch]);
 
-  // useInitialize();
-
   return (
     <div>
       <Navbar />

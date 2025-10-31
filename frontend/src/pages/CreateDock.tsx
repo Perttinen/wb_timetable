@@ -8,7 +8,7 @@ import {
 import * as Yup from "yup";
 import { useNavigate } from "react-router";
 import { IDockname } from "../../../types";
-import { useAddDockMutation } from "../redux/docks/docksApi";
+import { useAddDockMutation } from "../redux/api";
 
 const CreateDock = () => {
   const navigate = useNavigate();

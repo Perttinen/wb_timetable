@@ -15,6 +15,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl: "/api",
   prepareHeaders: (headers) => {
     const skipAuth = headers.get("X-Skip-Auth") === "true";
+
     if (!skipAuth) {
       const token = localStorage.getItem("token");
       if (token) {

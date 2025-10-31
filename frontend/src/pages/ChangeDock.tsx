@@ -1,8 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  useChangeDockMutation,
-  useGetDockQuery,
-} from "../redux/docks/docksApi";
+
 import {
   FormGroupContainer,
   FormMainContainer,
@@ -11,6 +8,7 @@ import {
 } from "../components/SmallOnes";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
+import { useChangeDockMutation, useGetDockQuery } from "../redux/api";
 
 const ChangeDock = () => {
   const { dockId } = useParams<{ dockId: string }>();

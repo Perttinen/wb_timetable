@@ -37,7 +37,7 @@ const getAllDocks = asyncHandler(async (_req, res: Response<IDock[]>) => {
 });
 
 const getDock = asyncHandler(async (req, res: Response<IDock>) => {
-  const id = Number(req.params.id);
+  const id = req.params.id;
   const dock = await Dock.findByPk(id);
   if (!dock) {
     throwNotFound(`dock ${id} not found`);

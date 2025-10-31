@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useNavigate } from "react-router-dom";
-import { useGetDocksQuery } from "../redux/docks/docksApi";
+import { useGetDocksQuery } from "../redux/api";
 
 const Docks = () => {
   const theme = useTheme();
