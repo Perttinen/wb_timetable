@@ -1,14 +1,19 @@
 import { useNavigate, useParams } from "react-router-dom";
 
 import {
+  FormButtons,
   FormGroupContainer,
   FormMainContainer,
   FormTextField,
-  SaveAndCancelButtons,
 } from "../components/SmallOnes";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { useChangeDockMutation, useGetDockQuery } from "../redux/api";
+import {
+  useChangeDockMutation,
+  useDeleteDockMutation,
+  useGetDockQuery,
+} from "../redux/api";
+import { Button } from "@mui/material";
 
 const ChangeDock = () => {
   const { dockId } = useParams<{ dockId: string }>();
@@ -27,9 +32,9 @@ const ChangeDock = () => {
 
   const dockName = dock ? dock.name : "";
 
-  const initialValues = {
-    name: dockName,
-  };
+  // const initialValues = {
+  //   name: dockName,
+  // };
 
   const handleSubmit = async (values: { name: string | null }) => {
     console.log("sub");
@@ -48,12 +53,45 @@ const ChangeDock = () => {
     console.log(values);
   };
 
+  const [deleteDock, { error }] = useDeleteDockMutation();
+  const handleDelete = async () => {
+    try {
+      if (dock?.id) {
+        const res = await deleteDock(dock.id).unwrap();
+        console.log("res: ", res);
+
+        void navigate("/logged/docks");
+      }
+    } catch (e) {
+      // e is likely a FetchBaseQueryError or SerializedError
+      if (
+        typeof e === "object" &&
+        e !== null &&
+        "data" in e &&
+        typeof e.data === "object" &&
+        e.data !== null &&
+        "error" in e.data &&
+        typeof e.data.error === "object"
+      ) {
+        const { name, message } = e.data.error as {
+          name: string;
+          message: string;
+        };
+        console.error(`Delete failed [${name}]: ${message}`);
+      } else {
+        console.error("Unexpected error:", e);
+      }
+    }
+  };
+
   return (
     <>
       {!isLoading && dock ? (
         <FormMainContainer>
           <Formik
-            initialValues={initialValues}
+            initialValues={{
+              name: dock.name,
+            }}
             validationSchema={dockSchema}
             onSubmit={handleSubmit}
             enableReinitialize={true}
@@ -62,9 +100,11 @@ const ChangeDock = () => {
               <FormGroupContainer>
                 <FormTextField label="" name="name" type="inputLabel" />
               </FormGroupContainer>
-              <SaveAndCancelButtons
-                submitLabel="create"
+              <FormButtons
+                buttons={["cancel", "delete", "save"]}
+                submitLabel="save"
                 onCancel={() => navigate("/logged/docks")}
+                onDelete={handleDelete}
               />
             </Form>
           </Formik>

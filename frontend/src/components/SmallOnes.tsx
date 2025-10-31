@@ -253,24 +253,40 @@ const FormDatePicker = <T,>(props: FormTimeOrDatePickerProps<T>) => {
 //   );
 // };
 
-type SaveAndCancelButtonsPropsType = {
-  onCancel: (val: boolean) => void;
+type FormButtonsPropsType = {
+  onCancel?: (val: boolean) => void;
+  onDelete?: (val: boolean) => void;
   submitLabel: string;
+  buttons: Array<"cancel" | "delete" | "save">;
 };
 
-const SaveAndCancelButtons = (props: SaveAndCancelButtonsPropsType) => {
+const FormButtons = (props: FormButtonsPropsType) => {
+  const { buttons, submitLabel, onCancel, onDelete } = props;
   return (
     <Box display={"flex"} flexDirection={"row"} justifyContent={"space-evenly"}>
-      <Button variant="contained" type="submit">
-        {props.submitLabel}
-      </Button>
-      <Button
-        onClick={() => props.onCancel(false)}
-        variant="contained"
-        type="reset"
-      >
-        close
-      </Button>
+      {props.buttons.includes("delete") && onDelete && (
+        <Button
+          onClick={() => onDelete(false)}
+          variant="contained"
+          type="button"
+        >
+          delete
+        </Button>
+      )}
+      {buttons.includes("cancel") && onCancel && (
+        <Button
+          onClick={() => onCancel(false)}
+          variant="contained"
+          type="reset"
+        >
+          cancel
+        </Button>
+      )}
+      {buttons.includes("save") && (
+        <Button variant="contained" type="submit">
+          {submitLabel}
+        </Button>
+      )}
     </Box>
   );
 };
@@ -309,7 +325,7 @@ export {
   FormTimePicker,
   FormDatePicker,
   FormMainContainer,
-  SaveAndCancelButtons,
+  FormButtons,
   TextButton,
   TopButtons,
 };

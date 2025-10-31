@@ -10,7 +10,7 @@ import {
   FormTextField,
   FormGroupContainer,
   FormMainContainer,
-  SaveAndCancelButtons,
+  FormButtons,
 } from "../components/SmallOnes";
 import {
   useAddLineMutation,
@@ -196,8 +196,9 @@ const CreateLine = () => {
                         selectValue="id"
                       />
                     </FormGroupContainer>
-                    <SaveAndCancelButtons
-                      submitLabel="create"
+                    <FormButtons
+                      buttons={["cancel", "save"]}
+                      submitLabel="save"
                       onCancel={() => navigate("/logged/lines")}
                     />
                   </Form>

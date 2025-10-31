@@ -16,7 +16,7 @@ interface IDock {
 export const api = createApi({
   reducerPath: "api",
   baseQuery: apiQuery,
-  tagTypes: ["Dock", "Timetable"],
+  tagTypes: ["GetDocks", "GetDock", "Timetable"],
   endpoints: (builder) => ({
     // DOCK
     getDocks: builder.query<IDock[], void>({
@@ -24,13 +24,14 @@ export const api = createApi({
         url: "/dock/",
         method: "GET",
       }),
-      providesTags: ["Dock"],
+      providesTags: ["GetDocks"],
     }),
     deleteDock: builder.mutation<void, number>({
       query: (id) => ({
         url: `/dock/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["GetDocks", "Timetable"],
     }),
     addDock: builder.mutation<IDock, IDockname>({
       query: (newDock) => ({
@@ -38,7 +39,7 @@ export const api = createApi({
         method: "POST",
         body: newDock,
       }),
-      invalidatesTags: ["Dock"],
+      invalidatesTags: ["GetDocks"],
     }),
     changeDock: builder.mutation<IDock, IDock>({
       query: (Dock) => ({
@@ -46,7 +47,7 @@ export const api = createApi({
         method: "PATCH",
         body: Dock,
       }),
-      invalidatesTags: ["Dock", "Timetable"],
+      invalidatesTags: ["GetDocks", "GetDock", "Timetable"],
     }),
 
     getDock: builder.query<IDock, number>({
@@ -54,6 +55,7 @@ export const api = createApi({
         url: `/dock/${id}`,
         method: "GET",
       }),
+      providesTags: ["GetDock"],
     }),
     //TIMETABLE
     getTimetable: builder.query<IDepartureForTimetable[], string>({

@@ -23,6 +23,7 @@ function Navbar() {
   const loggedUser = useAppSelector((state) => state.loggedUser.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const getPagesByUserlevels = (userlevels: string[]) => {
     const pagesToShow = [];
@@ -52,7 +53,7 @@ function Navbar() {
     { label: "Profile", function: () => showProfile() },
     { label: "Logout", function: () => handleLogout() },
   ];
-  const theme = useTheme();
+
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -157,12 +158,17 @@ function Navbar() {
           >
             LOGO
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          {/* <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{
+                  my: 2,
+                  color: "white",
+                  display: "block",
+                  bgcolor: "purple",
+                }}
               >
                 <Link
                   style={{ textDecoration: "none", color: "white" }}
@@ -172,6 +178,37 @@ function Navbar() {
                 </Link>
               </Button>
             ))}
+          </Box> */}
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {pages.map((page) => {
+              const isActive = location.pathname === `/logged/${page}`;
+              return (
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    my: 2,
+                    bgcolor: isActive
+                      ? theme.palette.primary.dark
+                      : theme.palette.primary.main,
+                    fontWeight: isActive ? "bold" : "normal",
+                    borderBottom: isActive ? "blue" : "none",
+                    display: "block",
+                    color: "white",
+                  }}
+                >
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                    to={`/logged/${page}`}
+                  >
+                    {page}
+                  </Link>
+                </Button>
+              );
+            })}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

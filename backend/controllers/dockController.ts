@@ -32,7 +32,19 @@ const deleteDock = asyncHandler(async (req, res) => {
 });
 
 const getAllDocks = asyncHandler(async (_req, res: Response<IDock[]>) => {
-  const docks: IDock[] = (await Dock.findAll({})).map((d) => d.toJSON());
+  const docks: IDock[] = (await Dock.findAll({}))
+    .map((d) => d.toJSON())
+    .sort((a, b) => {
+      const nameA = a.name.toUpperCase();
+      const nameB = b.name.toUpperCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
   res.status(200).json(docks);
 });
 

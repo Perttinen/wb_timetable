@@ -3,6 +3,7 @@ import {
   FetchArgs,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
+import { showSnackbar } from "../components/snackbarProvider";
 
 interface IServerError {
   error: {
@@ -34,9 +35,12 @@ export const apiQuery = async (
   const result = await baseQuery(args, api, extraOptions);
 
   if ("error" in result && result.error) {
-    const { data } = result.error;
+    const { data, status } = result.error;
     const errorData = data as IServerError;
-    console.error(errorData.error);
+    const name = errorData?.error?.name || "Error";
+    const message = errorData?.error?.message || "Unexpected server error";
+    console.error(`[${status}] ${name}: ${message}`);
+    showSnackbar(`${name}: ${message}`);
   }
 
   return result;
