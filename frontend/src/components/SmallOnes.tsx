@@ -1,6 +1,6 @@
 import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
-import { Field, useField } from "formik";
-import { DatePicker, TimePicker } from "@mui/x-date-pickers";
+import { useField } from "formik";
+
 import { PropsWithChildren } from "react";
 
 type TextButtonProps = {
@@ -170,31 +170,31 @@ const FormSelect = <T extends object>(props: FormSelectProps<T>) => {
   );
 };
 
-type FormTimeOrDatePickerProps<T> = {
-  name: string;
-  label: string;
-  setFieldValue: (field: string, value: T, shouldValidate?: boolean) => void;
-};
+// type FormTimeOrDatePickerProps<T> = {
+//   name: string;
+//   label: string;
+//   setFieldValue: (field: string, value: T, shouldValidate?: boolean) => void;
+// };
 
-const FormTimePicker = <T,>(props: FormTimeOrDatePickerProps<T>) => {
-  const [field] = useField(props);
+// const FormTimePicker = <T,>(props: FormTimeOrDatePickerProps<T>) => {
+//   const [field] = useField(props);
 
-  return (
-    <Field name={props.name}>
-      {() => (
-        <TimePicker
-          label={props.label}
-          value={field.value as T}
-          onChange={(newValue: T | null) => {
-            if (newValue) {
-              props.setFieldValue(props.name, newValue);
-            }
-          }}
-        />
-      )}
-    </Field>
-  );
-};
+//   return (
+//     <Field name={props.name}>
+//       {() => (
+//         <TimePicker
+//           label={props.label}
+//           value={field.value as T}
+//           onChange={(newValue: T | null) => {
+//             if (newValue) {
+//               props.setFieldValue(props.name, newValue);
+//             }
+//           }}
+//         />
+//       )}
+//     </Field>
+//   );
+// };
 // type FormTimeOrDatePickerProps = {
 //   name: string;
 //   label: string;
@@ -218,24 +218,24 @@ const FormTimePicker = <T,>(props: FormTimeOrDatePickerProps<T>) => {
 //   );
 // };
 
-const FormDatePicker = <T,>(props: FormTimeOrDatePickerProps<T>) => {
-  const [field] = useField(props);
-  return (
-    <Field name={props.name}>
-      {() => (
-        <DatePicker
-          label={props.label}
-          value={field.value as T}
-          onChange={(newValue: T | null): void => {
-            if (newValue) {
-              props.setFieldValue(props.name, newValue);
-            }
-          }}
-        />
-      )}
-    </Field>
-  );
-};
+// const FormDatePicker = <T,>(props: FormTimeOrDatePickerProps<T>) => {
+//   const [field] = useField(props);
+//   return (
+//     <Field name={props.name}>
+//       {() => (
+//         <DatePicker
+//           label={props.label}
+//           value={field.value as T}
+//           onChange={(newValue: T | null): void => {
+//             if (newValue) {
+//               props.setFieldValue(props.name, newValue);
+//             }
+//           }}
+//         />
+//       )}
+//     </Field>
+//   );
+// };
 // const FormDatePicker = (props: FormTimeOrDatePickerProps) => {
 //   const [field] = useField(props);
 //   return (
@@ -253,24 +253,40 @@ const FormDatePicker = <T,>(props: FormTimeOrDatePickerProps<T>) => {
 //   );
 // };
 
-type SaveAndCancelButtonsPropsType = {
-  onCancel: (val: boolean) => void;
+type FormButtonsPropsType = {
+  onCancel?: (val: boolean) => void;
+  onDelete?: (val: boolean) => void;
   submitLabel: string;
+  buttons: Array<"cancel" | "delete" | "save">;
 };
 
-const SaveAndCancelButtons = (props: SaveAndCancelButtonsPropsType) => {
+const FormButtons = (props: FormButtonsPropsType) => {
+  const { buttons, submitLabel, onCancel, onDelete } = props;
   return (
     <Box display={"flex"} flexDirection={"row"} justifyContent={"space-evenly"}>
-      <Button variant="contained" type="submit">
-        {props.submitLabel}
-      </Button>
-      <Button
-        onClick={() => props.onCancel(false)}
-        variant="contained"
-        type="reset"
-      >
-        close
-      </Button>
+      {props.buttons.includes("delete") && onDelete && (
+        <Button
+          onClick={() => onDelete(false)}
+          variant="contained"
+          type="button"
+        >
+          delete
+        </Button>
+      )}
+      {buttons.includes("cancel") && onCancel && (
+        <Button
+          onClick={() => onCancel(false)}
+          variant="contained"
+          type="reset"
+        >
+          cancel
+        </Button>
+      )}
+      {buttons.includes("save") && (
+        <Button variant="contained" type="submit">
+          {submitLabel}
+        </Button>
+      )}
     </Box>
   );
 };
@@ -306,10 +322,10 @@ export {
   FormGroupContainer,
   FormTextField,
   FormSelect,
-  FormTimePicker,
-  FormDatePicker,
+  // FormTimePicker,
+  // FormDatePicker,
   FormMainContainer,
-  SaveAndCancelButtons,
+  FormButtons,
   TextButton,
   TopButtons,
 };

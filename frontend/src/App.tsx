@@ -15,6 +15,9 @@ import ChangeLine from "./pages/ChangeLine";
 import CreateLine from "./pages/CreateLine";
 import CreateDock from "./pages/CreateDock";
 import ChangeDock from "./pages/ChangeDock";
+import RemoveStarts from "./pages/RemoveStarts";
+import AddOneStart from "./pages/AddOneStart";
+import AddManyStarts from "./pages/AddManyStarts";
 
 const App = () => {
   return (
@@ -31,6 +34,18 @@ const App = () => {
         <Route element={<LoggedLayout preferredUserlevel="user" />}>
           <Route path="/logged/schedule" element={<Schedule />} />
           <Route path="/logged/schedule/:lineId" element={<ScheduleLine />} />
+          <Route
+            path="/logged/schedule/addone/:lineId"
+            element={<AddOneStart />}
+          />
+          <Route
+            path="/logged/schedule/addmany/:lineId"
+            element={<AddManyStarts />}
+          />
+          <Route
+            path="/logged/schedule/remove/:lineId"
+            element={<RemoveStarts />}
+          />
           <Route path="/logged/timetables" element={<Timetables />} />
           <Route
             path="/logged/timetables/:dockId"

@@ -7,6 +7,7 @@ import {
   IDepartureForTimetable,
   IDock,
   IFormattedLine,
+  IInputDeparture,
 } from "../../types";
 import { throwNotFound, throwValidationError } from "../util/errorThrowers";
 
@@ -48,13 +49,11 @@ const formatLines = (input: IFormatLinesEntry): IFormattedLine[] => {
   return formattedLines;
 };
 
-interface IInputDeparture {
-  lineId: number;
-  start: Date;
-}
-
 const createDeparture = asyncHandler(
-  async (req: Request<unknown, unknown, IInputDeparture>, res: Response) => {
+  async (
+    req: Request<unknown, unknown, IInputDeparture>,
+    res: Response<IDeparture>
+  ) => {
     const { lineId, start } = req.body;
     if (!lineId || !start) {
       throwValidationError("lineId and start are required");

@@ -23,12 +23,13 @@ function Navbar() {
   const loggedUser = useAppSelector((state) => state.loggedUser.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const getPagesByUserlevels = (userlevels: string[]) => {
     const pagesToShow = [];
     if (userlevels.includes("user"))
-      pagesToShow.push("Timetables", "Schedule", "Docks", "Lines");
-    if (userlevels.includes("admin")) pagesToShow.push("Users");
+      pagesToShow.push("timetables", "schedule", "docks", "lines");
+    if (userlevels.includes("admin")) pagesToShow.push("users");
     return pagesToShow;
   };
 
@@ -52,7 +53,7 @@ function Navbar() {
     { label: "Profile", function: () => showProfile() },
     { label: "Logout", function: () => handleLogout() },
   ];
-  const theme = useTheme();
+
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -158,20 +159,35 @@ function Navbar() {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                <Link
-                  style={{ textDecoration: "none", color: "white" }}
-                  to={`/logged/${page}`}
+            {pages.map((page) => {
+              const isActive = location.pathname.includes(page);
+              return (
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    my: 2,
+                    bgcolor: isActive
+                      ? theme.palette.primary.dark
+                      : theme.palette.primary.main,
+                    fontWeight: isActive ? "bold" : "normal",
+                    borderBottom: isActive ? "blue" : "none",
+                    display: "block",
+                    color: "white",
+                  }}
                 >
-                  {page}
-                </Link>
-              </Button>
-            ))}
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                    to={`/logged/${page}`}
+                  >
+                    {page}
+                  </Link>
+                </Button>
+              );
+            })}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

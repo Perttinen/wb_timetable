@@ -66,6 +66,11 @@ export interface IFormattedLine {
   via: string[];
 }
 
+export interface IInputDeparture {
+  lineId: number;
+  start: Date;
+}
+
 export interface IJsonSafeUser extends IUser {
   token: string;
   id: number;

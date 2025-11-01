@@ -1,9 +1,9 @@
 import { Form, Formik } from "formik";
 import {
+  FormButtons,
   FormGroupContainer,
   FormMainContainer,
   FormTextField,
-  SaveAndCancelButtons,
 } from "../components/SmallOnes";
 import * as Yup from "yup";
 import { useNavigate } from "react-router";
@@ -48,8 +48,9 @@ const CreateDock = () => {
           <FormGroupContainer>
             <FormTextField label="name" name="name" />
           </FormGroupContainer>
-          <SaveAndCancelButtons
-            submitLabel="create"
+          <FormButtons
+            buttons={["cancel", "save"]}
+            submitLabel="save"
             onCancel={() => navigate("/logged/docks")}
           />
         </Form>

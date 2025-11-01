@@ -1,0 +1,69 @@
+import { DateTimePicker } from "@mui/x-date-pickers";
+import dayjs, { Dayjs } from "dayjs";
+import { Field, Form, Formik } from "formik";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAddDepartureMutation } from "../redux/api";
+
+import {
+  FormGroupContainer,
+  FormMainContainer,
+  FormButtons,
+} from "../components/SmallOnes";
+
+const AddOneStart = () => {
+  const navigate = useNavigate();
+  const { lineId } = useParams<{ lineId: string }>();
+  const [addDeparture] = useAddDepartureMutation();
+
+  interface FormValues {
+    start: Dayjs;
+    lineId: number | "";
+  }
+
+  const initialValues: FormValues = {
+    start: dayjs(),
+    lineId: Number(lineId),
+  };
+
+  const handleSubmit = async (values: FormValues) => {
+    const parsedValues = {
+      start: values.start.toDate(),
+      lineId: Number(values.lineId),
+    };
+
+    await addDeparture(parsedValues);
+    void navigate("/logged/schedule");
+    console.log(parsedValues);
+  };
+
+  return (
+    <FormMainContainer>
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+        {({ setFieldValue, values }) => (
+          <Form>
+            <FormGroupContainer>
+              <Field name="start">
+                {() => (
+                  <DateTimePicker
+                    label="Departure Time"
+                    value={values.start}
+                    onChange={(newValue): void => {
+                      void setFieldValue("start", newValue);
+                    }}
+                  />
+                )}
+              </Field>
+            </FormGroupContainer>
+            <FormButtons
+              submitLabel="create"
+              onCancel={() => navigate("/logged/schedule")}
+              buttons={["save", "cancel"]}
+            />
+          </Form>
+        )}
+      </Formik>
+    </FormMainContainer>
+  );
+};
+
+export default AddOneStart;
