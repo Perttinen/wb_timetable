@@ -1,7 +1,9 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import {
+  IDeparture,
   IDepartureForTimetable,
   IDockname,
+  IInputDeparture,
   IJsonUserFlattenedLevels,
   ILineReturnable,
   ILineToAdd,
@@ -57,13 +59,21 @@ export const api = createApi({
       }),
       providesTags: ["GetDock"],
     }),
-    //TIMETABLE
+    //DEPARTURE
     getTimetable: builder.query<IDepartureForTimetable[], string>({
       query: (dockId) => ({
         url: `/departure/timetable/${dockId}`,
         method: "GET",
       }),
       providesTags: ["Timetable"],
+    }),
+    addDeparture: builder.mutation<IDeparture, IInputDeparture>({
+      query: (newDeparture) => ({
+        url: "/departure",
+        method: "POST",
+        body: newDeparture,
+      }),
+      invalidatesTags: ["Timetable"],
     }),
     //LINE
     getLines: builder.query<ILineReturnable[], void>({
@@ -99,6 +109,7 @@ export const {
   useGetDockQuery,
   useChangeDockMutation,
   useGetTimetableQuery,
+  useAddDepartureMutation,
   useAddLineMutation,
   useGetLinesQuery,
   useGetLineQuery,

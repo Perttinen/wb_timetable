@@ -28,8 +28,8 @@ function Navbar() {
   const getPagesByUserlevels = (userlevels: string[]) => {
     const pagesToShow = [];
     if (userlevels.includes("user"))
-      pagesToShow.push("Timetables", "Schedule", "Docks", "Lines");
-    if (userlevels.includes("admin")) pagesToShow.push("Users");
+      pagesToShow.push("timetables", "schedule", "docks", "lines");
+    if (userlevels.includes("admin")) pagesToShow.push("users");
     return pagesToShow;
   };
 
@@ -158,30 +158,9 @@ function Navbar() {
           >
             LOGO
           </Typography>
-          {/* <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{
-                  my: 2,
-                  color: "white",
-                  display: "block",
-                  bgcolor: "purple",
-                }}
-              >
-                <Link
-                  style={{ textDecoration: "none", color: "white" }}
-                  to={`/logged/${page}`}
-                >
-                  {page}
-                </Link>
-              </Button>
-            ))}
-          </Box> */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => {
-              const isActive = location.pathname === `/logged/${page}`;
+              const isActive = location.pathname.includes(page);
               return (
                 <Button
                   key={page}

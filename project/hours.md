@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 110
+#### total hours 112
+
+1.11.2025 AddOneStart applied in scheduling. Hours: 2, Total: 112
 
 31.10.2025 Small improvements + snackbarProvider and snackbar errors for apiQuery. Hours 2,5, Total: 110
 
