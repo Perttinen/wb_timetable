@@ -64,6 +64,18 @@ const createDeparture = asyncHandler(
   }
 );
 
+const createManyDepartures = asyncHandler(
+  async (
+    req: Request<unknown, unknown, IInputDeparture[]>,
+    res: Response<IDeparture[]>
+  ) => {
+    const departures = req.body;
+
+    const response = await Departure.bulkCreate(departures);
+    res.status(200).json(response);
+  }
+);
+
 const getAllDepartures = asyncHandler(async (_req: Request, res: Response) => {
   const departures: Departure[] = (await Departure.findAll({})).map((d) =>
     d.toJSON()
@@ -164,6 +176,7 @@ const get20DeparturesByDockName = asyncHandler(
 
 export default {
   createDeparture,
+  createManyDepartures,
   getAllDepartures,
   get20DeparturesByDockName,
   getDeparturesByLineId,

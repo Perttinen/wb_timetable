@@ -13,6 +13,7 @@ import {
   useDeleteDockMutation,
   useGetDockQuery,
 } from "../redux/api";
+import { showSnackbar } from "../components/SnackbarProvider";
 
 const ChangeDock = () => {
   const { dockId } = useParams<{ dockId: string }>();
@@ -21,6 +22,7 @@ const ChangeDock = () => {
   const navigate = useNavigate();
 
   const [changeDock] = useChangeDockMutation();
+  const [deleteDock] = useDeleteDockMutation();
 
   const dockSchema = Yup.object().shape({
     name: Yup.string()
@@ -31,32 +33,27 @@ const ChangeDock = () => {
 
   const handleSubmit = async (values: { name: string | null }) => {
     console.log("sub");
-
-    try {
-      if (typeof values.name === "string" && dock) {
-        await changeDock({
-          name: values.name,
-          id: dock.id,
-        });
+    if (typeof values.name === "string" && dock) {
+      const result = await changeDock({
+        name: values.name,
+        id: dock.id,
+      });
+      if (!("error" in result)) {
+        const message = `dock ${dock.name} changed to ${values.name}`;
+        showSnackbar({ message, severity: "success" });
         void navigate("/logged/docks");
       }
-    } catch (err) {
-      console.error("Failed to change dock", err);
     }
-    console.log(values);
   };
 
-  const [deleteDock] = useDeleteDockMutation();
   const handleDelete = async () => {
-    try {
-      if (dock?.id) {
-        const res = await deleteDock(dock.id).unwrap();
-        console.log("res: ", res);
-
+    if (dock?.id) {
+      const result = await deleteDock(dock.id);
+      if (!("error" in result)) {
+        const message = `dock ${dock.name} deleted`;
+        showSnackbar({ message, severity: "success" });
         void navigate("/logged/docks");
       }
-    } catch (e) {
-      console.error("Unexpected error:", e);
     }
   };
 

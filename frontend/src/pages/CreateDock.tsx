@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router";
 import { IDockname } from "../../../types";
 import { useAddDockMutation } from "../redux/api";
+import { showSnackbar } from "../components/SnackbarProvider";
 
 const CreateDock = () => {
   const navigate = useNavigate();
@@ -25,14 +26,12 @@ const CreateDock = () => {
   const initialValues = {
     name: "",
   };
-
   const handleSubmit = async (values: IDockname) => {
-    console.log(values.name);
-    try {
-      await addDock(values);
+    const result = await addDock(values).unwrap();
+    if (result) {
+      const message = `dock ${values.name} created`;
+      showSnackbar({ message, severity: "success" });
       void navigate("/logged/docks");
-    } catch (err) {
-      console.error("Failed to add dock", err);
     }
   };
 

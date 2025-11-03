@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 112
+#### total hours 120
+
+3.11.2025 AddManyStarts applied in scheduling & backend. Hours: 8, Total: 120
 
 1.11.2025 AddOneStart applied in scheduling. Hours: 2, Total: 112
 

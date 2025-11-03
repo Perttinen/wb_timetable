@@ -68,10 +68,18 @@ export const api = createApi({
       providesTags: ["Timetable"],
     }),
     addDeparture: builder.mutation<IDeparture, IInputDeparture>({
-      query: (newDeparture) => ({
-        url: "/departure",
+      query: (addDeparture) => ({
+        url: "/departure/addOne",
         method: "POST",
-        body: newDeparture,
+        body: addDeparture,
+      }),
+      invalidatesTags: ["Timetable"],
+    }),
+    addManyDepartures: builder.mutation<IDeparture[], IInputDeparture[]>({
+      query: (addManyDepartures) => ({
+        url: "/departure/addMany",
+        method: "POST",
+        body: addManyDepartures,
       }),
       invalidatesTags: ["Timetable"],
     }),
@@ -110,6 +118,7 @@ export const {
   useChangeDockMutation,
   useGetTimetableQuery,
   useAddDepartureMutation,
+  useAddManyDeparturesMutation,
   useAddLineMutation,
   useGetLinesQuery,
   useGetLineQuery,
