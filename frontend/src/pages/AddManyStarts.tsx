@@ -1,4 +1,11 @@
-import { Alert, Box, Button, Snackbar, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Snackbar,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import { Field, FieldArray, Form, Formik } from "formik";
 import { useState } from "react";
@@ -12,15 +19,16 @@ import {
 } from "../components/SmallOnes";
 import { IInputDeparture } from "../../../types";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAddManyDeparturesMutation } from "../redux/api";
+import { useAddManyDeparturesMutation, useGetLineQuery } from "../redux/api";
 import { showSnackbar } from "../components/SnackbarProvider";
 
 const AddManyStarts = () => {
   const { lineId } = useParams<{ lineId: string }>();
   const [successMsg, setSuccessMsg] = useState("");
   const navigate = useNavigate();
+  const theme = useTheme();
   const [addDepartures] = useAddManyDeparturesMutation();
-
+  const { data: line, isLoading } = useGetLineQuery(Number(lineId));
   const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
   interface FormValues {
@@ -74,6 +82,35 @@ const AddManyStarts = () => {
 
   return (
     <>
+      {!isLoading && line && (
+        <Box
+          width={"100%"}
+          justifySelf={"center"}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+
+            padding: "5px",
+
+            backgroundColor: "white",
+            maxWidth: "md",
+            color: theme.palette.primary.main,
+            alignContent: "center",
+          }}
+        >
+          <Typography sx={{ fontSize: "1rem", fontWeight: "bold" }}>
+            {line.startDock.name} - {line.endDock.name}
+          </Typography>
+          <Typography sx={{ fontSize: "0.8rem" }}>
+            {line.stopDocks?.length
+              ? `via: ${line.stopDocks
+                  .map((stopDock) => stopDock.name)
+                  .join(" | ")}`
+              : "\u00A0"}
+          </Typography>
+        </Box>
+      )}
       <FormMainContainer>
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           {(props) => (

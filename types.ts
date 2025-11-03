@@ -17,23 +17,6 @@ export interface IBigLine {
   }[];
 }
 
-export interface ILineReturnable {
-  id: number;
-  startDock: {
-    name: string;
-    id: number;
-  };
-  endDock: {
-    name: string;
-    id: number;
-  };
-  stopDocks: {
-    name: string;
-    id: number;
-    delayFromStart: number;
-  }[];
-}
-
 export interface ICreateUserEntry extends IUser {
   password: string;
   userlevel?: string[];
@@ -115,17 +98,40 @@ export interface IJsonUserPw extends IJsonUser {
   password: string;
 }
 
+export interface ILine {
+  id: number;
+  startDockId: number;
+  endDockId: number;
+}
+
+export interface ILineReturnable {
+  id: number;
+  startDock: {
+    name: string;
+    id: number;
+  };
+  endDock: {
+    name: string;
+    id: number;
+  };
+  stopDocks: {
+    name: string;
+    id: number;
+    delayFromStart: number;
+  }[];
+}
+
+export interface ILineToAdd {
+  startDockId: number;
+  stops: { dockId: number; delayFromStart: number }[];
+  endDockId: number;
+}
+
 export interface ILineWithStopsArray {
   id: number;
   startDockId: number;
   endDockId: number;
   stops: IStop[];
-}
-
-export interface ILine {
-  id: number;
-  startDockId: number;
-  endDockId: number;
 }
 
 export interface IStop {
@@ -141,10 +147,4 @@ interface IUser {
 export interface IUserlevel {
   id: number;
   userlevel: string;
-}
-
-export interface ILineToAdd {
-  startDockId: number;
-  stops: { dockId: number; delayFromStart: number }[];
-  endDockId: number;
 }
