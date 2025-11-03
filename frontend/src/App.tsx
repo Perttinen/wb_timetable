@@ -19,6 +19,8 @@ import RemoveStarts from "./pages/RemoveStarts";
 import AddOneStart from "./pages/AddOneStart";
 import AddManyStarts from "./pages/AddManyStarts";
 
+//Testing ci pipe
+
 const App = () => {
   return (
     <Routes>
