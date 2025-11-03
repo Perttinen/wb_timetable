@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Snackbar, Alert } from "@mui/material";
+import { Snackbar, Alert, AlertColor } from "@mui/material";
 
-let triggerSnackbar: ((message: string) => void) | null = null;
+interface ISnackbarParams {
+  message: string;
+  severity: AlertColor;
+}
 
-const setSnackbarTrigger = (fn: (message: string) => void) => {
+let triggerSnackbar: ((params: ISnackbarParams) => void) | null = null;
+
+const setSnackbarTrigger = (fn: (params: ISnackbarParams) => void) => {
   triggerSnackbar = fn;
 };
 
-export const showSnackbar = (message: string) => {
+export const showSnackbar = (params: ISnackbarParams) => {
   if (triggerSnackbar) {
-    triggerSnackbar(message);
+    triggerSnackbar(params);
   } else {
     console.warn("Snackbar trigger not set");
   }
@@ -22,10 +27,27 @@ export const SnackbarProvider = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState<AlertColor>("info");
+  const [autoHideDuration, setAutoHideDuration] = useState(1000);
 
   useEffect(() => {
-    setSnackbarTrigger((msg: string) => {
-      setMessage(msg);
+    setSnackbarTrigger((params: ISnackbarParams) => {
+      setMessage(params.message);
+      setSeverity(params.severity);
+      switch (params.severity) {
+        case "error":
+          setAutoHideDuration(15000);
+          break;
+        case "warning":
+          setAutoHideDuration(15000);
+          break;
+        case "info":
+          setAutoHideDuration(5000);
+          break;
+        case "success":
+          setAutoHideDuration(5000);
+          break;
+      }
       setOpen(true);
     });
   }, []);
@@ -35,11 +57,11 @@ export const SnackbarProvider = ({
       {children}
       <Snackbar
         open={open}
-        autoHideDuration={5000}
+        autoHideDuration={autoHideDuration}
         onClose={() => setOpen(false)}
       >
         <Alert
-          severity="error"
+          severity={severity}
           onClose={() => setOpen(false)}
           sx={{ width: "100%" }}
         >

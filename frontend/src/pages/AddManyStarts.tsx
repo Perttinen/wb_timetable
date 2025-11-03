@@ -1,8 +1,202 @@
-import { useParams } from "react-router-dom";
+import { Alert, Box, Button, Snackbar, Typography } from "@mui/material";
+import dayjs, { Dayjs } from "dayjs";
+import { Field, FieldArray, Form, Formik } from "formik";
+import { useState } from "react";
+
+import {
+  FormDatePicker,
+  FormMainContainer,
+  FormTimePicker,
+  FormGroupContainer,
+  FormButtons,
+} from "../components/SmallOnes";
+import { IInputDeparture } from "../../../types";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAddManyDeparturesMutation } from "../redux/api";
+import { showSnackbar } from "../components/SnackbarProvider";
 
 const AddManyStarts = () => {
   const { lineId } = useParams<{ lineId: string }>();
-  return <>add many to {lineId}</>;
+  const [successMsg, setSuccessMsg] = useState("");
+  const navigate = useNavigate();
+  const [addDepartures] = useAddManyDeparturesMutation();
+
+  const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+
+  interface FormValues {
+    fromDate: Dayjs;
+    toDate: Dayjs;
+    times: Dayjs[];
+    weekdays: [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
+    lineId: number | "";
+  }
+
+  const initialValues: FormValues = {
+    fromDate: dayjs(),
+    toDate: dayjs(),
+    times: [dayjs()],
+    weekdays: [false, false, false, false, false, false, false],
+    lineId: Number(lineId),
+  };
+
+  const createStartList = (values: FormValues) => {
+    const startArray = [];
+    for (
+      let start = values.fromDate;
+      start.isBefore(values.toDate.add(1, "day"));
+      start = start.add(1, "day")
+    ) {
+      if (values.weekdays[start.subtract(1, "day").day()]) {
+        for (const time of values.times) {
+          const dateTime = start
+            .set("hour", time.hour())
+            .set("minute", time.minute())
+            .set("second", 0);
+          startArray.push({
+            start: dateTime.toDate(),
+            lineId: Number(values.lineId),
+          });
+        }
+      }
+    }
+    return startArray;
+  };
+
+  const handleSubmit = async (values: FormValues) => {
+    const starts: IInputDeparture[] = createStartList(values);
+    const result = await addDepartures(starts);
+    if (result) {
+      const message = `${starts.length} starts successfully added!`;
+      showSnackbar({ message, severity: "success" });
+      void navigate("/logged/schedule");
+    }
+  };
+
+  return (
+    <>
+      <FormMainContainer>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          {(props) => (
+            <Form>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
+              >
+                <FormGroupContainer>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                    }}
+                  >
+                    {days.map((d, i) => (
+                      <Box
+                        key={i}
+                        sx={{ display: "flex", flexDirection: "column" }}
+                      >
+                        <Typography>{d}</Typography>
+                        <Field type="checkbox" name={`weekdays[${i}]`} />
+                      </Box>
+                    ))}
+                  </Box>
+                </FormGroupContainer>
+                <FormGroupContainer>
+                  <Box display={"flex"} flexDirection={"row"}>
+                    <FormDatePicker
+                      name="fromDate"
+                      label="from date"
+                      setFieldValue={props.setFieldValue}
+                    />
+                    <FormDatePicker
+                      name="toDate"
+                      label="to date"
+                      setFieldValue={props.setFieldValue}
+                    />
+                  </Box>
+                </FormGroupContainer>
+                <FormGroupContainer>
+                  <FieldArray name="times">
+                    {(arrayProps) => (
+                      <div>
+                        <Box display={"flex"} flexDirection={"column"}>
+                          {props.values.times.length > 0 &&
+                            props.values.times.map((_p, index) => {
+                              const time = `times[${index}]`;
+                              const fieldLabel = `start ${index + 1}`;
+                              return (
+                                <Box
+                                  key={index}
+                                  display={"flex"}
+                                  flexDirection={"row"}
+                                  justifyContent={"start"}
+                                  alignItems={"start"}
+                                  marginY={"10px"}
+                                >
+                                  <Box
+                                    display={"flex"}
+                                    flexDirection={"column"}
+                                    alignItems={"center"}
+                                  >
+                                    <FormTimePicker
+                                      name={time}
+                                      label={fieldLabel}
+                                      setFieldValue={props.setFieldValue}
+                                    />
+                                    {index ===
+                                      props.values.times.length - 1 && (
+                                      <Button
+                                        onClick={() => arrayProps.push(dayjs())}
+                                        variant="text"
+                                      >
+                                        add more starts
+                                      </Button>
+                                    )}
+                                  </Box>
+                                  {index > 0 && (
+                                    <Button
+                                      onClick={() => arrayProps.remove(index)}
+                                    >
+                                      delete
+                                    </Button>
+                                  )}
+                                </Box>
+                              );
+                            })}
+                          <Box
+                            display={"flex"}
+                            flexDirection={"row"}
+                            justifyContent={"center"}
+                          ></Box>
+                        </Box>
+                      </div>
+                    )}
+                  </FieldArray>
+                </FormGroupContainer>
+                <FormButtons
+                  buttons={["save", "cancel"]}
+                  submitLabel="create"
+                  onCancel={() => navigate("/logged/schedule")}
+                />
+              </Box>
+            </Form>
+          )}
+        </Formik>
+      </FormMainContainer>
+      <Snackbar
+        open={successMsg !== ""}
+        autoHideDuration={4000}
+        onClose={() => {
+          setSuccessMsg("");
+        }}
+      >
+        <Alert severity="success">{successMsg}</Alert>
+      </Snackbar>
+    </>
+  );
 };
 
 export default AddManyStarts;

@@ -29,7 +29,7 @@ const Lines = () => {
             alignItems: "flex-center",
           }}
         >
-          add one
+          add one start
         </Button>
         <Button
           onClick={handleAddManyStarts}
@@ -41,7 +41,7 @@ const Lines = () => {
             alignItems: "flex-center",
           }}
         >
-          add many
+          add many starts
         </Button>
       </Box>
       <Box display={"flex"} flexDirection={"column"} gap={2} sx={{ margin: 2 }}>
@@ -55,7 +55,7 @@ const Lines = () => {
             alignItems: "flex-center",
           }}
         >
-          remove
+          remove starts
         </Button>
       </Box>
     </Box>

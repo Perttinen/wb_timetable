@@ -5,7 +5,10 @@ import departures from "../controllers/departureController";
 import { authorizer } from "../util/middleware";
 
 const router = Router();
-router.route("/").post(authorizer("user"), departures.createDeparture);
+router.route("/addone").post(authorizer("user"), departures.createDeparture);
+router
+  .route("/addmany")
+  .post(authorizer("user"), departures.createManyDepartures);
 router.route("/").get(authorizer("user"), departures.getAllDepartures);
 router.route("/timetable/:dockId").get(departures.get20DeparturesByDockName);
 router

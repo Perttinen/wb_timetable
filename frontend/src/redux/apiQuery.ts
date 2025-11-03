@@ -3,14 +3,9 @@ import {
   FetchArgs,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
-import { showSnackbar } from "../components/snackbarProvider";
 
-interface IServerError {
-  error: {
-    name: string;
-    message: string;
-  };
-}
+import { getErrorMessage } from "../utils/getErrorMessage";
+import { showSnackbar } from "../components/SnackbarProvider";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "/api",
@@ -32,16 +27,20 @@ export const apiQuery = async (
   api: BaseQueryApi,
   extraOptions: Record<string, unknown>
 ) => {
-  const result = await baseQuery(args, api, extraOptions);
+  try {
+    const result = await baseQuery(args, api, extraOptions);
 
-  if ("error" in result && result.error) {
-    const { data, status } = result.error;
-    const errorData = data as IServerError;
-    const name = errorData?.error?.name || "Error";
-    const message = errorData?.error?.message || "Unexpected server error";
-    console.error(`[${status}] ${name}: ${message}`);
-    showSnackbar(`${name}: ${message}`);
+    if ("error" in result && result.error) {
+      const message = getErrorMessage(result.error);
+      console.error(`Api error: ${message}`);
+      showSnackbar({ message, severity: "error" });
+      return { error: result.error };
+    }
+    return { data: result.data };
+  } catch (e) {
+    const message = getErrorMessage(e);
+    console.error("Unexpected exception:", message);
+    showSnackbar({ message, severity: "error" });
+    return { error: e };
   }
-
-  return result;
 };

@@ -16,8 +16,6 @@ export const getErrorMessage = (error: unknown): string => {
     const data = (error as FetchBaseQueryError).data as IErrorWithMessage;
     return data?.error?.message || "Tuntematon virhe";
   }
-
-  console.error("TUNTEMATON ERRORI!: ", error, "LISÄÄ getErrorMessage.ts!");
-
+  console.error("TUNTEMATON API ERRORI!: ", error);
   return "Something nasty happened...";
 };
