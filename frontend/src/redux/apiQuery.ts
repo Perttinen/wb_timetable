@@ -2,6 +2,7 @@ import {
   BaseQueryApi,
   FetchArgs,
   fetchBaseQuery,
+  FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
 
 import { getErrorMessage } from "../utils/getErrorMessage";
@@ -31,14 +32,14 @@ export const apiQuery = async (
     const result = await baseQuery(args, api, extraOptions);
 
     if ("error" in result && result.error) {
-      const message = getErrorMessage(result.error);
+      const message = getErrorMessage(result.error as FetchBaseQueryError);
       console.error(`Api error: ${message}`);
       showSnackbar({ message, severity: "error" });
       return { error: result.error };
     }
     return { data: result.data };
   } catch (e) {
-    const message = getErrorMessage(e);
+    const message = getErrorMessage(e as FetchBaseQueryError);
     console.error("Unexpected exception:", message);
     showSnackbar({ message, severity: "error" });
     return { error: e };
