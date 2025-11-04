@@ -1,4 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { Form, Formik } from "formik";
+import * as Yup from "yup";
 
 import {
   FormButtons,
@@ -6,23 +8,23 @@ import {
   FormMainContainer,
   FormTextField,
 } from "../components/SmallOnes";
-import { Form, Formik } from "formik";
-import * as Yup from "yup";
 import {
   useChangeDockMutation,
   useDeleteDockMutation,
   useGetDockQuery,
 } from "../redux/api";
 import { showSnackbar } from "../components/SnackbarProvider";
+import Spinner from "../components/Spinner";
 
 const ChangeDock = () => {
   const { dockId } = useParams<{ dockId: string }>();
-  const { data: dock, isLoading } = useGetDockQuery(Number(dockId));
+  const { data: dock, isLoading: isLoadingDock } = useGetDockQuery(
+    Number(dockId)
+  );
 
   const navigate = useNavigate();
-
-  const [changeDock] = useChangeDockMutation();
-  const [deleteDock] = useDeleteDockMutation();
+  const [changeDock, { isLoading: isChangingDock }] = useChangeDockMutation();
+  const [deleteDock, { isLoading: isDeletingDock }] = useDeleteDockMutation();
 
   const dockSchema = Yup.object().shape({
     name: Yup.string()
@@ -32,34 +34,44 @@ const ChangeDock = () => {
   });
 
   const handleSubmit = async (values: { name: string | null }) => {
-    console.log("sub");
-    if (typeof values.name === "string" && dock) {
-      const result = await changeDock({
-        name: values.name,
-        id: dock.id,
-      });
-      if (!("error" in result)) {
-        const message = `dock ${dock.name} changed to ${values.name}`;
-        showSnackbar({ message, severity: "success" });
-        void navigate("/logged/docks");
+    try {
+      if (typeof values.name === "string" && dock) {
+        const result = await changeDock({
+          name: values.name,
+          id: dock.id,
+        });
+        if (!("error" in result)) {
+          const message = `dock ${dock.name} changed to ${values.name}`;
+          showSnackbar({ message, severity: "success" });
+          void navigate("/logged/docks");
+        }
       }
+    } catch (e) {
+      console.error(e);
     }
   };
 
   const handleDelete = async () => {
-    if (dock?.id) {
-      const result = await deleteDock(dock.id);
-      if (!("error" in result)) {
-        const message = `dock ${dock.name} deleted`;
-        showSnackbar({ message, severity: "success" });
-        void navigate("/logged/docks");
+    try {
+      if (dock?.id) {
+        const result = await deleteDock(dock.id);
+        if (!("error" in result)) {
+          const message = `dock ${dock.name} deleted`;
+          showSnackbar({ message, severity: "success" });
+          void navigate("/logged/docks");
+        }
       }
+    } catch (e) {
+      console.error(e);
     }
   };
 
+  const isBusy = isChangingDock || isDeletingDock || isLoadingDock;
+
   return (
     <>
-      {!isLoading && dock ? (
+      {isBusy && <Spinner />}
+      {!isLoadingDock && dock && (
         <FormMainContainer>
           <Formik
             initialValues={{
@@ -82,8 +94,6 @@ const ChangeDock = () => {
             </Form>
           </Formik>
         </FormMainContainer>
-      ) : (
-        <div>loading...</div>
       )}
     </>
   );

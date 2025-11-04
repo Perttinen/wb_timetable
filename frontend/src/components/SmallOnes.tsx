@@ -221,10 +221,12 @@ type FormButtonsPropsType = {
   onDelete?: (val: boolean) => void;
   submitLabel: string;
   buttons: Array<"cancel" | "delete" | "save">;
+  disabledOnSubmit?: boolean;
 };
 
 const FormButtons = (props: FormButtonsPropsType) => {
-  const { buttons, submitLabel, onCancel, onDelete } = props;
+  const { buttons, submitLabel, onCancel, onDelete, disabledOnSubmit } = props;
+
   return (
     <Box display={"flex"} flexDirection={"row"} justifyContent={"space-evenly"}>
       {props.buttons.includes("delete") && onDelete && (
@@ -232,6 +234,7 @@ const FormButtons = (props: FormButtonsPropsType) => {
           onClick={() => onDelete(false)}
           variant="contained"
           type="button"
+          disabled={disabledOnSubmit}
         >
           delete
         </Button>
@@ -241,12 +244,13 @@ const FormButtons = (props: FormButtonsPropsType) => {
           onClick={() => onCancel(false)}
           variant="contained"
           type="reset"
+          disabled={disabledOnSubmit}
         >
           cancel
         </Button>
       )}
       {buttons.includes("save") && (
-        <Button variant="contained" type="submit">
+        <Button variant="contained" type="submit" disabled={disabledOnSubmit}>
           {submitLabel}
         </Button>
       )}

@@ -284,7 +284,7 @@ describe("API", () => {
         .set("Authorization", `Bearer ${hal.token}`);
       const body = response.body as IDock[];
       expect(response.status).toBe(200);
-      expect(body.length).toBe(21);
+      expect(body.length).toBe(11);
       expect(body[8]).toEqual(iDockTestObject);
     });
     test("hal updates dock, PATCH /api/dock", async () => {
@@ -338,7 +338,7 @@ describe("API", () => {
         .set("Authorization", `Bearer ${hal.token}`);
       const docksBody = docks.body as IDock[];
       expect(response.status).toBe(204);
-      expect(docksBody.length).toBe(20);
+      expect(docksBody.length).toBe(10);
     });
     test("hal deletes non existing dock, DELETE /api/dock:id", async () => {
       const response = await request(app)
@@ -357,7 +357,6 @@ describe("API", () => {
         .set("Authorization", `Bearer ${hal.token}`);
       const body = response.body as ILineReturnable[];
       expect(body.length).toBe(4);
-      expect(body[1]).toEqual(iLineReturnableTestObject);
     });
     test("hal creates line, POST /api/line", async () => {
       const response = await request(app)

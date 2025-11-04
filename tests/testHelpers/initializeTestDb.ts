@@ -8,6 +8,7 @@ import {
 } from "../../database/models";
 import { IJsonUser } from "../../types";
 import { Op } from "@sequelize/core";
+import { docks } from "../testHelpers/data/docks";
 
 interface IDock {
   id: number;
@@ -21,10 +22,10 @@ interface ILine {
 }
 
 const create20Docks = async () => {
-  const docks: { name: string }[] = [];
-  for (let i = 1; i < 21; i++) {
-    docks.push({ name: `dock${i}` });
-  }
+  // const docks: { name: string }[] = [];
+  // for (let i = 1; i < 21; i++) {
+  //   docks.push({ name: `dock${i}` });
+  // }
   const returnDocks: IDock[] = (await Dock.bulkCreate(docks)).map((d) =>
     d.toJSON()
   );
@@ -58,7 +59,7 @@ const create4Lines = async (docks: IDock[]) => {
   );
 
   const stops = [
-    { lineId: createdLines[0].id, dockId: docks[12].id, delayFromStart: 11 },
+    { lineId: createdLines[0].id, dockId: docks[9].id, delayFromStart: 11 },
     { lineId: createdLines[1].id, dockId: docks[0].id, delayFromStart: 22 },
     { lineId: createdLines[1].id, dockId: docks[5].id, delayFromStart: 33 },
     { lineId: createdLines[2].id, dockId: docks[0].id, delayFromStart: 24 },

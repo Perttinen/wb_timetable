@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { RootState } from "../redux/store";
 import { useAppSelector } from "../redux/hooks";
+import Spinner from "../components/Spinner";
 
 const LoggedLayout = ({
   preferredUserlevel,
@@ -10,10 +11,10 @@ const LoggedLayout = ({
   const user = useAppSelector((state: RootState) => state.loggedUser.user);
 
   if (!user) {
-    return <div>fetching userdata...</div>;
+    return <Spinner />;
   }
 
-  if (!user.userlevels.includes(preferredUserlevel)) {
+  if (!user?.userlevels.includes(preferredUserlevel)) {
     return <Navigate to="/" replace />;
   }
 

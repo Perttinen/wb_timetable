@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import { useGetLinesQuery } from "../redux/api";
+import Spinner from "./Spinner";
 
 interface Props {
   onSelectLine: (lineId: number) => void;
@@ -11,11 +12,14 @@ interface Props {
 
 const LineSelector = ({ onSelectLine, caption }: Props) => {
   const theme = useTheme();
-  const { data: lines, isLoading } = useGetLinesQuery();
+  const { data: lines, isLoading: IsLoadingLines } = useGetLinesQuery();
+
+  const isBusy = IsLoadingLines;
 
   return (
     <>
-      {!isLoading && lines ? (
+      {isBusy && <Spinner />}
+      {!IsLoadingLines && lines && (
         <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
           <Box display={"flex"} justifyContent={"center"} width={"100%"}>
             <Typography color={theme.palette.primary.dark} fontSize={"1.8rem"}>
@@ -54,8 +58,6 @@ const LineSelector = ({ onSelectLine, caption }: Props) => {
             ))}
           </Box>
         </Box>
-      ) : (
-        <div>Loading...</div>
       )}
     </>
   );

@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 120
+#### total hours 122
+
+4.11.2025 Spinners while witing api. 60 sec polling in timetable. Small refactoring. Hours: 2, Total: 122
 
 3.11.2025 AddManyStarts applied in scheduling & backend. Hours: 8, Total: 120
 

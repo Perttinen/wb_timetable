@@ -1,16 +1,16 @@
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import { Button, Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useNavigate } from "react-router-dom";
+
 import { useGetDocksQuery } from "../redux/api";
+import Spinner from "../components/Spinner";
 
 const Docks = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const { data: docks, isLoading } = useGetDocksQuery();
+  const { data: docks, isLoading: isLoadingDocks } = useGetDocksQuery();
 
   const handleNewDock = () => {
     void navigate("/logged/docks/create");
@@ -20,9 +20,12 @@ const Docks = () => {
     void navigate(`/logged/docks/change/${dockId}`);
   };
 
+  const isBusy = isLoadingDocks;
+
   return (
     <>
-      {!isLoading && docks ? (
+      {isBusy && <Spinner />}
+      {!isLoadingDocks && docks && (
         <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
           <Box display={"flex"} justifyContent={"center"} width={"100%"}>
             <Typography color={theme.palette.primary.dark} fontSize={"1.8rem"}>
@@ -74,8 +77,6 @@ const Docks = () => {
             ))}
           </Box>
         </Box>
-      ) : (
-        <div>Loading...</div>
       )}
     </>
   );
