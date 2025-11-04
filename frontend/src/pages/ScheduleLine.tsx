@@ -1,5 +1,4 @@
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
+import { Button, Box } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Lines = () => {

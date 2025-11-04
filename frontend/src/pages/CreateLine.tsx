@@ -2,7 +2,6 @@ import { Alert, Box, Button, Snackbar } from "@mui/material";
 import { FieldArray, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -12,18 +11,16 @@ import {
   FormMainContainer,
   FormButtons,
 } from "../components/SmallOnes";
-import {
-  useAddLineMutation,
-  useGetDocksQuery,
-  useGetLinesQuery,
-} from "../redux/api";
+import { useAddLineMutation, useGetDocksQuery } from "../redux/api";
+import { showSnackbar } from "../components/SnackbarProvider";
+import Spinner from "../components/Spinner";
 
 const CreateLine = () => {
   const [errorMsg, setErrorMsg] = useState("");
 
   const navigate = useNavigate();
 
-  const { data: docks, isLoading } = useGetDocksQuery();
+  const { data: docks, isLoading: isLoadingDocks } = useGetDocksQuery();
 
   const validationSchema = Yup.object().shape({
     startDockId: Yup.number()
@@ -65,28 +62,33 @@ const CreateLine = () => {
     return ids.length === distinctIds.length;
   };
 
-  const [addLine] = useAddLineMutation();
-
-  // THIS MUST BE UNNECCESSARY!!
-  const { refetch } = useGetLinesQuery();
+  const [addLine, { isLoading: isAddingLine }] = useAddLineMutation();
 
   const handleSubmit = async (values: RouteFormValuesType) => {
     try {
       if (docksAreUnique(values)) {
-        const response = await addLine(values).unwrap();
-        await refetch();
-        console.log("Line added:", response);
+        const result = await addLine(values).unwrap();
+        if (result) {
+          const stops = result.stopDocks?.map((stop) => stop.name).join(" | ");
+          const via = stops ? `via: ${stops}` : "";
+          const message = `line ${result.startDock.name} - ${result.endDock.name} ${via}  created`;
+          showSnackbar({ message, severity: "success" });
+          void navigate("/logged/lines");
+        }
       } else {
         setErrorMsg("All docks should be unique!");
       }
-    } catch (err) {
-      console.error("Failed to add line", err);
+    } catch (e) {
+      console.error(e);
     }
   };
 
+  const isBusy = isAddingLine || isLoadingDocks;
+
   return (
     <>
-      {!isLoading && docks ? (
+      {isBusy && <Spinner />}
+      {!isLoadingDocks && docks && (
         <Box>
           <FormMainContainer>
             {docks.length > 0 && (
@@ -214,8 +216,6 @@ const CreateLine = () => {
             <Alert severity="error">{errorMsg}</Alert>
           </Snackbar>
         </Box>
-      ) : (
-        <div>Loading...</div>
       )}
     </>
   );

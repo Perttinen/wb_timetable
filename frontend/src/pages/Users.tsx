@@ -1,10 +1,15 @@
+import Spinner from "../components/Spinner";
 import { useGetUsersQuery } from "../redux/api";
 
 const Users = () => {
-  const { data: users, isLoading } = useGetUsersQuery();
+  const { data: users, isLoading: isLoadingUsers } = useGetUsersQuery();
+
+  const isBusy = isLoadingUsers;
+
   return (
     <>
-      {!isLoading && users ? (
+      {isBusy && <Spinner />}
+      {!isLoadingUsers && users && (
         <div>
           <h2>Users</h2>
           <ul>
@@ -17,8 +22,6 @@ const Users = () => {
             ))}
           </ul>
         </div>
-      ) : (
-        <div>Loading...</div>
       )}
     </>
   );

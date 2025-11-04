@@ -1,13 +1,14 @@
 import { useFormik } from "formik";
 import * as yup from "yup";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
+import { Button, TextField } from "@mui/material";
+
 import { useLoginMutation } from "../redux/auth/loginApi";
 import { useAppDispatch } from "../redux/hooks";
 import { setCredentials } from "../redux/auth/loggedUserSlice";
 import { useNavigate } from "react-router-dom";
 import { getErrorMessage } from "../utils/getErrorMessage";
-import { useTheme } from "@mui/material/styles";
+import { showSnackbar } from "../components/SnackbarProvider";
+import Spinner from "../components/Spinner";
 
 const validationSchema = yup.object({
   username: yup
@@ -23,8 +24,8 @@ const validationSchema = yup.object({
 const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [login, { isLoading, error }] = useLoginMutation();
-  const theme = useTheme();
+  const [login, { isLoading: isLogging, error }] = useLoginMutation();
+
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -37,14 +38,18 @@ const Login = () => {
         localStorage.setItem("token", result.token);
         dispatch(setCredentials(result));
         void navigate("/logged/timetables");
-      } catch (err) {
-        console.error("Kirjautuminen epäonnistui:", err);
+      } catch (e) {
+        const message = `Kirjautuminen epäonnistui: ${e}`;
+        showSnackbar({ message, severity: "error" });
       }
     },
   });
 
+  const isBusy = isLogging;
+
   return (
     <div>
+      {isBusy && <Spinner />}
       <form
         style={{
           maxWidth: "400px",
@@ -86,9 +91,6 @@ const Login = () => {
           Submit
         </Button>
         {error && <p style={{ color: "red" }}>{getErrorMessage(error)}</p>}
-        {isLoading && (
-          <p style={{ color: theme.palette.primary.main }}>Logging in...</p>
-        )}
       </form>
     </div>
   );

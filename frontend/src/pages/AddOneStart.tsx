@@ -9,11 +9,14 @@ import {
   FormMainContainer,
   FormButtons,
 } from "../components/SmallOnes";
+import { showSnackbar } from "../components/SnackbarProvider";
+import Spinner from "../components/Spinner";
 
 const AddOneStart = () => {
   const navigate = useNavigate();
   const { lineId } = useParams<{ lineId: string }>();
-  const [addDeparture] = useAddDepartureMutation();
+  const [addDeparture, { isLoading: isAddingDeparture }] =
+    useAddDepartureMutation();
 
   interface FormValues {
     start: Dayjs;
@@ -30,39 +33,52 @@ const AddOneStart = () => {
       start: values.start.toDate(),
       lineId: Number(values.lineId),
     };
-
-    await addDeparture(parsedValues);
-    void navigate("/logged/schedule");
-    console.log(parsedValues);
+    try {
+      const result = await addDeparture(parsedValues);
+      if (result) {
+        showSnackbar({
+          message: "start successfully added!",
+          severity: "success",
+        });
+        void navigate("/logged/schedule");
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
+  const isBusy = isAddingDeparture;
+
   return (
-    <FormMainContainer>
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        {({ setFieldValue, values }) => (
-          <Form>
-            <FormGroupContainer>
-              <Field name="start">
-                {() => (
-                  <DateTimePicker
-                    label="Departure Time"
-                    value={values.start}
-                    onChange={(newValue): void => {
-                      void setFieldValue("start", newValue);
-                    }}
-                  />
-                )}
-              </Field>
-            </FormGroupContainer>
-            <FormButtons
-              submitLabel="create"
-              onCancel={() => navigate("/logged/schedule")}
-              buttons={["save", "cancel"]}
-            />
-          </Form>
-        )}
-      </Formik>
-    </FormMainContainer>
+    <>
+      {isBusy && <Spinner />}
+      <FormMainContainer>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          {({ setFieldValue, values }) => (
+            <Form>
+              <FormGroupContainer>
+                <Field name="start">
+                  {() => (
+                    <DateTimePicker
+                      label="Departure Time"
+                      value={values.start}
+                      onChange={(newValue): void => {
+                        void setFieldValue("start", newValue);
+                      }}
+                    />
+                  )}
+                </Field>
+              </FormGroupContainer>
+              <FormButtons
+                submitLabel="create"
+                onCancel={() => navigate("/logged/schedule")}
+                buttons={["save", "cancel"]}
+              />
+            </Form>
+          )}
+        </Formik>
+      </FormMainContainer>
+    </>
   );
 };
 

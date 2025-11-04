@@ -1,20 +1,21 @@
 import { Form, Formik } from "formik";
+import * as Yup from "yup";
+import { useNavigate } from "react-router";
+
 import {
   FormButtons,
   FormGroupContainer,
   FormMainContainer,
   FormTextField,
 } from "../components/SmallOnes";
-import * as Yup from "yup";
-import { useNavigate } from "react-router";
 import { IDockname } from "../../../types";
 import { useAddDockMutation } from "../redux/api";
 import { showSnackbar } from "../components/SnackbarProvider";
+import Spinner from "../components/Spinner";
 
 const CreateDock = () => {
   const navigate = useNavigate();
-
-  const [addDock] = useAddDockMutation();
+  const [addDock, { isLoading: isAddingDock }] = useAddDockMutation();
 
   const dockSchema = Yup.object().shape({
     name: Yup.string()
@@ -26,35 +27,45 @@ const CreateDock = () => {
   const initialValues = {
     name: "",
   };
+
   const handleSubmit = async (values: IDockname) => {
-    const result = await addDock(values).unwrap();
-    if (result) {
-      const message = `dock ${values.name} created`;
-      showSnackbar({ message, severity: "success" });
-      void navigate("/logged/docks");
+    try {
+      const result = await addDock(values).unwrap();
+      if (result) {
+        const message = `dock ${values.name} created`;
+        showSnackbar({ message, severity: "success" });
+        void navigate("/logged/docks");
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 
+  const isBusy = isAddingDock;
+
   return (
-    <FormMainContainer>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={dockSchema}
-        onSubmit={handleSubmit}
-        enableReinitialize={true}
-      >
-        <Form>
-          <FormGroupContainer>
-            <FormTextField label="name" name="name" />
-          </FormGroupContainer>
-          <FormButtons
-            buttons={["cancel", "save"]}
-            submitLabel="save"
-            onCancel={() => navigate("/logged/docks")}
-          />
-        </Form>
-      </Formik>
-    </FormMainContainer>
+    <>
+      {isBusy && <Spinner />}
+      <FormMainContainer>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={dockSchema}
+          onSubmit={handleSubmit}
+          enableReinitialize={true}
+        >
+          <Form>
+            <FormGroupContainer>
+              <FormTextField label="name" name="name" />
+            </FormGroupContainer>
+            <FormButtons
+              buttons={["cancel", "save"]}
+              submitLabel="save"
+              onCancel={() => navigate("/logged/docks")}
+            />
+          </Form>
+        </Formik>
+      </FormMainContainer>
+    </>
   );
 };
 

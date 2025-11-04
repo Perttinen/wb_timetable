@@ -1,23 +1,21 @@
-// show 20 next departures by dockName from params
-
-// /logged/timetables/:dockName
-// /timetables/:dockName
-
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
+import {
+  Typography,
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  Stack,
+  TableHead,
+  Paper,
+} from "@mui/material";
+import dayjs from "dayjs";
 
 import { IDepartureForTimetable } from "../../../types";
-import Typography from "@mui/material/Typography";
-import TableContainer from "@mui/material/TableContainer";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
-import Stack from "@mui/material/Stack";
-import dayjs from "dayjs";
-import TableHead from "@mui/material/TableHead";
-import Paper from "@mui/material/Paper";
 import { useGetDockQuery, useGetTimetableQuery } from "../redux/api";
+import Spinner from "../components/Spinner";
 
 const InfoCell = ({
   text,
@@ -98,6 +96,7 @@ const DepartureWithViaRow = ({
                 ml={"10px"}
               >
                 {v}
+                {i < departure.via.length - 1 && " | "}
               </Typography>
             ))}
           </Stack>
@@ -159,26 +158,37 @@ interface Props {
 
 const DockTimetable = ({ fullwidth }: Props) => {
   const { dockId } = useParams<{ dockId: string }>();
-
   const { data: dock, isLoading: isLoadingDock } = useGetDockQuery(
     Number(dockId)
   );
-
-  const { data: departures, isLoading } = useGetTimetableQuery(String(dockId));
-
+  const {
+    data: departures,
+    isLoading: isLoadingTimetable,
+    refetch: fetchDepartures,
+  } = useGetTimetableQuery(String(dockId));
   const url = useLocation();
 
   const height = url.pathname.includes("logged")
     ? { xs: "calc(100dvh - 56px)", sm: "calc(100vh - 64px)" }
     : { xs: "100dvh" };
 
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      await fetchDepartures();
+    }, 60000);
+    return () => clearInterval(interval);
+  }, [fetchDepartures]);
+
   if (departures?.length === 0) {
     return <>{`No upcoming departures from ${dockId}`}</>;
   }
 
+  const isBusy = isLoadingDock || isLoadingTimetable;
+
   return (
     <>
-      {!isLoading && !isLoadingDock && departures && dock ? (
+      {isBusy && <Spinner />}
+      {!isLoadingTimetable && !isLoadingDock && departures && dock && (
         <TableContainer
           component={Paper}
           sx={{
@@ -240,8 +250,6 @@ const DockTimetable = ({ fullwidth }: Props) => {
             </TableBody>
           </Table>
         </TableContainer>
-      ) : (
-        <div>loading</div>
       )}
     </>
   );
