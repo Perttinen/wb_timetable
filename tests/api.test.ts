@@ -337,7 +337,7 @@ describe("API", () => {
         .get(`/api/dock/`)
         .set("Authorization", `Bearer ${hal.token}`);
       const docksBody = docks.body as IDock[];
-      expect(response.status).toBe(204);
+      expect(response.status).toBe(200);
       expect(docksBody.length).toBe(10);
     });
     test("hal deletes non existing dock, DELETE /api/dock:id", async () => {

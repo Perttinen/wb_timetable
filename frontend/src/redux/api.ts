@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import {
+  IDeleteDeparturesPayload,
   IDeparture,
   IDepartureForTimetable,
   IDockname,
@@ -28,7 +29,7 @@ export const api = createApi({
       }),
       providesTags: ["GetDocks"],
     }),
-    deleteDock: builder.mutation<void, number>({
+    deleteDock: builder.mutation<number, number>({
       query: (id) => ({
         url: `/dock/${id}`,
         method: "DELETE",
@@ -83,6 +84,13 @@ export const api = createApi({
       }),
       invalidatesTags: ["Timetable"],
     }),
+    deleteDepartures: builder.mutation<void, IDeleteDeparturesPayload>({
+      query: (deleteManyDepartures) => ({
+        url: "/departure/deletemany",
+        method: "DELETE",
+        body: deleteManyDepartures,
+      }),
+    }),
     //LINE
     getLines: builder.query<ILineReturnable[], void>({
       query: () => ({
@@ -119,6 +127,7 @@ export const {
   useGetTimetableQuery,
   useAddDepartureMutation,
   useAddManyDeparturesMutation,
+  useDeleteDeparturesMutation,
   useAddLineMutation,
   useGetLinesQuery,
   useGetLineQuery,

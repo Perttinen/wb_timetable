@@ -22,6 +22,15 @@ export interface ICreateUserEntry extends IUser {
   userlevel?: string[];
 }
 
+export interface IDeleteDeparturesPayload {
+  lineId: number;
+  fromDate: string;
+  toDate: string;
+  fromTime: string;
+  toTime: string;
+  weekdays: boolean[];
+}
+
 export interface IDeparture {
   id: number;
   lineId: number;

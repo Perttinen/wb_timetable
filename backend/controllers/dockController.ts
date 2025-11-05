@@ -24,11 +24,12 @@ const createNewDock = asyncHandler(
 const deleteDock = asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
   const destroyedDock = await Dock.destroy({ where: { id } });
+
   if (!destroyedDock) {
     throwNotFound("nothing deleted");
     return;
   }
-  res.status(204).end();
+  res.status(200).json(destroyedDock);
 });
 
 const getAllDocks = asyncHandler(async (_req, res: Response<IDock[]>) => {

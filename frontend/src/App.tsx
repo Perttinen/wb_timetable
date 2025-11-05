@@ -15,9 +15,10 @@ import ChangeLine from "./pages/ChangeLine";
 import CreateLine from "./pages/CreateLine";
 import CreateDock from "./pages/CreateDock";
 import ChangeDock from "./pages/ChangeDock";
-import RemoveStarts from "./pages/RemoveStarts";
+
 import AddOneStart from "./pages/AddOneStart";
 import AddManyStarts from "./pages/AddManyStarts";
+import RemoveDepartures from "./pages/RemoveDepartures";
 
 const App = () => {
   return (
@@ -44,7 +45,7 @@ const App = () => {
           />
           <Route
             path="/logged/schedule/remove/:lineId"
-            element={<RemoveStarts />}
+            element={<RemoveDepartures />}
           />
           <Route path="/logged/timetables" element={<Timetables />} />
           <Route
