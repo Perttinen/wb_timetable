@@ -10,6 +10,12 @@ import {
   IInputDeparture,
 } from "../../types";
 import { throwNotFound, throwValidationError } from "../util/errorThrowers";
+import { Op } from "@sequelize/core";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { IDeleteDeparturesPayload } from "../../types";
+
+dayjs.extend(customParseFormat);
 
 interface IFormatLinesEntry {
   lines: IBigLine[];
@@ -48,6 +54,55 @@ const formatLines = (input: IFormatLinesEntry): IFormattedLine[] => {
   }
   return formattedLines;
 };
+
+const deleteDepartures = asyncHandler(
+  async (req: Request<unknown, unknown, IDeleteDeparturesPayload>, res) => {
+    const { lineId, fromDate, toDate, fromTime, toTime, weekdays } = req.body;
+
+    const fromDateTime = dayjs(`${fromDate}T${fromTime}`);
+    const toDateTime = dayjs(`${toDate}T${toTime}`);
+
+    const departures = await Departure.findAll({
+      where: {
+        lineId,
+        start: {
+          [Op.between]: [fromDateTime.toDate(), toDateTime.toDate()],
+        },
+      },
+    });
+
+    const filtered = departures.filter((d) => {
+      const start = dayjs(d.start);
+      const minutes = start.hour() * 60 + start.minute();
+      const fromMinutes =
+        dayjs(fromTime, "HH:mm").hour() * 60 +
+        dayjs(fromTime, "HH:mm").minute();
+      const toMinutes =
+        dayjs(toTime, "HH:mm").hour() * 60 + dayjs(toTime, "HH:mm").minute();
+      const weekdayIndex = (start.day() + 6) % 7;
+      return (
+        minutes >= fromMinutes && minutes <= toMinutes && weekdays[weekdayIndex]
+      );
+    });
+
+    console.log(
+      "filtered: ",
+      filtered.map((f) => f.dataValues)
+    );
+
+    const idsToDelete = filtered.map((d) => d.id);
+
+    const deleted = await Departure.destroy({
+      where: {
+        id: {
+          [Op.in]: idsToDelete,
+        },
+      },
+    });
+
+    res.status(200).json(deleted);
+  }
+);
 
 const createDeparture = asyncHandler(
   async (
@@ -180,4 +235,5 @@ export default {
   getAllDepartures,
   get20DeparturesByDockName,
   getDeparturesByLineId,
+  deleteDepartures,
 };

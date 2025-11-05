@@ -10,6 +10,9 @@ router
   .route("/addmany")
   .post(authorizer("user"), departures.createManyDepartures);
 router.route("/").get(authorizer("user"), departures.getAllDepartures);
+router
+  .route("/deletemany")
+  .delete(authorizer("user"), departures.deleteDepartures);
 router.route("/timetable/:dockId").get(departures.get20DeparturesByDockName);
 router
   .route("/line/:lineId")
