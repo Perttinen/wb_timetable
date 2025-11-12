@@ -1,24 +1,25 @@
 import { Route, Routes } from "react-router-dom";
-import Docks from "./pages/Docks";
-import Lines from "./pages/Lines";
 
-import Login from "./pages/Login";
-import Users from "./pages/Users";
-import Timetables from "./pages/Timetables";
+import Lines from "./pages/line/Lines";
+
 import NavLayout from "./layouts/NavLayout";
 import LoggedLayout from "./layouts/LoggedLayout";
-import ScheduleLine from "./pages/ScheduleLine";
-import Schedule from "./pages/Schedule";
-import DockTimetable from "./pages/DockTimetable";
-import ChangeLineSelector from "./pages/ChangeLineSelector";
-import ChangeLine from "./pages/ChangeLine";
-import CreateLine from "./pages/CreateLine";
-import CreateDock from "./pages/CreateDock";
-import ChangeDock from "./pages/ChangeDock";
-
-import AddOneStart from "./pages/AddOneStart";
-import AddManyStarts from "./pages/AddManyStarts";
-import RemoveDepartures from "./pages/RemoveDepartures";
+import ScheduleLine from "./pages/scheldule/ScheduleLine";
+import AddManyStarts from "./pages/scheldule/AddManyStarts";
+import Login from "./pages/user/Login";
+import Timetables from "./pages/timetable/Timetables";
+import DockTimetable from "./pages/timetable/DockTimetable";
+import Schedule from "./pages/scheldule/Schedule";
+import AddOneStart from "./pages/scheldule/AddOneStart";
+import RemoveDepartures from "./pages/scheldule/RemoveDepartures";
+import Docks from "./pages/dock/Docks";
+import CreateDock from "./pages/dock/CreateDock";
+import ChangeDock from "./pages/dock/ChangeDock";
+import ChangeLineSelector from "./pages/line/ChangeLineSelector";
+import ChangeLine from "./pages/line/ChangeLine";
+import CreateLine from "./pages/line/CreateLine";
+import Users from "./pages/user/Users";
+import CreateUser from "./pages/user/CreateUser";
 
 const App = () => {
   return (
@@ -61,6 +62,7 @@ const App = () => {
           <Route path="/logged/lines/create" element={<CreateLine />} />
           <Route element={<LoggedLayout preferredUserlevel="admin" />}>
             <Route path="/logged/users" element={<Users />} />
+            <Route path="/logged/users/create" element={<CreateUser />} />
           </Route>
         </Route>
       </Route>

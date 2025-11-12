@@ -7,11 +7,12 @@ import {
   FormGroupContainer,
   FormMainContainer,
   FormTextField,
-} from "../components/SmallOnes";
-import { IDockname } from "../../../types";
-import { useAddDockMutation } from "../redux/api";
-import { showSnackbar } from "../components/SnackbarProvider";
-import Spinner from "../components/Spinner";
+} from "../../components/SmallOnes";
+import { IDockname } from "../../../../types";
+import { useAddDockMutation } from "../../redux/api";
+import { showSnackbar } from "../../components/SnackbarProvider";
+import Spinner from "../../components/Spinner";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 const CreateDock = () => {
   const navigate = useNavigate();
@@ -32,12 +33,19 @@ const CreateDock = () => {
     try {
       const result = await addDock(values).unwrap();
       if (result) {
-        const message = `dock ${values.name} created`;
-        showSnackbar({ message, severity: "success" });
+        showSnackbar({
+          message: `dock ${values.name} created`,
+          duration: 5000,
+          severity: "success",
+        });
         void navigate("/logged/docks");
       }
     } catch (e) {
-      console.error(e);
+      let message = getErrorMessage(e);
+      if (message === "Validation error") {
+        message = `${values.name} already exists`;
+      }
+      showSnackbar({ severity: "error", duration: 6000, message });
     }
   };
 

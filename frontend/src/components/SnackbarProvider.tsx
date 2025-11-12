@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Snackbar, Alert, AlertColor } from "@mui/material";
 
-interface ISnackbarParams {
+export interface ISnackbarParams {
   message: string;
   severity: AlertColor;
+  duration: number;
 }
 
 let triggerSnackbar: ((params: ISnackbarParams) => void) | null = null;
@@ -12,9 +13,9 @@ const setSnackbarTrigger = (fn: (params: ISnackbarParams) => void) => {
   triggerSnackbar = fn;
 };
 
-export const showSnackbar = (params: ISnackbarParams) => {
+export const showSnackbar = (input: ISnackbarParams) => {
   if (triggerSnackbar) {
-    triggerSnackbar(params);
+    triggerSnackbar(input);
   } else {
     console.warn("Snackbar trigger not set");
   }
@@ -34,20 +35,7 @@ export const SnackbarProvider = ({
     setSnackbarTrigger((params: ISnackbarParams) => {
       setMessage(params.message);
       setSeverity(params.severity);
-      switch (params.severity) {
-        case "error":
-          setAutoHideDuration(15000);
-          break;
-        case "warning":
-          setAutoHideDuration(15000);
-          break;
-        case "info":
-          setAutoHideDuration(5000);
-          break;
-        case "success":
-          setAutoHideDuration(5000);
-          break;
-      }
+      setAutoHideDuration(params.duration);
       setOpen(true);
     });
   }, []);

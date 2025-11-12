@@ -143,6 +143,12 @@ export interface ILineWithStopsArray {
   stops: IStop[];
 }
 
+export interface INewUserRequest {
+  username: string;
+  password: string;
+  userlevel: string[];
+}
+
 export interface IStop {
   id: number;
   dockId: number;

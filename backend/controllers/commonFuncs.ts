@@ -46,11 +46,27 @@ export const lineIncludes = [
 export const createReturnableLine = (line: Line): ILineReturnable | void => {
   const jsonLine: IBigLine = line.toJSON();
   if (jsonLine.docks && jsonLine.endDock && jsonLine.startDock) {
-    const stopDocks = jsonLine.docks.map((dock) => ({
-      id: dock.id,
-      name: dock.name,
-      delayFromStart: dock.lineDock.delayFromStart,
-    }));
+    const stopDocks = jsonLine.docks
+      .map((dock) => ({
+        id: dock.id,
+        name: dock.name,
+        delayFromStart: dock.lineDock.delayFromStart,
+      }))
+      .sort((a, b) => a.delayFromStart - b.delayFromStart);
+
+    console.log({
+      id: jsonLine.id,
+      startDock: {
+        name: jsonLine.startDock.name,
+        id: jsonLine.startDock.id,
+      },
+      endDock: {
+        name: jsonLine.endDock.name,
+        id: jsonLine.endDock.id,
+      },
+      stopDocks,
+    });
+
     return {
       id: jsonLine.id,
       startDock: {

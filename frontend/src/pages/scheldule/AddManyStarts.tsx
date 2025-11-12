@@ -9,11 +9,12 @@ import {
   FormTimePicker,
   FormGroupContainer,
   FormButtons,
-} from "../components/SmallOnes";
-import { IInputDeparture } from "../../../types";
-import { useAddManyDeparturesMutation, useGetLineQuery } from "../redux/api";
-import { showSnackbar } from "../components/SnackbarProvider";
-import Spinner from "../components/Spinner";
+} from "../../components/SmallOnes";
+import { IInputDeparture } from "../../../../types";
+import { useAddManyDeparturesMutation, useGetLineQuery } from "../../redux/api";
+import { showSnackbar } from "../../components/SnackbarProvider";
+import Spinner from "../../components/Spinner";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 const AddManyStarts = () => {
   const { lineId } = useParams<{ lineId: string }>();
@@ -72,12 +73,19 @@ const AddManyStarts = () => {
     try {
       const result = await addDepartures(starts);
       if (result) {
-        const message = `${starts.length} starts successfully added!`;
-        showSnackbar({ message, severity: "success" });
+        showSnackbar({
+          message: `${starts.length} starts successfully added!`,
+          duration: 5000,
+          severity: "success",
+        });
         void navigate("/logged/schedule");
       }
     } catch (e) {
-      console.error(e);
+      showSnackbar({
+        message: getErrorMessage(e),
+        duration: 10000,
+        severity: "error",
+      });
     }
   };
 

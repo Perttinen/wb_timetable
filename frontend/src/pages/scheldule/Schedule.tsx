@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 
-import LineSelector from "../components/LineSelector";
+import LineSelector from "../../components/LineSelector";
 
 const Schedule = () => {
   const navigate = useNavigate();

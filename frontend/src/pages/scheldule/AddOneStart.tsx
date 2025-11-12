@@ -2,15 +2,15 @@ import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { Field, Form, Formik } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAddDepartureMutation } from "../redux/api";
+import { useAddDepartureMutation } from "../../redux/api";
 
 import {
   FormGroupContainer,
   FormMainContainer,
   FormButtons,
-} from "../components/SmallOnes";
-import { showSnackbar } from "../components/SnackbarProvider";
-import Spinner from "../components/Spinner";
+} from "../../components/SmallOnes";
+import { showSnackbar } from "../../components/SnackbarProvider";
+import Spinner from "../../components/Spinner";
 
 const AddOneStart = () => {
   const navigate = useNavigate();
@@ -39,6 +39,7 @@ const AddOneStart = () => {
         showSnackbar({
           message: "start successfully added!",
           severity: "success",
+          duration: 5000,
         });
         void navigate("/logged/schedule");
       }

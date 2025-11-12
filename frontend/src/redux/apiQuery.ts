@@ -33,14 +33,18 @@ export const apiQuery = async (
     if ("error" in result && result.error) {
       const message = getErrorMessage(result.error);
       console.error(`Api error: ${message}`);
-      showSnackbar({ message, severity: "error" });
+      showSnackbar({
+        message,
+        severity: "error",
+        duration: 10000,
+      });
       return { error: result.error };
     }
     return { data: result.data };
   } catch (e) {
     const message = getErrorMessage(e);
     console.error("Unexpected exception:", message);
-    showSnackbar({ message, severity: "error" });
+    showSnackbar({ message, severity: "error", duration: 10000 });
     return { error: e };
   }
 };

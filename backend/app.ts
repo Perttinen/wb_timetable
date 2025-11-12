@@ -7,6 +7,7 @@ import {
   unknownEndpoint,
 } from "./util/middleware";
 import userRouter from "./routes/userRoutes";
+import userlevelRouter from "./routes/userlevelRoutes";
 import authRouter from "./routes/authRoutes";
 import dockRouter from "./routes/dockRoutes";
 import lineRouter from "./routes/lineRoutes";
@@ -24,6 +25,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/dock", dockRouter);
 app.use("/api/line", lineRouter);
 app.use("/api/departure", departureRouter);
+app.use("/api/userlevel", userlevelRouter);
 
 const DIST_PATH = path.join(process.cwd(), "frontend", "build");
 

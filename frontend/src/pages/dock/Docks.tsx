@@ -3,8 +3,8 @@ import { useTheme } from "@mui/material/styles";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useNavigate } from "react-router-dom";
 
-import { useGetDocksQuery } from "../redux/api";
-import Spinner from "../components/Spinner";
+import { useGetDocksQuery } from "../../redux/api";
+import Spinner from "../../components/Spinner";
 
 const Docks = () => {
   const theme = useTheme();
@@ -45,7 +45,7 @@ const Docks = () => {
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "flex-start",
+                alignItems: "center",
               }}
             >
               <Typography

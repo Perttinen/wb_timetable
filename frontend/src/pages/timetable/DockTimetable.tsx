@@ -13,9 +13,11 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs";
 
-import { IDepartureForTimetable } from "../../../types";
-import { useGetDockQuery, useGetTimetableQuery } from "../redux/api";
-import Spinner from "../components/Spinner";
+import { IDepartureForTimetable } from "../../../../types";
+import { useGetDockQuery, useGetTimetableQuery } from "../../redux/api";
+import Spinner from "../../components/Spinner";
+// import { getErrorMessage } from "../../utils/getErrorMessage";
+import { showSnackbar } from "../../components/SnackbarProvider";
 
 const InfoCell = ({
   text,
@@ -158,16 +160,25 @@ interface Props {
 
 const DockTimetable = ({ fullwidth }: Props) => {
   const { dockId } = useParams<{ dockId: string }>();
-  const { data: dock, isLoading: isLoadingDock } = useGetDockQuery(
-    Number(dockId)
-  );
+  const {
+    data: dock,
+    isLoading: isLoadingDock,
+    error: getDockError,
+  } = useGetDockQuery(Number(dockId));
   const {
     data: departures,
     isLoading: isLoadingTimetable,
     refetch: fetchDepartures,
+    error: getTimetableError,
   } = useGetTimetableQuery(String(dockId));
   const url = useLocation();
-
+  if (getTimetableError || getDockError) {
+    showSnackbar({
+      message: "unable to refresh data!",
+      severity: "error",
+      duration: 10000,
+    });
+  }
   const height = url.pathname.includes("logged")
     ? { xs: "calc(100dvh - 56px)", sm: "calc(100vh - 64px)" }
     : { xs: "100dvh" };
@@ -175,7 +186,7 @@ const DockTimetable = ({ fullwidth }: Props) => {
   useEffect(() => {
     const interval = setInterval(async () => {
       await fetchDepartures();
-    }, 60000);
+    }, 20000);
     return () => clearInterval(interval);
   }, [fetchDepartures]);
 
