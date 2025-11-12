@@ -9,12 +9,12 @@ import {
   FormDatePicker,
   FormGroupContainer,
   FormMainContainer,
-} from "../components/SmallOnes";
-import { IDeleteDeparturesPayload } from "../../../types";
-import { useDeleteDeparturesMutation } from "../redux/api";
+} from "../../components/SmallOnes";
+import { IDeleteDeparturesPayload } from "../../../../types";
+import { useDeleteDeparturesMutation } from "../../redux/api";
 import { useNavigate, useParams } from "react-router-dom";
-import { showSnackbar } from "../components/SnackbarProvider";
-import Spinner from "../components/Spinner";
+import { showSnackbar } from "../../components/SnackbarProvider";
+import Spinner from "../../components/Spinner";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -58,7 +58,7 @@ const RemoveStarts = () => {
       const result = await deleteDepartures(payload);
       if (!("error" in result)) {
         const message = `${result.data} start(s) deleted`;
-        showSnackbar({ message, severity: "success" });
+        showSnackbar({ message, severity: "success", duration: 5000 });
         void navigate("/logged/schedule");
       }
     } catch (e) {

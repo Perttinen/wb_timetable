@@ -7,14 +7,14 @@ import {
   FormGroupContainer,
   FormMainContainer,
   FormTextField,
-} from "../components/SmallOnes";
+} from "../../components/SmallOnes";
 import {
   useChangeDockMutation,
   useDeleteDockMutation,
   useGetDockQuery,
-} from "../redux/api";
-import { showSnackbar } from "../components/SnackbarProvider";
-import Spinner from "../components/Spinner";
+} from "../../redux/api";
+import { showSnackbar } from "../../components/SnackbarProvider";
+import Spinner from "../../components/Spinner";
 
 const ChangeDock = () => {
   const { dockId } = useParams<{ dockId: string }>();
@@ -42,7 +42,7 @@ const ChangeDock = () => {
         });
         if (!("error" in result)) {
           const message = `dock ${dock.name} changed to ${values.name}`;
-          showSnackbar({ message, severity: "success" });
+          showSnackbar({ message, severity: "success", duration: 5000 });
           void navigate("/logged/docks");
         }
       }
@@ -57,7 +57,7 @@ const ChangeDock = () => {
         const result = await deleteDock(dock.id);
         if (!("error" in result)) {
           const message = `dock ${dock.name} deleted`;
-          showSnackbar({ message, severity: "success" });
+          showSnackbar({ message, severity: "success", duration: 5000 });
           void navigate("/logged/docks");
         }
       }

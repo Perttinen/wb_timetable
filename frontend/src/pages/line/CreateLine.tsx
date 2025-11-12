@@ -10,10 +10,10 @@ import {
   FormGroupContainer,
   FormMainContainer,
   FormButtons,
-} from "../components/SmallOnes";
-import { useAddLineMutation, useGetDocksQuery } from "../redux/api";
-import { showSnackbar } from "../components/SnackbarProvider";
-import Spinner from "../components/Spinner";
+} from "../../components/SmallOnes";
+import { useAddLineMutation, useGetDocksQuery } from "../../redux/api";
+import { showSnackbar } from "../../components/SnackbarProvider";
+import Spinner from "../../components/Spinner";
 
 const CreateLine = () => {
   const [errorMsg, setErrorMsg] = useState("");
@@ -72,7 +72,7 @@ const CreateLine = () => {
           const stops = result.stopDocks?.map((stop) => stop.name).join(" | ");
           const via = stops ? `via: ${stops}` : "";
           const message = `line ${result.startDock.name} - ${result.endDock.name} ${via}  created`;
-          showSnackbar({ message, severity: "success" });
+          showSnackbar({ message, severity: "success", duration: 5000 });
           void navigate("/logged/lines");
         }
       } else {

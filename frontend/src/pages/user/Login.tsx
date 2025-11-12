@@ -2,13 +2,13 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { Button, TextField } from "@mui/material";
 
-import { useLoginMutation } from "../redux/auth/loginApi";
-import { useAppDispatch } from "../redux/hooks";
-import { setCredentials } from "../redux/auth/loggedUserSlice";
+import { useLoginMutation } from "../../redux/auth/loginApi";
+import { useAppDispatch } from "../../redux/hooks";
+import { setCredentials } from "../../redux/auth/loggedUserSlice";
 import { useNavigate } from "react-router-dom";
-import { getErrorMessage } from "../utils/getErrorMessage";
-import { showSnackbar } from "../components/SnackbarProvider";
-import Spinner from "../components/Spinner";
+import { getErrorMessage } from "../../utils/getErrorMessage";
+import { showSnackbar } from "../../components/SnackbarProvider";
+import Spinner from "../../components/Spinner";
 
 const validationSchema = yup.object({
   username: yup
@@ -24,7 +24,7 @@ const validationSchema = yup.object({
 const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [login, { isLoading: isLogging, error }] = useLoginMutation();
+  const [login, { isLoading: isLogging }] = useLoginMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -39,8 +39,9 @@ const Login = () => {
         dispatch(setCredentials(result));
         void navigate("/logged/timetables");
       } catch (e) {
-        const message = `Kirjautuminen epäonnistui: ${e}`;
-        showSnackbar({ message, severity: "error" });
+        const message = getErrorMessage(e);
+        //  `Kirjautuminen epäonnistui: ${e}`;
+        showSnackbar({ message, severity: "error", duration: 10000 });
       }
     },
   });
@@ -90,7 +91,6 @@ const Login = () => {
         <Button color="primary" variant="contained" fullWidth type="submit">
           Submit
         </Button>
-        {error && <p style={{ color: "red" }}>{getErrorMessage(error)}</p>}
       </form>
     </div>
   );

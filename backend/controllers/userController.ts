@@ -8,6 +8,7 @@ import {
   IJsonUserFlattenedLevels,
   IJsonUserFromDbNoLevels,
   IJsonUserPw,
+  INewUserRequest,
   IUserlevel,
 } from "../../types";
 import { User, UserAndlevel, Userlevel } from "../../database/models";
@@ -55,12 +56,6 @@ const validateUserlevelInput = ({
     return null;
   return validatedInputLevelIds;
 };
-
-interface INewUserRequest {
-  username: string;
-  password: string;
-  userlevel: string[];
-}
 
 const createNewUser = asyncHandler(
   async (

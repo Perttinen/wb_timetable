@@ -116,6 +116,8 @@ const getAllLines = asyncHandler(async (_req: Request, res: Response) => {
   const linesDb: Line[] = await Line.findAll({
     include: lineIncludes,
   });
+  // console.log(linesDb.map((line) => createReturnableLine(line)));
+
   res.status(200).json(linesDb.map((line) => createReturnableLine(line)));
 });
 

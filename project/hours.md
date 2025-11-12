@@ -1,6 +1,10 @@
 ## Hours
 
-#### total hours 122
+#### total hours 136
+
+12.11.2025 Pages to folders. Create User. Userlevel controller + router. Better errors. Hous: 8, Total: 136
+
+5.11.2025 Remove departures implemented both ends. Hours: 6, Total: 128
 
 4.11.2025 Spinners while witing api. 60 sec polling in timetable. Small refactoring. Hours: 2, Total: 122
 

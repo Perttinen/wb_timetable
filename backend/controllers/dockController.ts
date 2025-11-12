@@ -17,6 +17,7 @@ const createNewDock = asyncHandler(
       throwValidationError("required { name } input value missing");
     }
     const newDock: IDock = (await Dock.create({ name })).toJSON();
+
     res.status(201).json(newDock);
   }
 );

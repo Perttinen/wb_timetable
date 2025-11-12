@@ -14,8 +14,9 @@ export const getErrorMessage = (error: unknown): string => {
     typeof (error as FetchBaseQueryError).data === "object"
   ) {
     const data = (error as FetchBaseQueryError).data as IErrorWithMessage;
-    return data?.error?.message || "Tuntematon virhe";
+    return data?.error?.message || "Unexpected exception";
   }
-  console.error("TUNTEMATON API ERRORI!: ", error);
-  return "Something nasty happened...";
+  console.error("Unexpected exception: ", error);
+
+  return "Unexpected exception";
 };

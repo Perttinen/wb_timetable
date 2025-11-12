@@ -31,18 +31,19 @@ const formatLines = (input: IFormatLinesEntry): IFormattedLine[] => {
       line.docks.sort(
         (a, b) => a.lineDock.delayFromStart - b.lineDock.delayFromStart
       );
+      console.log(line.docks);
 
       const isStartDock = line.startDock.id === dockId;
-      const dockInDocks = line.docks.find((d) => d.id === dockId);
+      const isStopDock = line.docks.find((d) => d.id === dockId);
 
-      if (!isStartDock && !dockInDocks) continue;
+      if (!isStartDock && !isStopDock) continue;
 
-      const delay = isStartDock ? 0 : dockInDocks!.lineDock.delayFromStart;
+      const delay = isStartDock ? 0 : isStopDock!.lineDock.delayFromStart;
 
       const via = isStartDock
         ? line.docks.map((dock) => dock.name)
         : line.docks
-            .slice(line.docks.indexOf(dockInDocks!) + 1)
+            .slice(line.docks.indexOf(isStopDock!) + 1)
             .map((dock) => dock.name);
       formattedLines.push({
         lineId: line.id,

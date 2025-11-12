@@ -8,6 +8,8 @@ import {
   IJsonUserFlattenedLevels,
   ILineReturnable,
   ILineToAdd,
+  INewUserRequest,
+  IUserlevel,
 } from "../../../types";
 import { apiQuery } from "./apiQuery";
 
@@ -19,7 +21,7 @@ interface IDock {
 export const api = createApi({
   reducerPath: "api",
   baseQuery: apiQuery,
-  tagTypes: ["GetDocks", "GetDock", "Timetable"],
+  tagTypes: ["GetDocks", "GetDock", "Timetable", "Lines", "Users"],
   endpoints: (builder) => ({
     // DOCK
     getDocks: builder.query<IDock[], void>({
@@ -34,7 +36,7 @@ export const api = createApi({
         url: `/dock/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["GetDocks", "Timetable"],
+      invalidatesTags: ["GetDocks"],
     }),
     addDock: builder.mutation<IDock, IDockname>({
       query: (newDock) => ({
@@ -50,7 +52,7 @@ export const api = createApi({
         method: "PATCH",
         body: Dock,
       }),
-      invalidatesTags: ["GetDocks", "GetDock", "Timetable"],
+      invalidatesTags: ["GetDocks", "GetDock", "Timetable", "Lines"],
     }),
 
     getDock: builder.query<IDock, number>({
@@ -90,6 +92,7 @@ export const api = createApi({
         method: "DELETE",
         body: deleteManyDepartures,
       }),
+      invalidatesTags: ["Timetable"],
     }),
     //LINE
     getLines: builder.query<ILineReturnable[], void>({
@@ -97,6 +100,7 @@ export const api = createApi({
         url: "/line",
         method: "GET",
       }),
+      providesTags: ["Lines"],
     }),
     getLine: builder.query<ILineReturnable, number>({
       query: (id) => ({
@@ -110,10 +114,25 @@ export const api = createApi({
         method: "POST",
         body: newLine,
       }),
+      invalidatesTags: ["Lines"],
     }),
     //USER
     getUsers: builder.query<IJsonUserFlattenedLevels[], void>({
       query: () => ({ url: "/user", method: "GET" }),
+      providesTags: ["Users"],
+    }),
+    addUser: builder.mutation<IJsonUserFlattenedLevels, INewUserRequest>({
+      query: (newUser) => ({
+        url: "/user",
+        method: "POST",
+        body: newUser,
+      }),
+      invalidatesTags: ["Users"],
+    }),
+    //USERLEVEL
+    getUserlevels: builder.query<IUserlevel[], void>({
+      query: () => ({ url: "/userlevel", method: "GET" }),
+      // providesTags: ["Users"],
     }),
   }),
 });
@@ -132,4 +151,6 @@ export const {
   useGetLinesQuery,
   useGetLineQuery,
   useGetUsersQuery,
+  useAddUserMutation,
+  useGetUserlevelsQuery,
 } = api;
