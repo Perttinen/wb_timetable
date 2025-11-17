@@ -10,7 +10,7 @@ const Docks = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const { data: docks, isLoading: isLoadingDocks } = useGetDocksQuery();
+  const { data: docks, isLoading: isLoadingDocks, error } = useGetDocksQuery();
 
   const handleNewDock = () => {
     void navigate("/logged/docks/create");
@@ -20,7 +20,11 @@ const Docks = () => {
     void navigate(`/logged/docks/change/${dockId}`);
   };
 
-  const isBusy = isLoadingDocks;
+  const isBusy = isLoadingDocks && !error;
+
+  if (error) {
+    console.log(error);
+  }
 
   return (
     <>

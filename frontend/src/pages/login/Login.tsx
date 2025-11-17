@@ -2,13 +2,11 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { Button, TextField } from "@mui/material";
 
-import { useLoginMutation } from "../../redux/auth/loginApi";
-import { useAppDispatch } from "../../redux/hooks";
-import { setCredentials } from "../../redux/auth/loggedUserSlice";
 import { useNavigate } from "react-router-dom";
 import { getErrorMessage } from "../../utils/getErrorMessage";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
+import { api, useGetMeQuery, useLoginMutation } from "../../redux/api";
 
 const validationSchema = yup.object({
   username: yup
@@ -22,9 +20,11 @@ const validationSchema = yup.object({
 });
 
 const Login = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [login, { isLoading: isLogging }] = useLoginMutation();
+  const { refetch: refetchMe } = useGetMeQuery();
+
+  api.util.invalidateTags(["Me"]);
 
   const formik = useFormik({
     initialValues: {
@@ -36,10 +36,11 @@ const Login = () => {
       try {
         const result = await login(values).unwrap();
         localStorage.setItem("token", result.token);
-        dispatch(setCredentials(result));
+        await refetchMe();
         void navigate("/logged/timetables");
       } catch (e) {
         const message = getErrorMessage(e);
+
         //  `Kirjautuminen epäonnistui: ${e}`;
         showSnackbar({ message, severity: "error", duration: 10000 });
       }

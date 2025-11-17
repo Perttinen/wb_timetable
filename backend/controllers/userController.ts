@@ -9,6 +9,7 @@ import {
   IJsonUserFromDbNoLevels,
   IJsonUserPw,
   INewUserRequest,
+  IUpdateUserInput,
   IUserlevel,
 } from "../../types";
 import { User, UserAndlevel, Userlevel } from "../../database/models";
@@ -168,13 +169,6 @@ const getUser = asyncHandler(
     res.status(200).json(userlevelsToArray(user));
   }
 );
-
-interface IUpdateUserInput {
-  disabled?: boolean;
-  password?: string;
-  userlevels?: string[];
-  username?: string;
-}
 
 const updateUser = asyncHandler(
   async (

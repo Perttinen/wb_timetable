@@ -163,3 +163,18 @@ export interface IUserlevel {
   id: number;
   userlevel: string;
 }
+export interface IUpdateUserInput {
+  disabled?: boolean;
+  password?: string;
+  userlevels?: string[];
+  username?: string;
+}
+
+export interface ILoginResponse {
+  user: IJsonUserFlattenedLevels;
+  token: string;
+}
+export interface ILoginRequest {
+  username: string;
+  password: string;
+}

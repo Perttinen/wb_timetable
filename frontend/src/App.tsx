@@ -6,7 +6,7 @@ import NavLayout from "./layouts/NavLayout";
 import LoggedLayout from "./layouts/LoggedLayout";
 import ScheduleLine from "./pages/scheldule/ScheduleLine";
 import AddManyStarts from "./pages/scheldule/AddManyStarts";
-import Login from "./pages/user/Login";
+import Login from "./pages/login/Login";
 import Timetables from "./pages/timetable/Timetables";
 import DockTimetable from "./pages/timetable/DockTimetable";
 import Schedule from "./pages/scheldule/Schedule";
@@ -20,6 +20,7 @@ import ChangeLine from "./pages/line/ChangeLine";
 import CreateLine from "./pages/line/CreateLine";
 import Users from "./pages/user/Users";
 import CreateUser from "./pages/user/CreateUser";
+import ChangeUser from "./pages/user/ChangeUser";
 
 const App = () => {
   return (
@@ -63,6 +64,10 @@ const App = () => {
           <Route element={<LoggedLayout preferredUserlevel="admin" />}>
             <Route path="/logged/users" element={<Users />} />
             <Route path="/logged/users/create" element={<CreateUser />} />
+            <Route
+              path="/logged/users/change/:userId"
+              element={<ChangeUser />}
+            />
           </Route>
         </Route>
       </Route>

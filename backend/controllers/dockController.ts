@@ -4,7 +4,7 @@ import asyncHandler from "express-async-handler";
 import { Departure, Dock, Line, LineDock } from "../../database/models";
 import { IDock } from "../../types";
 import { throwNotFound, throwValidationError } from "../util/errorThrowers";
-import { Op } from "@sequelize/core";
+
 // import { lineIncludes } from "./commonFuncs";
 
 const createNewDock = asyncHandler(
@@ -60,21 +60,6 @@ const getDock = asyncHandler(async (req, res: Response<IDock>) => {
   res.status(200).json(dock.toJSON());
 });
 
-const getRelatedData = asyncHandler(async (req, res: Response<IDock>) => {
-  const dockId = Number(req.params.id);
-
-  const linesWithDockDb = await Line.findAndCountAll({
-    where: { [Op.or]: [{ startDockId: dockId }, { endDockId: dockId }] },
-  });
-  const lineDocksWithDockDb = await LineDock.findAndCountAll({
-    where: { dockId: dockId },
-  });
-  console.log(linesWithDockDb.count);
-  console.log(lineDocksWithDockDb.count);
-
-  res.status(200).end();
-});
-
 const updateDock = asyncHandler(
   async (req: Request<unknown, unknown, IDock>, res: Response<IDock>) => {
     const { id, name } = req.body;
@@ -108,5 +93,4 @@ export default {
   getDock,
   updateDock,
   deleteAllDocks,
-  getRelatedData,
 };

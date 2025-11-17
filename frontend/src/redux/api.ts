@@ -8,7 +8,10 @@ import {
   IJsonUserFlattenedLevels,
   ILineReturnable,
   ILineToAdd,
+  ILoginRequest,
+  ILoginResponse,
   INewUserRequest,
+  IUpdateUserInput,
   IUserlevel,
 } from "../../../types";
 import { apiQuery } from "./apiQuery";
@@ -21,7 +24,7 @@ interface IDock {
 export const api = createApi({
   reducerPath: "api",
   baseQuery: apiQuery,
-  tagTypes: ["GetDocks", "GetDock", "Timetable", "Lines", "Users"],
+  tagTypes: ["GetDocks", "GetDock", "Timetable", "Lines", "Users", "Me"],
   endpoints: (builder) => ({
     // DOCK
     getDocks: builder.query<IDock[], void>({
@@ -121,6 +124,10 @@ export const api = createApi({
       query: () => ({ url: "/user", method: "GET" }),
       providesTags: ["Users"],
     }),
+    getUser: builder.query<IJsonUserFlattenedLevels, string>({
+      query: (userId) => ({ url: `/user/${userId}`, method: "GET" }),
+      // providesTags: ["User"],
+    }),
     addUser: builder.mutation<IJsonUserFlattenedLevels, INewUserRequest>({
       query: (newUser) => ({
         url: "/user",
@@ -129,10 +136,41 @@ export const api = createApi({
       }),
       invalidatesTags: ["Users"],
     }),
+    updateUser: builder.mutation<
+      IJsonUserFlattenedLevels,
+      { id: string; body: IUpdateUserInput }
+    >({
+      query: ({ id, body }) => ({
+        url: `/user/${id}`,
+        method: "PATCH",
+        body,
+      }),
+      // invalidatesTags: ["GetDocks", "GetDock", "Timetable", "Lines"],
+    }),
+    deleteUser: builder.mutation<number, number>({
+      query: (id) => ({
+        url: `/user/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Users"],
+    }),
     //USERLEVEL
     getUserlevels: builder.query<IUserlevel[], void>({
       query: () => ({ url: "/userlevel", method: "GET" }),
       // providesTags: ["Users"],
+    }),
+    //LOGIN
+    login: builder.mutation<ILoginResponse, ILoginRequest>({
+      query: (credentials) => ({
+        url: "/auth/login",
+        method: "POST",
+        body: credentials,
+        invalidatesTags: ["Me"],
+      }),
+    }),
+    getMe: builder.query<IJsonUserFlattenedLevels, void>({
+      query: () => "/auth/me",
+      providesTags: ["Me"],
     }),
   }),
 });
@@ -153,4 +191,9 @@ export const {
   useGetUsersQuery,
   useAddUserMutation,
   useGetUserlevelsQuery,
+  useGetUserQuery,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+  useLoginMutation,
+  useGetMeQuery,
 } = api;

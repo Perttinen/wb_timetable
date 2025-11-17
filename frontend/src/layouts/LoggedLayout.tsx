@@ -1,14 +1,14 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { RootState } from "../redux/store";
-import { useAppSelector } from "../redux/hooks";
 import Spinner from "../components/Spinner";
+import { useGetMeQuery } from "../redux/api";
 
 const LoggedLayout = ({
   preferredUserlevel,
 }: {
   preferredUserlevel: string;
 }) => {
-  const user = useAppSelector((state: RootState) => state.loggedUser.user);
+  // const user = useAppSelector((state: RootState) => state.loggedUser.user);
+  const { data: user } = useGetMeQuery();
 
   if (!user) {
     return <Spinner />;

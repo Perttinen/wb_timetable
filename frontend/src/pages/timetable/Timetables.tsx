@@ -10,6 +10,7 @@ const Timetables = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+
   const { data: docks, isLoading: isLoadingDocks } = useGetDocksQuery();
 
   const isLoggedRoute = location.pathname.includes("logged");

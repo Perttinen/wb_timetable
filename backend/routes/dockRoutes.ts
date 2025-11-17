@@ -11,6 +11,5 @@ router.route("/:id").get(docks.getDock);
 router.route("/:id").delete(authorizer("admin"), docks.deleteDock);
 router.route("/").delete(authorizer("hal"), docks.deleteAllDocks);
 router.route("/").patch(authorizer("admin"), docks.updateDock);
-router.route("/relations/:id").get(docks.getRelatedData);
 
 export default router;

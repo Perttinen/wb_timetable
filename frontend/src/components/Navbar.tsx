@@ -14,14 +14,14 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { logout } from "../redux/auth/logoutActions";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+import { api, useGetMeQuery } from "../redux/api";
+
 function Navbar() {
-  const loggedUser = useAppSelector((state) => state.loggedUser.user);
-  const dispatch = useAppDispatch();
+  const { data: loggedUser } = useGetMeQuery();
+  // const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -37,7 +37,7 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.clear();
-    dispatch(logout());
+    api.util.invalidateTags(["Me"]);
     void navigate("/");
     setAnchorElUser(null);
   };
