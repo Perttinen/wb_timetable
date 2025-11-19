@@ -13,7 +13,6 @@ import {
   INewUserRequest,
   IUpdateLineArgs,
   IUpdateUserArgs,
-  IUpdateUserInput,
   IUserlevel,
 } from "../../../types";
 import { apiQuery } from "./apiQuery";
