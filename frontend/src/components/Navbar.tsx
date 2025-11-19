@@ -18,12 +18,14 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import { api, useGetMeQuery } from "../redux/api";
+import { useDispatch } from "react-redux";
 
 function Navbar() {
-  const { data: loggedUser } = useGetMeQuery();
-  // const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
+  const dispatch = useDispatch();
+
+  const { data: loggedUser } = useGetMeQuery();
 
   const getPagesByUserlevels = (userlevels: string[]) => {
     const pagesToShow = [];
@@ -36,14 +38,12 @@ function Navbar() {
   const avatar = !loggedUser ? "?" : loggedUser.username[0].toUpperCase();
 
   const handleLogout = () => {
-    localStorage.clear();
-    api.util.invalidateTags(["Me"]);
+    dispatch(api.util.resetApiState());
     void navigate("/");
     setAnchorElUser(null);
   };
 
   const showProfile = () => {
-    console.log("profile");
     setAnchorElUser(null);
   };
 

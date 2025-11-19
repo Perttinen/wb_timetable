@@ -11,6 +11,8 @@ import {
   ILoginRequest,
   ILoginResponse,
   INewUserRequest,
+  IUpdateLineArgs,
+  IUpdateUserArgs,
   IUpdateUserInput,
   IUserlevel,
 } from "../../../types";
@@ -24,7 +26,16 @@ interface IDock {
 export const api = createApi({
   reducerPath: "api",
   baseQuery: apiQuery,
-  tagTypes: ["GetDocks", "GetDock", "Timetable", "Lines", "Users", "Me"],
+  tagTypes: [
+    "GetDocks",
+    "GetDock",
+    "Timetable",
+    "Lines",
+    "Line",
+    "Users",
+    "User",
+    "Me",
+  ],
   endpoints: (builder) => ({
     // DOCK
     getDocks: builder.query<IDock[], void>({
@@ -110,6 +121,7 @@ export const api = createApi({
         url: `/line/${id}`,
         method: "GET",
       }),
+      providesTags: ["Line"],
     }),
     addLine: builder.mutation<ILineReturnable, ILineToAdd>({
       query: (newLine) => ({
@@ -119,6 +131,16 @@ export const api = createApi({
       }),
       invalidatesTags: ["Lines"],
     }),
+
+    updateLine: builder.mutation<ILineReturnable, IUpdateLineArgs>({
+      query: ({ id, body }) => ({
+        url: `/line/${id}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Lines", "Line", "Timetable"],
+    }),
+
     //USER
     getUsers: builder.query<IJsonUserFlattenedLevels[], void>({
       query: () => ({ url: "/user", method: "GET" }),
@@ -126,7 +148,7 @@ export const api = createApi({
     }),
     getUser: builder.query<IJsonUserFlattenedLevels, string>({
       query: (userId) => ({ url: `/user/${userId}`, method: "GET" }),
-      // providesTags: ["User"],
+      providesTags: ["User"],
     }),
     addUser: builder.mutation<IJsonUserFlattenedLevels, INewUserRequest>({
       query: (newUser) => ({
@@ -136,16 +158,13 @@ export const api = createApi({
       }),
       invalidatesTags: ["Users"],
     }),
-    updateUser: builder.mutation<
-      IJsonUserFlattenedLevels,
-      { id: string; body: IUpdateUserInput }
-    >({
+    updateUser: builder.mutation<IJsonUserFlattenedLevels, IUpdateUserArgs>({
       query: ({ id, body }) => ({
         url: `/user/${id}`,
         method: "PATCH",
         body,
       }),
-      // invalidatesTags: ["GetDocks", "GetDock", "Timetable", "Lines"],
+      invalidatesTags: ["Users", "User"],
     }),
     deleteUser: builder.mutation<number, number>({
       query: (id) => ({
@@ -188,6 +207,7 @@ export const {
   useAddLineMutation,
   useGetLinesQuery,
   useGetLineQuery,
+  useUpdateLineMutation,
   useGetUsersQuery,
   useAddUserMutation,
   useGetUserlevelsQuery,

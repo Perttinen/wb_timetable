@@ -63,6 +63,8 @@ const login = asyncHandler(
 
 const me = asyncHandler(
   async (req, res: Response<IJsonUserFlattenedLevels>) => {
+    console.log("getMe");
+
     const dt = req.decodedToken;
 
     const user = (await User.findByPk(req.decodedToken.id))?.toJSON();

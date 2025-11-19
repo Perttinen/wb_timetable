@@ -1,14 +1,21 @@
-import { useFormik } from "formik";
+import { Form, Formik } from "formik";
 import * as yup from "yup";
-import { Button, TextField } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
 import { getErrorMessage } from "../../utils/getErrorMessage";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
-import { api, useGetMeQuery, useLoginMutation } from "../../redux/api";
+import { api, useLoginMutation } from "../../redux/api";
+import {
+  FormButtons,
+  FormGroupContainer,
+  FormMainContainer,
+  FormTextField,
+} from "../../components/SmallOnes";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 
-const validationSchema = yup.object({
+const loginSchema = yup.object({
   username: yup
     .string()
     .min(3, "Username should be of minimum 3 characters length")
@@ -22,77 +29,57 @@ const validationSchema = yup.object({
 const Login = () => {
   const navigate = useNavigate();
   const [login, { isLoading: isLogging }] = useLoginMutation();
-  const { refetch: refetchMe } = useGetMeQuery();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(api.util.resetApiState());
+    localStorage.clear();
+  }, []);
 
-  api.util.invalidateTags(["Me"]);
-
-  const formik = useFormik({
-    initialValues: {
-      username: "",
-      password: "",
-    },
-    validationSchema: validationSchema,
-    onSubmit: async (values) => {
-      try {
-        const result = await login(values).unwrap();
-        localStorage.setItem("token", result.token);
-        await refetchMe();
-        void navigate("/logged/timetables");
-      } catch (e) {
-        const message = getErrorMessage(e);
-
-        //  `Kirjautuminen epäonnistui: ${e}`;
-        showSnackbar({ message, severity: "error", duration: 10000 });
-      }
-    },
-  });
+  const handleSubmit = async (values: {
+    username: string;
+    password: string;
+  }) => {
+    try {
+      const result = await login(values).unwrap();
+      localStorage.setItem("token", result.token);
+      api.util.resetApiState();
+      void navigate("/logged/timetables");
+    } catch (e) {
+      const message = getErrorMessage(e);
+      showSnackbar({ message, severity: "error", duration: 10000 });
+    }
+  };
 
   const isBusy = isLogging;
 
   return (
     <div>
       {isBusy && <Spinner />}
-      <form
-        style={{
-          maxWidth: "400px",
-          margin: "100px auto",
-          padding: "2rem",
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          backgroundColor: "#f9f9f9",
-          borderRadius: "8px",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-        }}
-        onSubmit={formik.handleSubmit}
-      >
-        <TextField
-          fullWidth
-          id="username"
-          name="username"
-          label="Username"
-          value={formik.values.username}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.username && Boolean(formik.errors.username)}
-          helperText={formik.touched.username && formik.errors.username}
-        />
-        <TextField
-          fullWidth
-          id="password"
-          name="password"
-          label="Password"
-          type="password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.password && Boolean(formik.errors.password)}
-          helperText={formik.touched.password && formik.errors.password}
-        />
-        <Button color="primary" variant="contained" fullWidth type="submit">
-          Submit
-        </Button>
-      </form>
+      <FormMainContainer caption="login">
+        <Formik
+          initialValues={{
+            username: "",
+            password: "",
+          }}
+          validationSchema={loginSchema}
+          onSubmit={handleSubmit}
+          enableReinitialize={true}
+        >
+          <Form>
+            <FormGroupContainer>
+              <FormTextField
+                name="username"
+                label="Username"
+                type="inputLabel"
+              />
+            </FormGroupContainer>
+            <FormGroupContainer>
+              <FormTextField name="password" label="Password" type="password" />
+            </FormGroupContainer>
+            <FormButtons buttons={["save"]} submitLabel="submit" />
+          </Form>
+        </Formik>
+      </FormMainContainer>
     </div>
   );
 };

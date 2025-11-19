@@ -7,7 +7,6 @@ const LoggedLayout = ({
 }: {
   preferredUserlevel: string;
 }) => {
-  // const user = useAppSelector((state: RootState) => state.loggedUser.user);
   const { data: user } = useGetMeQuery();
 
   if (!user) {

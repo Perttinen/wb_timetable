@@ -21,29 +21,6 @@ const dockIdsAreValid = async (line: ILineToAdd): Promise<boolean> => {
   return idsToValidate.every((id) => validDockIds.includes(id));
 };
 
-// const createReturnableLine = (line: Line): ILineReturnable | void => {
-//   const jsonLine: IBigLine = line.toJSON();
-//   if (jsonLine.docks && jsonLine.endDock && jsonLine.startDock) {
-//     const stopDocks = jsonLine.docks.map((dock) => ({
-//       id: dock.id,
-//       name: dock.name,
-//       delayFromStart: dock.lineDock.delayFromStart,
-//     }));
-//     return {
-//       id: jsonLine.id,
-//       startDock: {
-//         name: jsonLine.startDock.name,
-//         id: jsonLine.startDock.id,
-//       },
-//       endDock: {
-//         name: jsonLine.endDock.name,
-//         id: jsonLine.endDock.id,
-//       },
-//       stopDocks,
-//     };
-//   }
-// };
-
 const createNewLine = asyncHandler(
   async (
     req: Request<unknown, unknown, ILineToAdd>,

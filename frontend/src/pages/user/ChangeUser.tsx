@@ -14,13 +14,15 @@ import {
 } from "../../components/SmallOnes";
 import { Field, Form, Formik } from "formik";
 import { Box, Typography, useTheme } from "@mui/material";
-// import * as Yup from "yup";
+import { showSnackbar } from "../../components/SnackbarProvider";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 const ChangeUser = () => {
   const { userId } = useParams<{ userId: string }>();
   const { data: user, isLoading: isLoadingUser } = useGetUserQuery(
     String(userId)
   );
+
   const { data: userlevels, isLoading: isLoadingUserlevels } =
     useGetUserlevelsQuery();
 
@@ -29,31 +31,47 @@ const ChangeUser = () => {
   const navigate = useNavigate();
   const theme = useTheme();
 
-  //   const userSchema = Yup.object().shape({
-  //     username: Yup.string()
-  //       .min(2, "Name must be 2-12 charecters!")
-  //       .max(12, "Name must be 2-12 charecters!")
-  //       .required("Name is required!"),
-  //   });
-
   interface IFormvalues {
     userlevel: string;
     disabled: boolean;
   }
 
   const handleSubmit = async (values: IFormvalues) => {
-    await updateUser({
-      id: String(user?.id),
-      body: {
-        ...values,
-        userlevels: values.userlevel === "admin" ? ["user", "admin"] : ["user"],
-      },
-    });
+    const body = {
+      ...values,
+      userlevels: values.userlevel === "admin" ? ["user", "admin"] : ["user"],
+    };
+    try {
+      const result = await updateUser({
+        id: String(user?.id),
+        body,
+      });
+      showSnackbar({
+        message: `user ${result.data?.username} updated`,
+        duration: 5000,
+        severity: "success",
+      });
+      void navigate("/logged/users");
+    } catch (e) {
+      const message = getErrorMessage(e);
+      showSnackbar({ severity: "error", duration: 6000, message });
+    }
   };
 
   const handleDelete = async () => {
-    if (user) {
-      await deleteUser(user?.id);
+    try {
+      if (user) {
+        await deleteUser(user?.id);
+        showSnackbar({
+          message: `user ${user.username} deleted`,
+          duration: 5000,
+          severity: "success",
+        });
+        void navigate("/logged/users");
+      }
+    } catch (e) {
+      const message = getErrorMessage(e);
+      showSnackbar({ severity: "error", duration: 6000, message });
     }
   };
 

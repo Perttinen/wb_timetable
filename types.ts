@@ -130,12 +130,6 @@ export interface ILineReturnable {
   }[];
 }
 
-export interface ILineToAdd {
-  startDockId: number;
-  stops: { dockId: number; delayFromStart: number }[];
-  endDockId: number;
-}
-
 export interface ILineWithStopsArray {
   id: number;
   startDockId: number;
@@ -177,4 +171,23 @@ export interface ILoginResponse {
 export interface ILoginRequest {
   username: string;
   password: string;
+}
+
+export interface IStopdocks {
+  stopDocks: { name: string; id: number; delayFromStart: number }[];
+}
+export interface ILineToAdd {
+  startDockId: number;
+  stops: { dockId: number; delayFromStart: number }[];
+  endDockId: number;
+}
+
+export interface IUpdateLineArgs {
+  id: string;
+  body: ILineToAdd;
+}
+
+export interface IUpdateUserArgs {
+  id: string;
+  body: IUpdateUserInput;
 }
