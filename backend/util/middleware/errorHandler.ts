@@ -13,7 +13,6 @@ const errorHandler = (
   const status = getStatusCode(error.name) || 500;
   const message = error.message || "strange server error";
   const name = error.name || "Error";
-
   res.status(status).json({ error: { name, message } });
 
   next(error);

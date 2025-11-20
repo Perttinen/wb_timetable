@@ -8,7 +8,7 @@ const Schedule = () => {
     void navigate(`/logged/schedule/${lineId}`);
   };
 
-  return <LineSelector onSelectLine={handleSelectLine} caption="SELECT LINE" />;
+  return <LineSelector onSelectLine={handleSelectLine} caption="SCHEDULE" />;
 };
 
 export default Schedule;

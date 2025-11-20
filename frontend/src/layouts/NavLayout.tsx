@@ -1,28 +1,36 @@
-import { Outlet } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { useGetMeQuery } from "../redux/auth/loginApi";
-import { useEffect } from "react";
-import { setCredentials } from "../redux/auth/loggedUserSlice";
+import { Outlet, useNavigate } from "react-router-dom";
+
 import Navbar from "../components/Navbar";
+import { useGetMeQuery } from "../redux/api";
+import Spinner from "../components/Spinner";
+import { useEffect } from "react";
 
 const NavLayout = () => {
-  const dispatch = useAppDispatch();
-  const loggedUser = useAppSelector((state) => state.loggedUser);
   const token = localStorage.getItem("token");
-  const { data } = useGetMeQuery(undefined, {
-    skip: !token,
-  });
-  useEffect(() => {
-    if (!loggedUser.user && token && data) {
-      dispatch(setCredentials({ user: data, token }));
+  const { data: loggedUser, isLoading: isLoadingLoggedUser } = useGetMeQuery(
+    undefined,
+    {
+      skip: !token,
     }
-  }, [data, loggedUser, token, dispatch]);
+  );
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      void navigate("/");
+    }
+  });
 
   return (
-    <div>
-      <Navbar />
-      <Outlet />
-    </div>
+    <>
+      {isLoadingLoggedUser && <Spinner />}
+      {!isLoadingLoggedUser && loggedUser && (
+        <div>
+          <Navbar />
+          <Outlet />
+        </div>
+      )}
+    </>
   );
 };
 

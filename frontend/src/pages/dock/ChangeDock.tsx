@@ -15,6 +15,7 @@ import {
 } from "../../redux/api";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 const ChangeDock = () => {
   const { dockId } = useParams<{ dockId: string }>();
@@ -47,7 +48,11 @@ const ChangeDock = () => {
         }
       }
     } catch (e) {
-      console.error(e);
+      showSnackbar({
+        message: getErrorMessage(e),
+        severity: "error",
+        duration: 10000,
+      });
     }
   };
 

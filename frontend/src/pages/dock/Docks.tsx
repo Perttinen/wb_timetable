@@ -10,7 +10,7 @@ const Docks = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const { data: docks, isLoading: isLoadingDocks } = useGetDocksQuery();
+  const { data: docks, isLoading: isLoadingDocks, error } = useGetDocksQuery();
 
   const handleNewDock = () => {
     void navigate("/logged/docks/create");
@@ -20,14 +20,27 @@ const Docks = () => {
     void navigate(`/logged/docks/change/${dockId}`);
   };
 
-  const isBusy = isLoadingDocks;
+  const isBusy = isLoadingDocks && !error;
+
+  if (error) {
+    console.log(error);
+  }
 
   return (
     <>
       {isBusy && <Spinner />}
       {!isLoadingDocks && docks && (
-        <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
-          <Box display={"flex"} justifyContent={"center"} width={"100%"}>
+        <Box
+          width={"100%"}
+          justifySelf={"center"}
+          sx={{ maxWidth: "md", mt: { md: 2 } }}
+        >
+          <Box
+            display={"flex"}
+            justifyContent={"center"}
+            width={"100%"}
+            sx={{ display: { md: "none", xs: "flex" } }}
+          >
             <Typography color={theme.palette.primary.dark} fontSize={"1.8rem"}>
               DOCKS
             </Typography>

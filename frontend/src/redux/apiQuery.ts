@@ -33,11 +33,20 @@ export const apiQuery = async (
     if ("error" in result && result.error) {
       const message = getErrorMessage(result.error);
       console.error(`Api error: ${message}`);
+
       showSnackbar({
         message,
         severity: "error",
         duration: 10000,
       });
+      if (message.includes("jwt expired") || message.includes("Unauthorized")) {
+        window.location.href = "/";
+        showSnackbar({
+          message,
+          severity: "error",
+          duration: 10000,
+        });
+      }
       return { error: result.error };
     }
     return { data: result.data };

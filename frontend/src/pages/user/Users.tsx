@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import Spinner from "../../components/Spinner";
 import { useGetUsersQuery } from "../../redux/api";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const Users = () => {
   const { data: users, isLoading: isLoadingUsers } = useGetUsersQuery();
@@ -15,16 +15,25 @@ const Users = () => {
     void navigate("/logged/users/create");
   };
 
-  const handleUserSelection = (userId: number) => {
-    console.log(userId);
+  const handleUserSelection = (userId: string) => {
+    void navigate(`/logged/users/change/${userId}`);
   };
 
   return (
     <>
       {isBusy && <Spinner />}
       {!isLoadingUsers && users && (
-        <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
-          <Box display={"flex"} justifyContent={"center"} width={"100%"}>
+        <Box
+          width={"100%"}
+          justifySelf={"center"}
+          sx={{ maxWidth: "md", mt: { md: 2 } }}
+        >
+          <Box
+            display={"flex"}
+            justifyContent={"center"}
+            width={"100%"}
+            sx={{ display: { md: "none", xs: "flex" } }}
+          >
             <Typography color={theme.palette.primary.dark} fontSize={"1.8rem"}>
               USERS
             </Typography>
@@ -60,7 +69,7 @@ const Users = () => {
             {users.map((user) => (
               <Button
                 key={user.id}
-                onClick={() => handleUserSelection(user.id)}
+                onClick={() => handleUserSelection(String(user.id))}
                 fullWidth
                 variant="contained"
               >
@@ -70,17 +79,20 @@ const Users = () => {
                   width={1000}
                   sx={{
                     justifyContent: "space-between",
-                    alignItems: "center",
                   }}
                 >
-                  <Grid>
-                    <Typography>{user.username}</Typography>
+                  <Grid size={4}>
+                    <Typography justifySelf={"flex-start"}>
+                      {user.username}
+                    </Typography>
                   </Grid>
-                  <Grid>
-                    <Typography>{user.userlevels.join(" | ")}</Typography>
+                  <Grid size={4}>
+                    <Typography justifySelf={"flex-start"}>
+                      {user.userlevels.join(" | ")}
+                    </Typography>
                   </Grid>
-                  <Grid>
-                    <Typography>
+                  <Grid size={3}>
+                    <Typography justifySelf={"flex-start"}>
                       {user.disabled ? "Disabled" : "valid"}
                     </Typography>
                   </Grid>

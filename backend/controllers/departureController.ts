@@ -31,7 +31,6 @@ const formatLines = (input: IFormatLinesEntry): IFormattedLine[] => {
       line.docks.sort(
         (a, b) => a.lineDock.delayFromStart - b.lineDock.delayFromStart
       );
-      console.log(line.docks);
 
       const isStartDock = line.startDock.id === dockId;
       const isStopDock = line.docks.find((d) => d.id === dockId);
@@ -85,11 +84,6 @@ const deleteDepartures = asyncHandler(
         minutes >= fromMinutes && minutes <= toMinutes && weekdays[weekdayIndex]
       );
     });
-
-    console.log(
-      "filtered: ",
-      filtered.map((f) => f.dataValues)
-    );
 
     const idsToDelete = filtered.map((d) => d.id);
 

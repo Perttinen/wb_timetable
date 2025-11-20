@@ -66,9 +66,10 @@ const FormMainContainer = (props: FormMainContainerProps) => {
       sx={{
         border: 1,
         marginBottom: "10px",
+        mt: "10px",
         padding: "5px",
         borderRadius: "5px",
-        backgroundColor: "#b0cbf5",
+        backgroundColor: "lightgray",
         maxWidth: "md",
       }}
     >
@@ -121,14 +122,14 @@ const FormTextField = (props: FormTextFieldProps) => {
       {...field}
       {...props}
       margin="normal"
-      name={props.name}
-      label={props.label}
-      type={props.type}
+      // name={props.name}
+      // label={props.label}
+      // type={props.type}
       required
       variant="outlined"
-      value={field.value as string}
-      onChange={field.onChange}
-      onBlur={field.onBlur}
+      // value={field.value as string}
+      // onChange={field.onChange}
+      // onBlur={field.onBlur}
       error={meta.touched && Boolean(meta.error)}
       helperText={meta.touched && meta.error}
     />

@@ -20,7 +20,7 @@ const CreateUser = () => {
   const { data: userlevels, isLoading: isLoadingUserlevels } =
     useGetUserlevelsQuery();
 
-  const dockSchema = Yup.object().shape({
+  const userSchema = Yup.object().shape({
     username: Yup.string()
       .min(2, "Name must be 2-32 charecters!")
       .max(12, "Name must be 2-32 charecters!")
@@ -38,7 +38,6 @@ const CreateUser = () => {
       ...values,
       userlevel: values.userlevel === "admin" ? ["user", "admin"] : ["user"],
     };
-    console.log(newUser);
 
     try {
       const result = await addUser(newUser).unwrap();
@@ -48,12 +47,12 @@ const CreateUser = () => {
           duration: 5000,
           severity: "success",
         });
-        void navigate("/logged/docks");
+        void navigate("/logged/users");
       }
     } catch (e) {
       let message = getErrorMessage(e);
       if (message === "Validation error") {
-        message = `${newUser.userlevel} already exists`;
+        message = `${newUser.username} already exists`;
       }
       showSnackbar({ severity: "error", duration: 6000, message });
     }
@@ -72,7 +71,7 @@ const CreateUser = () => {
               password: "",
               userlevel: "",
             }}
-            validationSchema={dockSchema}
+            validationSchema={userSchema}
             onSubmit={handleSubmit}
             enableReinitialize={true}
           >

@@ -98,6 +98,7 @@ const authorizer = (requiredLevel: string): RequestHandler =>
       throwAuthError("unauthorized");
       return;
     }
+
     req.decodedToken = decoded;
     next();
   });

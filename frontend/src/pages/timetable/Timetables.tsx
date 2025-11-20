@@ -10,6 +10,7 @@ const Timetables = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+
   const { data: docks, isLoading: isLoadingDocks } = useGetDocksQuery();
 
   const isLoggedRoute = location.pathname.includes("logged");
@@ -27,10 +28,19 @@ const Timetables = () => {
     <>
       {isBusy && <Spinner />}{" "}
       {!isLoadingDocks && docks && (
-        <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
-          <Box display={"flex"} justifyContent={"center"} width={"100%"}>
+        <Box
+          width={"100%"}
+          justifySelf={"center"}
+          sx={{ maxWidth: "md", mt: { md: 2 } }}
+        >
+          <Box
+            display={"flex"}
+            justifyContent={"center"}
+            width={"100%"}
+            sx={{ display: { md: "none", xs: "flex" } }}
+          >
             <Typography color={theme.palette.primary.dark} fontSize={"1.8rem"}>
-              SELECT DOCK
+              TIMETABLES
             </Typography>
           </Box>
           <Box

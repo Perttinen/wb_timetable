@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import {
+  ICheckPasswordArgs,
   IDeleteDeparturesPayload,
   IDeparture,
   IDepartureForTimetable,
@@ -8,7 +9,11 @@ import {
   IJsonUserFlattenedLevels,
   ILineReturnable,
   ILineToAdd,
+  ILoginRequest,
+  ILoginResponse,
   INewUserRequest,
+  IUpdateLineArgs,
+  IUpdateUserArgs,
   IUserlevel,
 } from "../../../types";
 import { apiQuery } from "./apiQuery";
@@ -21,7 +26,16 @@ interface IDock {
 export const api = createApi({
   reducerPath: "api",
   baseQuery: apiQuery,
-  tagTypes: ["GetDocks", "GetDock", "Timetable", "Lines", "Users"],
+  tagTypes: [
+    "GetDocks",
+    "GetDock",
+    "Timetable",
+    "Lines",
+    "Line",
+    "Users",
+    "User",
+    "Me",
+  ],
   endpoints: (builder) => ({
     // DOCK
     getDocks: builder.query<IDock[], void>({
@@ -107,6 +121,7 @@ export const api = createApi({
         url: `/line/${id}`,
         method: "GET",
       }),
+      providesTags: ["Line"],
     }),
     addLine: builder.mutation<ILineReturnable, ILineToAdd>({
       query: (newLine) => ({
@@ -116,10 +131,24 @@ export const api = createApi({
       }),
       invalidatesTags: ["Lines"],
     }),
+
+    updateLine: builder.mutation<ILineReturnable, IUpdateLineArgs>({
+      query: ({ id, body }) => ({
+        url: `/line/${id}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Lines", "Line", "Timetable"],
+    }),
+
     //USER
     getUsers: builder.query<IJsonUserFlattenedLevels[], void>({
       query: () => ({ url: "/user", method: "GET" }),
       providesTags: ["Users"],
+    }),
+    getUser: builder.query<IJsonUserFlattenedLevels, string>({
+      query: (userId) => ({ url: `/user/${userId}`, method: "GET" }),
+      providesTags: ["User"],
     }),
     addUser: builder.mutation<IJsonUserFlattenedLevels, INewUserRequest>({
       query: (newUser) => ({
@@ -129,10 +158,45 @@ export const api = createApi({
       }),
       invalidatesTags: ["Users"],
     }),
+    updateUser: builder.mutation<IJsonUserFlattenedLevels, IUpdateUserArgs>({
+      query: ({ id, body }) => ({
+        url: `/user/${id}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Users", "User"],
+    }),
+    deleteUser: builder.mutation<number, number>({
+      query: (id) => ({
+        url: `/user/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Users"],
+    }),
     //USERLEVEL
     getUserlevels: builder.query<IUserlevel[], void>({
       query: () => ({ url: "/userlevel", method: "GET" }),
       // providesTags: ["Users"],
+    }),
+    //AUTH
+    login: builder.mutation<ILoginResponse, ILoginRequest>({
+      query: (credentials) => ({
+        url: "/auth/login",
+        method: "POST",
+        body: credentials,
+        invalidatesTags: ["Me"],
+      }),
+    }),
+    getMe: builder.query<IJsonUserFlattenedLevels, void>({
+      query: () => "/auth/me",
+      providesTags: ["Me"],
+    }),
+    checkPassword: builder.mutation<boolean, ICheckPasswordArgs>({
+      query: (pw) => ({
+        url: "/auth/pw",
+        method: "POST",
+        body: pw,
+      }),
     }),
   }),
 });
@@ -150,7 +214,14 @@ export const {
   useAddLineMutation,
   useGetLinesQuery,
   useGetLineQuery,
+  useUpdateLineMutation,
   useGetUsersQuery,
   useAddUserMutation,
   useGetUserlevelsQuery,
+  useGetUserQuery,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+  useLoginMutation,
+  useGetMeQuery,
+  useCheckPasswordMutation,
 } = api;

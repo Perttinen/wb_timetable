@@ -14,16 +14,19 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { logout } from "../redux/auth/logoutActions";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+import { api, useGetMeQuery } from "../redux/api";
+import { useDispatch } from "react-redux";
+import { UserCard } from "./UserCard";
+
 function Navbar() {
-  const loggedUser = useAppSelector((state) => state.loggedUser.user);
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const [usercard, setUsercard] = useState(false);
+  const { data: loggedUser } = useGetMeQuery();
 
   const getPagesByUserlevels = (userlevels: string[]) => {
     const pagesToShow = [];
@@ -35,15 +38,15 @@ function Navbar() {
 
   const avatar = !loggedUser ? "?" : loggedUser.username[0].toUpperCase();
 
-  const handleLogout = () => {
-    localStorage.clear();
-    dispatch(logout());
-    void navigate("/");
+  const showProfile = () => {
+    console.log("profile");
+    setUsercard(true);
     setAnchorElUser(null);
   };
 
-  const showProfile = () => {
-    console.log("profile");
+  const handleLogout = () => {
+    dispatch(api.util.resetApiState());
+    void navigate("/");
     setAnchorElUser(null);
   };
 
@@ -73,159 +76,162 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="sticky">
-      <Container maxWidth="lg">
-        <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            LOGO
-          </Typography>
+    <>
+      <AppBar position="sticky">
+        <Container maxWidth="lg">
+          <Toolbar disableGutters>
+            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="#app-bar-with-responsive-menu"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              LOGO
+            </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{ display: { xs: "block", md: "none" } }}
+              >
+                {pages.map((page) => (
+                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <Typography sx={{ textAlign: "center" }}>
+                      <Link
+                        style={{
+                          textDecoration: "none",
+                          color: theme.palette.primary.main,
+                        }}
+                        to={`/logged/${page}`}
+                      >
+                        {page}
+                      </Link>
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href="#app-bar-with-responsive-menu"
+              sx={{
+                mr: 2,
+                display: { xs: "flex", md: "none" },
+                flexGrow: 1,
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: "block", md: "none" } }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
+              LOGO
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              {pages.map((page) => {
+                const isActive = location.pathname.includes(page);
+                return (
+                  <Button
+                    key={page}
+                    onClick={handleCloseNavMenu}
+                    sx={{
+                      my: 2,
+                      bgcolor: isActive
+                        ? theme.palette.primary.dark
+                        : theme.palette.primary.main,
+                      fontWeight: isActive ? "bold" : "normal",
+                      borderBottom: isActive ? "blue" : "none",
+                      display: "block",
+                      color: "white",
+                    }}
+                  >
                     <Link
                       style={{
                         textDecoration: "none",
-                        color: theme.palette.primary.main,
+                        color: "inherit",
                       }}
                       to={`/logged/${page}`}
                     >
                       {page}
                     </Link>
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            LOGO
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => {
-              const isActive = location.pathname.includes(page);
-              return (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    my: 2,
-                    bgcolor: isActive
-                      ? theme.palette.primary.dark
-                      : theme.palette.primary.main,
-                    fontWeight: isActive ? "bold" : "normal",
-                    borderBottom: isActive ? "blue" : "none",
-                    display: "block",
-                    color: "white",
-                  }}
-                >
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                      color: "inherit",
-                    }}
-                    to={`/logged/${page}`}
+                  </Button>
+                );
+              })}
+            </Box>
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar>{avatar}</Avatar>
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting.label}
+                    onClick={() => setting.function()}
                   >
-                    {page}
-                  </Link>
-                </Button>
-              );
-            })}
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar>{avatar}</Avatar>
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting.label}
-                  onClick={() => setting.function()}
-                >
-                  <Typography sx={{ textAlign: "center" }}>
-                    {setting.label}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+                    <Typography sx={{ textAlign: "center" }}>
+                      {setting.label}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+      <UserCard setUserCard={setUsercard} userCard={usercard} />
+    </>
   );
 }
 export default Navbar;

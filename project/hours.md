@@ -1,6 +1,10 @@
 ## Hours
 
-#### total hours 136
+#### total hours 142
+
+20.11.2025 ChangePassword(fe), checkPw(be), improved responsiveness, uniform appearance. Hours: 6, Total: 148
+
+19.11.2025 ChangeUser, ChanceLine, stylish Login. Hours: 8, Total: 142
 
 12.11.2025 Pages to folders. Create User. Userlevel controller + router. Better errors. Hous: 8, Total: 136
 

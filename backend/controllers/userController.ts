@@ -9,6 +9,7 @@ import {
   IJsonUserFromDbNoLevels,
   IJsonUserPw,
   INewUserRequest,
+  IUpdateUserInput,
   IUserlevel,
 } from "../../types";
 import { User, UserAndlevel, Userlevel } from "../../database/models";
@@ -150,7 +151,21 @@ const getAllUsers = asyncHandler(
       ],
     });
     // response json users with userlevelIds flattened
-    res.status(200).json(users.map((u) => userlevelsToArray(u)));
+    res.status(200).json(
+      users
+        .map((u) => userlevelsToArray(u))
+        .sort((a, b) => {
+          const nameA = a.username.toUpperCase();
+          const nameB = b.username.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        })
+    );
   }
 );
 
@@ -168,13 +183,6 @@ const getUser = asyncHandler(
     res.status(200).json(userlevelsToArray(user));
   }
 );
-
-interface IUpdateUserInput {
-  disabled?: boolean;
-  password?: string;
-  userlevels?: string[];
-  username?: string;
-}
 
 const updateUser = asyncHandler(
   async (

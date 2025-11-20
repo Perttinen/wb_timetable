@@ -4,10 +4,10 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import { Provider } from "react-redux";
-import { store } from "./redux/store";
 import { SnackbarProvider } from "./components/SnackbarProvider";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { store } from "./redux/store";
 import "dayjs/locale/fi";
 
 const root = ReactDOM.createRoot(

@@ -54,19 +54,6 @@ export const createReturnableLine = (line: Line): ILineReturnable | void => {
       }))
       .sort((a, b) => a.delayFromStart - b.delayFromStart);
 
-    console.log({
-      id: jsonLine.id,
-      startDock: {
-        name: jsonLine.startDock.name,
-        id: jsonLine.startDock.id,
-      },
-      endDock: {
-        name: jsonLine.endDock.name,
-        id: jsonLine.endDock.id,
-      },
-      stopDocks,
-    });
-
     return {
       id: jsonLine.id,
       startDock: {

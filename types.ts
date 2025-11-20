@@ -130,12 +130,6 @@ export interface ILineReturnable {
   }[];
 }
 
-export interface ILineToAdd {
-  startDockId: number;
-  stops: { dockId: number; delayFromStart: number }[];
-  endDockId: number;
-}
-
 export interface ILineWithStopsArray {
   id: number;
   startDockId: number;
@@ -162,4 +156,47 @@ interface IUser {
 export interface IUserlevel {
   id: number;
   userlevel: string;
+}
+export interface IUpdateUserInput {
+  disabled?: boolean;
+  password?: string;
+  userlevels?: string[];
+  username?: string;
+}
+
+export interface ILoginResponse {
+  user: IJsonUserFlattenedLevels;
+  token: string;
+}
+export interface ILoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface IStopdocks {
+  stopDocks: { name: string; id: number; delayFromStart: number }[];
+}
+export interface ILineToAdd {
+  startDockId: number;
+  stops: { dockId: number; delayFromStart: number }[];
+  endDockId: number;
+}
+
+export interface IUpdateLineArgs {
+  id: string;
+  body: ILineToAdd;
+}
+
+export interface IUpdateUserArgs {
+  id: string;
+  body: IUpdateUserInput;
+}
+
+export interface IConfirmedPasswordsType {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+export interface ICheckPasswordArgs {
+  password: string;
 }
