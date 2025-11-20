@@ -40,7 +40,7 @@ const ChangeLine = () => {
       await updateLine({ id: String(line?.id), body: payload });
       const message = `line ${line?.id} succesfully updated`;
       showSnackbar({ message, severity: "success", duration: 5000 });
-      void navigate("/logged/lines/change");
+      void navigate("/logged/lines");
     } catch (e) {
       showSnackbar({
         message: getErrorMessage(e),
