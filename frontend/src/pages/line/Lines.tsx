@@ -1,47 +1,27 @@
-import { Button, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import LineSelector from "../../components/LineSelector";
 
 const Lines = () => {
   const navigate = useNavigate();
 
-  const handleChangeLine = () => {
-    void navigate("/logged/lines/change");
+  const handleSelectLine = (lineId: number) => {
+    void navigate(`/logged/lines/change/${lineId}`);
   };
-  const handleCreateLine = () => {
-    void navigate("/logged/lines/create");
+  const handleNewLine = () => {
+    void navigate(`/logged/lines/create`);
+  };
+
+  const onAdd = {
+    function: handleNewLine,
+    text: "create new line",
   };
 
   return (
-    <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
-      <Box display={"flex"} flexDirection={"column"} gap={2} sx={{ margin: 2 }}>
-        <Button
-          onClick={handleCreateLine}
-          fullWidth
-          variant="contained"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-center",
-          }}
-        >
-          CREATE LINE
-        </Button>
-      </Box>
-      <Box display={"flex"} flexDirection={"column"} gap={2} sx={{ margin: 2 }}>
-        <Button
-          onClick={handleChangeLine}
-          fullWidth
-          variant="contained"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-center",
-          }}
-        >
-          CHANGE LINE
-        </Button>
-      </Box>
-    </Box>
+    <LineSelector
+      onAdd={onAdd}
+      onSelectLine={handleSelectLine}
+      caption="LINES"
+    />
   );
 };
 

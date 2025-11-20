@@ -11,7 +11,7 @@ import {
   throwNotFound,
   throwValidationError,
 } from "../util/errorThrowers";
-import { IJsonUserFlattenedLevels } from "../../types";
+import { ICheckPasswordArgs, IJsonUserFlattenedLevels } from "../../types";
 
 dotenv.config();
 
@@ -63,8 +63,6 @@ const login = asyncHandler(
 
 const me = asyncHandler(
   async (req, res: Response<IJsonUserFlattenedLevels>) => {
-    console.log("getMe");
-
     const dt = req.decodedToken;
 
     const user = (await User.findByPk(req.decodedToken.id))?.toJSON();
@@ -82,7 +80,29 @@ const me = asyncHandler(
   }
 );
 
+const pw = asyncHandler(
+  async (
+    req: Request<unknown, unknown, ICheckPasswordArgs>,
+    res: Response<boolean>
+  ) => {
+    const reqPwd = req.body.password;
+
+    const user = (await User.findByPk(req.decodedToken.id))?.toJSON();
+
+    if (user) {
+      console.log("user: ", user);
+      const passwordCorrect = await bcrypt.compare(reqPwd, user?.password);
+      if (!passwordCorrect) {
+        throwAuthError("Password mismatch");
+      }
+      res.status(200).json(passwordCorrect);
+    }
+    return;
+  }
+);
+
 export default {
   login,
   me,
+  pw,
 };

@@ -30,8 +30,17 @@ const Docks = () => {
     <>
       {isBusy && <Spinner />}
       {!isLoadingDocks && docks && (
-        <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
-          <Box display={"flex"} justifyContent={"center"} width={"100%"}>
+        <Box
+          width={"100%"}
+          justifySelf={"center"}
+          sx={{ maxWidth: "md", mt: { md: 2 } }}
+        >
+          <Box
+            display={"flex"}
+            justifyContent={"center"}
+            width={"100%"}
+            sx={{ display: { md: "none", xs: "flex" } }}
+          >
             <Typography color={theme.palette.primary.dark} fontSize={"1.8rem"}>
               DOCKS
             </Typography>

@@ -15,7 +15,6 @@ import RemoveDepartures from "./pages/scheldule/RemoveDepartures";
 import Docks from "./pages/dock/Docks";
 import CreateDock from "./pages/dock/CreateDock";
 import ChangeDock from "./pages/dock/ChangeDock";
-import ChangeLineSelector from "./pages/line/ChangeLineSelector";
 import ChangeLine from "./pages/line/ChangeLine";
 import CreateLine from "./pages/line/CreateLine";
 import Users from "./pages/user/Users";
@@ -58,7 +57,7 @@ const App = () => {
           <Route path="/logged/docks/create" element={<CreateDock />} />
           <Route path="/logged/docks/change/:dockId" element={<ChangeDock />} />
           <Route path="/logged/lines" element={<Lines />} />
-          <Route path="/logged/lines/change" element={<ChangeLineSelector />} />
+
           <Route path="/logged/lines/change/:lineId" element={<ChangeLine />} />
           <Route path="/logged/lines/create" element={<CreateLine />} />
           <Route element={<LoggedLayout preferredUserlevel="admin" />}>

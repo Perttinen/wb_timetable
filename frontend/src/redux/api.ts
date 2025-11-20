@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import {
+  ICheckPasswordArgs,
   IDeleteDeparturesPayload,
   IDeparture,
   IDepartureForTimetable,
@@ -177,7 +178,7 @@ export const api = createApi({
       query: () => ({ url: "/userlevel", method: "GET" }),
       // providesTags: ["Users"],
     }),
-    //LOGIN
+    //AUTH
     login: builder.mutation<ILoginResponse, ILoginRequest>({
       query: (credentials) => ({
         url: "/auth/login",
@@ -189,6 +190,13 @@ export const api = createApi({
     getMe: builder.query<IJsonUserFlattenedLevels, void>({
       query: () => "/auth/me",
       providesTags: ["Me"],
+    }),
+    checkPassword: builder.mutation<boolean, ICheckPasswordArgs>({
+      query: (pw) => ({
+        url: "/auth/pw",
+        method: "POST",
+        body: pw,
+      }),
     }),
   }),
 });
@@ -215,4 +223,5 @@ export const {
   useDeleteUserMutation,
   useLoginMutation,
   useGetMeQuery,
+  useCheckPasswordMutation,
 } = api;

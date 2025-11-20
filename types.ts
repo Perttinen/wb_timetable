@@ -191,3 +191,12 @@ export interface IUpdateUserArgs {
   id: string;
   body: IUpdateUserInput;
 }
+
+export interface IConfirmedPasswordsType {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+export interface ICheckPasswordArgs {
+  password: string;
+}

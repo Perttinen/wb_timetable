@@ -69,7 +69,7 @@ const FormMainContainer = (props: FormMainContainerProps) => {
         mt: "10px",
         padding: "5px",
         borderRadius: "5px",
-        backgroundColor: "#b0cbf5",
+        backgroundColor: "lightgray",
         maxWidth: "md",
       }}
     >
