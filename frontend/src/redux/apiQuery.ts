@@ -32,6 +32,18 @@ export const apiQuery = async (
 
     if ("error" in result && result.error) {
       const message = getErrorMessage(result.error);
+      const isSerializedError = (
+        err: unknown
+      ): err is { name?: string; message?: string } =>
+        typeof err === "object" && err !== null && "name" in err;
+
+      if (
+        isSerializedError(result.error) &&
+        result.error.name === "AbortError"
+      ) {
+        console.debug("Request aborted:", message);
+        return { error: result.error, aborted: true };
+      }
       console.error(`Api error: ${message}`);
 
       showSnackbar({
