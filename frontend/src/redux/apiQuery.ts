@@ -32,15 +32,6 @@ export const apiQuery = async (
 
     if ("error" in result && result.error) {
       const message = getErrorMessage(result.error);
-      if (
-        result.error &&
-        result.error.status === "FETCH_ERROR" &&
-        getErrorMessage(result.error).includes("signal is aborted")
-      ) {
-        // Ignore aborts caused by resetApiState
-        console.debug("Request aborted:", result.error);
-        return { error: result.error, aborted: true };
-      }
       console.error(`Api error: ${message}`);
 
       showSnackbar({
@@ -60,13 +51,6 @@ export const apiQuery = async (
     }
     return { data: result.data };
   } catch (e) {
-    if (
-      (e as any)?.name === "AbortError" ||
-      getErrorMessage(e).includes("signal is aborted")
-    ) {
-      console.debug("Caught abort:", e);
-      return { error: e, aborted: true };
-    }
     const message = getErrorMessage(e);
     console.error("Unexpected exception:", message);
     showSnackbar({ message, severity: "error", duration: 10000 });
