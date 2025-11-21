@@ -47,7 +47,12 @@ function Navbar() {
   const handleLogout = () => {
     setAnchorElUser(null);
     void navigate("/");
-    dispatch(api.util.resetApiState());
+    setTimeout(() => {
+      console.log("reset");
+
+      dispatch(api.util.resetApiState());
+    }, 500);
+    // dispatch(api.util.resetApiState());
   };
 
   const pages = loggedUser ? getPagesByUserlevels(loggedUser.userlevels) : [];
