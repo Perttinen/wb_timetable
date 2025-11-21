@@ -1,17 +1,11 @@
-import { useNavigate, useLocation } from "react-router-dom";
-import { Button, Box, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-
+import { useNavigate } from "react-router-dom";
+import UniversalSelector from "../../components/UniversalSelector";
 import { useGetDocksQuery } from "../../redux/api";
-
 import Spinner from "../../components/Spinner";
 
 const Timetables = () => {
-  const theme = useTheme();
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const { data: docks, isLoading: isLoadingDocks } = useGetDocksQuery();
+  const navigate = useNavigate();
 
   const isLoggedRoute = location.pathname.includes("logged");
 
@@ -22,50 +16,15 @@ const Timetables = () => {
     void navigate(dockTimetablePath);
   };
 
-  const isBusy = isLoadingDocks;
-
   return (
     <>
-      {isBusy && <Spinner />}{" "}
+      {isLoadingDocks && <Spinner />}
       {!isLoadingDocks && docks && (
-        <Box
-          width={"100%"}
-          justifySelf={"center"}
-          sx={{ maxWidth: "md", mt: { md: 2 } }}
-        >
-          <Box
-            display={"flex"}
-            justifyContent={"center"}
-            width={"100%"}
-            sx={{ display: { md: "none", xs: "flex" } }}
-          >
-            <Typography color={theme.palette.primary.dark} fontSize={"1.8rem"}>
-              TIMETABLES
-            </Typography>
-          </Box>
-          <Box
-            display={"flex"}
-            flexDirection={"column"}
-            gap={2}
-            sx={{ marginX: 2 }}
-          >
-            {docks.map((dock) => (
-              <Button
-                key={dock.id}
-                onClick={() => handleSelectTimetable(dock.id)}
-                fullWidth
-                variant="contained"
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                }}
-              >
-                <Typography sx={{ fontSize: "1rem" }}>{dock.name}</Typography>
-              </Button>
-            ))}
-          </Box>
-        </Box>
+        <UniversalSelector
+          onSelect={handleSelectTimetable}
+          caption="TIMETABLES"
+          input={{ type: "docks", data: docks }}
+        />
       )}
     </>
   );

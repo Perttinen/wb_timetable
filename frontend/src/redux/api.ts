@@ -4,6 +4,7 @@ import {
   IDeleteDeparturesPayload,
   IDeparture,
   IDepartureForTimetable,
+  IDock,
   IDockname,
   IInputDeparture,
   IJsonUserFlattenedLevels,
@@ -17,11 +18,6 @@ import {
   IUserlevel,
 } from "../../../types";
 import { apiQuery } from "./apiQuery";
-
-interface IDock {
-  id: number | null;
-  name: string | null;
-}
 
 export const api = createApi({
   reducerPath: "api",
