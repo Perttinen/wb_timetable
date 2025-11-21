@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 
 import { User } from "../../database/models";
 import { addUserlevels, userlevelsToArray } from "./commonFuncs";
@@ -77,6 +77,56 @@ const login = asyncHandler(
   }
 );
 
+const refresh = (req: Request, res: Response) => {
+  const cookies = req.cookies;
+
+  if (!cookies?.jwt) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  const refreshToken = cookies.jwt;
+
+  jwt.verify(
+    refreshToken,
+    String(process.env.JWT_REFRESH),
+    async (
+      err: VerifyErrors | null,
+      decoded: JwtPayload | string | undefined
+    ) => {
+      if (err) {
+        res.status(403).json({ message: "Forbidden" });
+        return;
+      }
+
+      const payload = decoded as JwtPayload;
+
+      const foundUser = await User.findOne({
+        attributes: { exclude: ["password"] },
+        where: { id: payload.id },
+        ...addUserlevels,
+      });
+
+      if (!foundUser) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
+      const safeUser = userlevelsToArray(foundUser);
+
+      const accessToken = jwt.sign(
+        {
+          id: safeUser.id,
+          userlevels: safeUser.userlevels,
+        },
+        String(process.env.ACCESS_TOKEN_SECRET),
+        { expiresIn: "15m" }
+      );
+
+      res.json({ accessToken });
+    }
+  );
+};
+
 const me = asyncHandler(
   async (req, res: Response<IJsonUserFlattenedLevels>) => {
     const dt = req.decodedToken;
@@ -121,4 +171,5 @@ export default {
   login,
   me,
   pw,
+  refresh,
 };
