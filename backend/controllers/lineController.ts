@@ -86,7 +86,7 @@ const deleteLine = asyncHandler(async (req: Request, res: Response) => {
     throwNotFound(`line ${req.params.id} not destroyed`);
     return;
   }
-  res.status(204).end();
+  res.status(204).send(lineDestroyed);
 });
 
 const getAllLines = asyncHandler(async (_req: Request, res: Response) => {

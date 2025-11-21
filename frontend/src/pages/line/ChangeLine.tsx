@@ -1,5 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetLineQuery, useUpdateLineMutation } from "../../redux/api";
+import {
+  useDeleteLineMutation,
+  useGetLineQuery,
+  useUpdateLineMutation,
+} from "../../redux/api";
 import Spinner from "../../components/Spinner";
 import {
   FormButtons,
@@ -11,18 +15,17 @@ import { Box, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import { ILineToAdd, IStopdocks } from "../../../../types";
 import { showSnackbar } from "../../components/SnackbarProvider";
-import { getErrorMessage } from "../../utils/getErrorMessage";
 
 const ChangeLine = () => {
   const { lineId } = useParams<{ lineId: string }>();
 
   const [updateLine] = useUpdateLineMutation();
+  const [deleteLine] = useDeleteLineMutation();
 
   const navigate = useNavigate();
   const { data: line, isLoading: isLoadingLine } = useGetLineQuery(
     Number(lineId)
   );
-  console.log(line);
 
   const isBusy = isLoadingLine;
 
@@ -42,11 +45,20 @@ const ChangeLine = () => {
       showSnackbar({ message, severity: "success", duration: 5000 });
       void navigate("/logged/lines");
     } catch (e) {
-      showSnackbar({
-        message: getErrorMessage(e),
-        severity: "error",
-        duration: 10000,
-      });
+      console.log(e);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      const result = await deleteLine(id);
+      if (!("error" in result)) {
+        const message = `line ${id} deleted`;
+        showSnackbar({ message, severity: "success", duration: 5000 });
+        void navigate("/logged/lines");
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -100,7 +112,7 @@ const ChangeLine = () => {
                 buttons={["cancel", "save", "delete"]}
                 submitLabel="save"
                 onCancel={() => navigate("/logged/lines")}
-                onDelete={() => console.log("deleted")}
+                onDelete={() => handleDelete(line.id)}
               />
             </Form>
           </Formik>

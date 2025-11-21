@@ -66,7 +66,7 @@ const authorizer = (requiredLevel: string): RequestHandler =>
     }
     // Checks jwt and get base values from jwt user
     const token = authHeader.substring(7);
-    const decoded = jwt.verify(token, String(process.env.JWT));
+    const decoded = jwt.verify(token, String(process.env.JWT_ACCESS));
     if (typeof decoded !== "object") {
       throwAuthError("token invalid");
       return;

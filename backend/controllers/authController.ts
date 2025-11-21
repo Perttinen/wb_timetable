@@ -52,11 +52,27 @@ const login = asyncHandler(
     }
     const token = jwt.sign(
       { id: safeUser.id, userlevels: safeUser.userlevels },
-      String(process.env.JWT),
+      String(process.env.JWT_ACCESS),
       {
         expiresIn: "3h",
       }
     );
+
+    const refreshToken = jwt.sign(
+      { id: safeUser.id },
+      String(process.env.JWT_REFRESH),
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     res.status(200).json({ token, user: safeUser });
   }
 );

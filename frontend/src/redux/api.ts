@@ -127,7 +127,6 @@ export const api = createApi({
       }),
       invalidatesTags: ["Lines"],
     }),
-
     updateLine: builder.mutation<ILineReturnable, IUpdateLineArgs>({
       query: ({ id, body }) => ({
         url: `/line/${id}`,
@@ -135,6 +134,13 @@ export const api = createApi({
         body,
       }),
       invalidatesTags: ["Lines", "Line", "Timetable"],
+    }),
+    deleteLine: builder.mutation<number, number>({
+      query: (id) => ({
+        url: `/line/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Lines"],
     }),
 
     //USER
@@ -220,4 +226,5 @@ export const {
   useLoginMutation,
   useGetMeQuery,
   useCheckPasswordMutation,
+  useDeleteLineMutation,
 } = api;

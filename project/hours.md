@@ -2,6 +2,8 @@
 
 #### total hours 151
 
+deleteLines added.
+
 21.11.2025 Created UniversalSelector that creates buttonlists for every main pages (Lines, Users, Docks). No need for deparate line- / dockselectors anymore. Hours: 3, Total: 151
 
 20.11.2025 ChangePassword(fe), checkPw(be), improved responsiveness, uniform appearance. Hours: 6, Total: 148
