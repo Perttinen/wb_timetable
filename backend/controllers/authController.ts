@@ -77,7 +77,14 @@ const login = asyncHandler(
   }
 );
 
-const refresh = (req: Request, res: Response) => {
+interface AuthenticatedRequest extends Request {
+  cookies: {
+    jwt?: string;
+    [key: string]: string | undefined;
+  };
+}
+
+const refresh = (req: AuthenticatedRequest, res: Response) => {
   const cookies = req.cookies;
 
   if (!cookies?.jwt) {
@@ -103,7 +110,7 @@ const refresh = (req: Request, res: Response) => {
 
       const foundUser = await User.findOne({
         attributes: { exclude: ["password"] },
-        where: { id: payload.id },
+        where: { id: Number(payload.id) },
         ...addUserlevels,
       });
 
