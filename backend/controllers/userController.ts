@@ -11,9 +11,9 @@ import {
   INewUserRequest,
   IUpdateUserInput,
   IUserlevel,
-} from "../../types";
+} from "../../typesFile";
 import { User, UserAndlevel, Userlevel } from "../../database/models";
-import { addUserlevels } from "./commonFuncs";
+import { addUserlevels } from "./helperFunctions";
 import { throwNotFound, throwValidationError } from "../util/errorThrowers";
 
 // Converts User object to json and flattens User.userlevels to array.

@@ -6,7 +6,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { IJsonUserFlattenedLevels } from "../../../types";
+import { IJsonUserFlattenedLevels } from "../../../typesFile";
 
 export const UserDataTable = ({ user }: { user: IJsonUserFlattenedLevels }) => {
   const userLevel = user.userlevels.includes("admin") ? "admin" : "user";

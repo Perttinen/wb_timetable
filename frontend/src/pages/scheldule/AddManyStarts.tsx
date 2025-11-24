@@ -10,7 +10,7 @@ import {
   FormGroupContainer,
   FormButtons,
 } from "../../components/SmallOnes";
-import { IInputDeparture } from "../../../../types";
+import { IInputDeparture } from "../../../../typesFile";
 import { useAddManyDeparturesMutation, useGetLineQuery } from "../../redux/api";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";

@@ -3,16 +3,13 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import {
-  IDock,
-  IJsonUserFlattenedLevels,
-  ILineReturnable,
-} from "../../../types";
+import { IJsonUserFlattenedLevels, ILineReturnable } from "../../../typesFile";
 import { Grid } from "@mui/material";
+import { dockTypes } from "../../../types";
 
 type DockInput = {
   type: "docks";
-  data: IDock[];
+  data: dockTypes.TDock[];
 };
 
 type LineInput = {

@@ -6,14 +6,21 @@ import {
 
 import { getErrorMessage } from "../utils/getErrorMessage";
 import { showSnackbar } from "../components/SnackbarProvider";
+import { setCredentials } from "./authSlice";
+import { RootState } from "./store";
+import { selectCurrentToken } from "./authSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "/api",
-  prepareHeaders: (headers) => {
+  credentials: "include",
+  prepareHeaders: (headers, { getState }) => {
     const skipAuth = headers.get("X-Skip-Auth") === "true";
+    // const token = useSelector(selectCurrentToken);
+    const token = selectCurrentToken(getState() as RootState);
 
     if (!skipAuth) {
-      const token = localStorage.getItem("token");
+      // const token = localStorage.getItem("token");
+
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
@@ -22,13 +29,40 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
+type RefreshResponse = {
+  accessToken: string;
+};
+
+const isRefreshResponse = (data: unknown): data is RefreshResponse => {
+  return typeof data === "object" && data !== null && "accessToken" in data;
+};
+
 export const apiQuery = async (
   args: string | FetchArgs,
   api: BaseQueryApi,
   extraOptions: Record<string, unknown>
 ) => {
   try {
-    const result = await baseQuery(args, api, extraOptions);
+    let result = await baseQuery(args, api, extraOptions);
+
+    if (result?.error?.status === 403 || result?.error?.status === 401) {
+      const refreshResult = await baseQuery("/auth/refresh", api, extraOptions);
+
+      if (isRefreshResponse(refreshResult?.data)) {
+        api.dispatch(setCredentials({ ...refreshResult.data }));
+        result = await baseQuery(args, api, extraOptions);
+      } else {
+        if (refreshResult?.error?.status === 403) {
+          return {
+            error: {
+              ...refreshResult.error,
+              data: { message: "Your login has expired." },
+            },
+          };
+        }
+        return refreshResult;
+      }
+    }
 
     if ("error" in result && result.error) {
       const message = getErrorMessage(result.error);

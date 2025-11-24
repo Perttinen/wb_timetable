@@ -10,7 +10,7 @@ import {
   FormGroupContainer,
   FormMainContainer,
 } from "../../components/SmallOnes";
-import { IDeleteDeparturesPayload } from "../../../../types";
+import { IDeleteDeparturesPayload } from "../../../../typesFile";
 import { useDeleteDeparturesMutation } from "../../redux/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { showSnackbar } from "../../components/SnackbarProvider";

@@ -6,7 +6,7 @@ import {
   User,
   UserAndlevel,
 } from "../../database/models";
-import { IJsonUser } from "../../types";
+import { IJsonUser } from "../../typesFile";
 import { Op } from "@sequelize/core";
 import { docks } from "../testHelpers/data/docks";
 

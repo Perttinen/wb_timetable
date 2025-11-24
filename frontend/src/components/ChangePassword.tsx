@@ -11,7 +11,7 @@ import {
 import {
   IConfirmedPasswordsType,
   IJsonUserFlattenedLevels,
-} from "../../../types";
+} from "../../../typesFile";
 import { useCheckPasswordMutation, useUpdateUserMutation } from "../redux/api";
 import { showSnackbar } from "./SnackbarProvider";
 import { getErrorMessage } from "../utils/getErrorMessage";
@@ -56,8 +56,6 @@ export const ChangePassword = ({
     };
     try {
       const pwOk = await checkPw({ password: values.currentPassword });
-      console.log("pwok: ", pwOk.data);
-
       if (pwOk.data) {
         await updateUser(payload);
         showSnackbar({

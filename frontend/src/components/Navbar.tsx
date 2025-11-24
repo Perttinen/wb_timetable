@@ -39,7 +39,6 @@ function Navbar() {
   const avatar = !loggedUser ? "?" : loggedUser.username[0].toUpperCase();
 
   const showProfile = () => {
-    console.log("profile");
     setUsercard(true);
     setAnchorElUser(null);
   };

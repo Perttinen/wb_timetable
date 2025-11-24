@@ -4,7 +4,7 @@ import {
   IJsonSafeUser,
   IJsonUserFlattenedLevels,
   ILineReturnable,
-} from "../types";
+} from "../typesFile";
 import initializeTestDb from "./testHelpers/initializeTestDb";
 import {
   iDockTestObject,
