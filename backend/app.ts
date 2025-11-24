@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-
+import cookieParser from "cookie-parser";
 import {
   requestLogger,
   errorHandler,
@@ -15,6 +15,7 @@ import departureRouter from "./routes/departureRoutes";
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/tese/", (_req, res) => {
   res.status(200).end();

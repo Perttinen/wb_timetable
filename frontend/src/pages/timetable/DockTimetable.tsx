@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs";
 
-import { IDepartureForTimetable } from "../../../../types";
+import { departureTypes } from "../../../../types";
 import { useGetDockQuery, useGetTimetableQuery } from "../../redux/api";
 import Spinner from "../../components/Spinner";
 // import { getErrorMessage } from "../../utils/getErrorMessage";
@@ -43,7 +43,7 @@ const InfoCell = ({
 const DepartureWithViaRow = ({
   departure,
 }: {
-  departure: IDepartureForTimetable;
+  departure: departureTypes.TDepartureForTimetable;
 }) => {
   return (
     <>
@@ -108,7 +108,11 @@ const DepartureWithViaRow = ({
   );
 };
 
-const DepartureRow = ({ departure }: { departure: IDepartureForTimetable }) => {
+const DepartureRow = ({
+  departure,
+}: {
+  departure: departureTypes.TDepartureForTimetable;
+}) => {
   return (
     <>
       <TableRow sx={{ lineHeight: "50px", borderBottom: "1" }}>
@@ -136,7 +140,11 @@ const DepartureRow = ({ departure }: { departure: IDepartureForTimetable }) => {
   );
 };
 
-const DateRow = ({ departure }: { departure: IDepartureForTimetable }) => {
+const DateRow = ({
+  departure,
+}: {
+  departure: departureTypes.TDepartureForTimetable;
+}) => {
   return (
     <TableRow>
       <TableCell

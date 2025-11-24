@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 
 import { Departure, Dock, Line, LineDock } from "../../database/models";
-import { IDock } from "../../types";
+import { dockTypes } from "../../types";
 import { throwNotFound, throwValidationError } from "../util/errorThrowers";
 
 // import { lineIncludes } from "./commonFuncs";
@@ -10,13 +10,15 @@ import { throwNotFound, throwValidationError } from "../util/errorThrowers";
 const createNewDock = asyncHandler(
   async (
     req: Request<unknown, unknown, { name: string }>,
-    res: Response<IDock>
+    res: Response<dockTypes.TDock>
   ) => {
+    console.log(req.cookies);
+
     const { name } = req.body;
     if (!name) {
       throwValidationError("required { name } input value missing");
     }
-    const newDock: IDock = (await Dock.create({ name })).toJSON();
+    const newDock: dockTypes.TDock = (await Dock.create({ name })).toJSON();
 
     res.status(201).json(newDock);
   }
@@ -33,24 +35,26 @@ const deleteDock = asyncHandler(async (req, res) => {
   res.status(200).json(destroyedDock);
 });
 
-const getAllDocks = asyncHandler(async (_req, res: Response<IDock[]>) => {
-  const docks: IDock[] = (await Dock.findAll({}))
-    .map((d) => d.toJSON())
-    .sort((a, b) => {
-      const nameA = a.name.toUpperCase();
-      const nameB = b.name.toUpperCase();
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      return 0;
-    });
-  res.status(200).json(docks);
-});
+const getAllDocks = asyncHandler(
+  async (_req, res: Response<dockTypes.TDock[]>) => {
+    const docks: dockTypes.TDock[] = (await Dock.findAll({}))
+      .map((d) => d.toJSON())
+      .sort((a, b) => {
+        const nameA = a.name.toUpperCase();
+        const nameB = b.name.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
+    res.status(200).json(docks);
+  }
+);
 
-const getDock = asyncHandler(async (req, res: Response<IDock>) => {
+const getDock = asyncHandler(async (req, res: Response<dockTypes.TDock>) => {
   const id = req.params.id;
   const dock = await Dock.findByPk(id);
   if (!dock) {
@@ -61,7 +65,10 @@ const getDock = asyncHandler(async (req, res: Response<IDock>) => {
 });
 
 const updateDock = asyncHandler(
-  async (req: Request<unknown, unknown, IDock>, res: Response<IDock>) => {
+  async (
+    req: Request<unknown, unknown, dockTypes.TDock>,
+    res: Response<dockTypes.TDock>
+  ) => {
     const { id, name } = req.body;
     if (!id || !name) {
       throwValidationError("required { id, name } input value missing");

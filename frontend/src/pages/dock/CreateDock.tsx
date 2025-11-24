@@ -8,7 +8,7 @@ import {
   FormMainContainer,
   FormTextField,
 } from "../../components/SmallOnes";
-import { IDockname } from "../../../../types";
+import { IDockname } from "../../../../typesFile";
 import { useAddDockMutation } from "../../redux/api";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";

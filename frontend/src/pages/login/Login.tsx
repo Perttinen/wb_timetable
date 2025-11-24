@@ -14,6 +14,7 @@ import {
 } from "../../components/SmallOnes";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
+import { setCredentials } from "../../redux/authSlice";
 
 const loginSchema = yup.object({
   username: yup
@@ -32,7 +33,6 @@ const Login = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(api.util.resetApiState());
-    localStorage.clear();
   }, []);
 
   const handleSubmit = async (values: {
@@ -41,8 +41,7 @@ const Login = () => {
   }) => {
     try {
       const result = await login(values).unwrap();
-      localStorage.setItem("token", result.token);
-      api.util.resetApiState();
+      dispatch(setCredentials({ accessToken: result.token }));
       void navigate("/logged/timetables");
     } catch (e) {
       const message = getErrorMessage(e);

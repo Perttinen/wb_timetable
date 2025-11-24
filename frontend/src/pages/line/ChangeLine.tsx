@@ -13,7 +13,7 @@ import {
 } from "../../components/SmallOnes";
 import { Box, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
-import { ILineToAdd, IStopdocks } from "../../../../types";
+import { ILineToAdd, IStopdocks } from "../../../../typesFile";
 import { showSnackbar } from "../../components/SnackbarProvider";
 
 const ChangeLine = () => {

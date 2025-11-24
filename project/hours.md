@@ -2,7 +2,9 @@
 
 #### total hours 151
 
-deleteLines added.
+24.11.2025 Token stored in state, refreshing with cookieToken. Code optimizing started with controllers. types.ts reorganization started. Hours: 6, Total: 157,5
+
+23.11.2025 Delete line added in front. Hours: 0,5, Total 151,5
 
 21.11.2025 Created UniversalSelector that creates buttonlists for every main pages (Lines, Users, Docks). No need for deparate line- / dockselectors anymore. Hours: 3, Total: 151
 

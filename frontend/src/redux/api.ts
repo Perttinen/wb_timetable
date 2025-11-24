@@ -1,10 +1,8 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
+import { authTypes, dockTypes, departureTypes } from "../../../types";
 import {
-  ICheckPasswordArgs,
   IDeleteDeparturesPayload,
   IDeparture,
-  IDepartureForTimetable,
-  IDock,
   IDockname,
   IInputDeparture,
   IJsonUserFlattenedLevels,
@@ -16,8 +14,9 @@ import {
   IUpdateLineArgs,
   IUpdateUserArgs,
   IUserlevel,
-} from "../../../types";
+} from "../../../typesFile";
 import { apiQuery } from "./apiQuery";
+import { logOut, setCredentials } from "./authSlice";
 
 export const api = createApi({
   reducerPath: "api",
@@ -34,7 +33,7 @@ export const api = createApi({
   ],
   endpoints: (builder) => ({
     // DOCK
-    getDocks: builder.query<IDock[], void>({
+    getDocks: builder.query<dockTypes.TDock[], void>({
       query: () => ({
         url: "/dock/",
         method: "GET",
@@ -48,7 +47,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["GetDocks"],
     }),
-    addDock: builder.mutation<IDock, IDockname>({
+    addDock: builder.mutation<dockTypes.TDock, IDockname>({
       query: (newDock) => ({
         url: "/dock",
         method: "POST",
@@ -56,7 +55,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["GetDocks"],
     }),
-    changeDock: builder.mutation<IDock, IDock>({
+    changeDock: builder.mutation<dockTypes.TDock, dockTypes.TDock>({
       query: (Dock) => ({
         url: "/dock",
         method: "PATCH",
@@ -65,7 +64,7 @@ export const api = createApi({
       invalidatesTags: ["GetDocks", "GetDock", "Timetable", "Lines"],
     }),
 
-    getDock: builder.query<IDock, number>({
+    getDock: builder.query<dockTypes.TDock, number>({
       query: (id) => ({
         url: `/dock/${id}`,
         method: "GET",
@@ -73,7 +72,10 @@ export const api = createApi({
       providesTags: ["GetDock"],
     }),
     //DEPARTURE
-    getTimetable: builder.query<IDepartureForTimetable[], string>({
+    getTimetable: builder.query<
+      departureTypes.TDepartureForTimetable[],
+      string
+    >({
       query: (dockId) => ({
         url: `/departure/timetable/${dockId}`,
         method: "GET",
@@ -189,13 +191,48 @@ export const api = createApi({
         invalidatesTags: ["Me"],
       }),
     }),
+    sendLogout: builder.mutation({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const data = await queryFulfilled;
+          console.log(data);
+
+          dispatch(logOut());
+          setTimeout(() => {
+            dispatch(api.util.resetApiState());
+          }, 500);
+        } catch (err) {
+          console.log(err);
+        }
+      },
+    }),
+    refresh: builder.mutation<{ accessToken: string }, void>({
+      query: () => ({
+        url: "/auth/refresh",
+        method: "GET",
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(data);
+          const { accessToken } = data;
+          dispatch(setCredentials({ accessToken }));
+        } catch (err) {
+          console.log(err);
+        }
+      },
+    }),
     getMe: builder.query<IJsonUserFlattenedLevels, void>({
       query: () => "/auth/me",
       providesTags: ["Me"],
     }),
-    checkPassword: builder.mutation<boolean, ICheckPasswordArgs>({
+    checkPassword: builder.mutation<boolean, authTypes.TCheckPasswordArgs>({
       query: (pw) => ({
-        url: "/auth/pw",
+        url: "/auth/checkpw",
         method: "POST",
         body: pw,
       }),

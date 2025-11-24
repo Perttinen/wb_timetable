@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { RequestHandler } from "express";
 import { User } from "../../../database/models";
-import { IJsonUserFromDbNoLevels } from "../../../types";
+import { IJsonUserFromDbNoLevels } from "../../../typesFile";
 import asyncHandler from "express-async-handler";
 import { throwAuthError, throwNotFound } from "../errorThrowers";
 
@@ -57,6 +57,7 @@ const authorizer = (requiredLevel: string): RequestHandler =>
     const reqUrl = req.originalUrl;
     // Checks for authorization header
     const authHeader = req.get("authorization");
+
     if (!authHeader) {
       throwAuthError("token missing");
       return;

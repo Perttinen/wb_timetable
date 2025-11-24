@@ -54,7 +54,7 @@ const ChangeUser = () => {
       void navigate("/logged/users");
     } catch (e) {
       const message = getErrorMessage(e);
-      showSnackbar({ severity: "error", duration: 6000, message });
+      showSnackbar({ severity: "error", duration: 10000, message });
     }
   };
 

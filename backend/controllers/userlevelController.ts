@@ -2,7 +2,7 @@ import { Response } from "express";
 import asyncHandler from "express-async-handler";
 
 import { Userlevel } from "../../database/models";
-import { IUserlevel } from "../../types";
+import { IUserlevel } from "../../typesFile";
 import { Op } from "@sequelize/core";
 
 const getUserlevels = asyncHandler(

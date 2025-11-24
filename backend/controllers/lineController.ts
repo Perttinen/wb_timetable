@@ -1,13 +1,15 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 
-import { IDock, ILine, ILineReturnable, ILineToAdd } from "../../types";
 import { Dock, Line, LineDock } from "../../database/models";
 import { throwNotFound, throwValidationError } from "../util/errorThrowers";
-import { lineIncludes } from "./commonFuncs";
-import { createReturnableLine } from "./commonFuncs";
+import { lineIncludes } from "./helperFunctions";
+import { createReturnableLine } from "./helperFunctions";
+import { lineTypes, dockTypes } from "../../types";
 
-const dockIdsAreValid = async (line: ILineToAdd): Promise<boolean> => {
+const dockIdsAreValid = async (
+  line: lineTypes.TLineToAdd
+): Promise<boolean> => {
   const idsToValidate = [
     line.startDockId,
     line.endDockId,
@@ -15,7 +17,7 @@ const dockIdsAreValid = async (line: ILineToAdd): Promise<boolean> => {
   ];
   const validDocks = await Dock.findAll();
   const validDockIds: number[] = validDocks.map((dock) => {
-    const dockJson: IDock = dock.toJSON();
+    const dockJson: dockTypes.TDock = dock.toJSON();
     return dockJson.id;
   });
   return idsToValidate.every((id) => validDockIds.includes(id));
@@ -23,8 +25,8 @@ const dockIdsAreValid = async (line: ILineToAdd): Promise<boolean> => {
 
 const createNewLine = asyncHandler(
   async (
-    req: Request<unknown, unknown, ILineToAdd>,
-    res: Response<ILineReturnable>
+    req: Request<unknown, unknown, lineTypes.TLineToAdd>,
+    res: Response<lineTypes.TLineReturnable>
   ) => {
     const { startDockId, stops, endDockId } = req.body;
 
@@ -40,7 +42,7 @@ const createNewLine = asyncHandler(
       return;
     }
 
-    const createdLine: ILine = (
+    const createdLine: lineTypes.TLine = (
       await Line.create({
         startDockId,
         endDockId,
@@ -111,8 +113,8 @@ const getLine = asyncHandler(async (req: Request, res: Response) => {
 
 const updateLine = asyncHandler(
   async (
-    req: Request<{ id: string }, unknown, ILineToAdd>,
-    res: Response<ILineReturnable>
+    req: Request<{ id: string }, unknown, lineTypes.TLineToAdd>,
+    res: Response<lineTypes.TLineReturnable>
   ) => {
     const { startDockId, stops, endDockId } = req.body;
     const lineId = req.params.id;

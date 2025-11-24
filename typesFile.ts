@@ -1,21 +1,126 @@
-export interface IBigLine {
-  id: number;
-  startDock?: {
-    name: string;
-    id: number;
-  };
-  endDock?: {
-    name: string;
-    id: number;
-  };
-  docks?: {
-    name: string;
-    id: number;
-    lineDock: {
-      delayFromStart: number;
-    };
-  }[];
-}
+// export namespace lineTypes {
+//   export type TLineRaw = {
+//     id: number;
+//     startDock?: {
+//       name: string;
+//       id: number;
+//     };
+//     endDock?: {
+//       name: string;
+//       id: number;
+//     };
+//     docks?: {
+//       name: string;
+//       id: number;
+//       lineDock: {
+//         delayFromStart: number;
+//       };
+//     }[];
+//   };
+
+//   export type TLineToAdd = {
+//     startDockId: number;
+//     stops: { dockId: number; delayFromStart: number }[];
+//     endDockId: number;
+//   };
+
+//   export type TLineReturnable = {
+//     id: number;
+//     startDock: {
+//       name: string;
+//       id: number;
+//     };
+//     endDock: {
+//       name: string;
+//       id: number;
+//     };
+//     stopDocks: {
+//       name: string;
+//       id: number;
+//       delayFromStart: number;
+//     }[];
+//   };
+//   export type TLine = {
+//     id: number;
+//     startDockId: number;
+//     endDockId: number;
+//   };
+//   export type TFormattedLine = {
+//     lineId: number;
+//     endDock: string;
+//     delay: number;
+//     via: string[];
+//   };
+// }
+
+// export namespace dockTypes {
+//   export type TDock = {
+//     id: number;
+//     name: string;
+//   };
+// }
+
+// export namespace userTypes {
+//   export type TUser = {
+//     username: string;
+//     id: number;
+//     disabled: boolean;
+//     userlevels: string[];
+//     password: string;
+//   };
+
+//   export type TUserSafe = {
+//     id: number;
+//     disabled: boolean;
+//     userlevels: string[];
+//     username: string;
+//   };
+
+//   export type TUserRaw = {
+//     password: string;
+//     id: number;
+//     disabled: boolean;
+//     userlevels: { userlevel: string; id: number }[];
+//     username: string;
+//   };
+// }
+
+// export namespace authTypes {
+//   export type TCheckPasswordArgs = {
+//     password: string;
+//   };
+//   export type TLoginArgs = {
+//     username: string;
+//     password: string;
+//   };
+// }
+
+// export namespace departureTypes {
+//   export type TDeleteDeparturesPayload = {
+//     lineId: number;
+//     fromDate: string;
+//     toDate: string;
+//     fromTime: string;
+//     toTime: string;
+//     weekdays: boolean[];
+//   };
+//   export type TInputDeparture = {
+//     lineId: number;
+//     start: Date;
+//   };
+
+//   export type TDeparture = {
+//     id: number;
+//     lineId: number;
+//     start: Date;
+//   };
+
+//   export type TDepartureForTimetable = {
+//     destination: string;
+//     startTime: Date;
+//     via: string[];
+//   };
+// }
 
 export interface ICreateUserEntry extends IUser {
   password: string;
@@ -37,16 +142,6 @@ export interface IDeparture {
   start: Date;
 }
 
-export interface IDepartureForTimetable {
-  destination: string;
-  startTime: Date;
-  via: string[];
-}
-
-export interface IDock {
-  id: number;
-  name: string;
-}
 export interface IDockname {
   name: string;
 }
@@ -83,20 +178,6 @@ export interface IJsonUserFlattenedLevels extends IUser {
   userlevels: string[];
 }
 
-export interface IJsonUserFlattenedLevels extends IUser {
-  id: number;
-  disabled: boolean;
-  userlevels: string[];
-}
-
-export interface IJsonUserFromDb extends IUser {
-  password: string;
-  id: number;
-  disabled: boolean;
-  userlevels: { userlevel: string; id: number }[];
-  username: string;
-}
-
 export interface IJsonUserFromDbNoLevels extends IUser {
   password: string;
   id: number;
@@ -105,12 +186,6 @@ export interface IJsonUserFromDbNoLevels extends IUser {
 
 export interface IJsonUserPw extends IJsonUser {
   password: string;
-}
-
-export interface ILine {
-  id: number;
-  startDockId: number;
-  endDockId: number;
 }
 
 export interface ILineReturnable {
@@ -196,7 +271,4 @@ export interface IConfirmedPasswordsType {
   currentPassword: string;
   newPassword: string;
   confirmPassword: string;
-}
-export interface ICheckPasswordArgs {
-  password: string;
 }
