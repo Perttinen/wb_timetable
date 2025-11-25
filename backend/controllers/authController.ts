@@ -34,7 +34,6 @@ const checkPassword = asyncHandler(
 
     if (!reqPwd) {
       throwNotFound("missing password");
-      return;
     }
 
     const user = (await User.findByPk(req.decodedToken.id))?.toJSON();
@@ -48,7 +47,6 @@ const checkPassword = asyncHandler(
 
     if (!passwordCorrect) {
       throwAuthError("password incorrect");
-      return;
     }
 
     res.status(200).json(passwordCorrect);
@@ -70,26 +68,24 @@ const login = asyncHandler(
 
     if (!username || !reqPwd) {
       throwValidationError("missing input field(s)");
-      return;
     }
 
-    const dbUser = await User.findOne({
+    const rawUser = await User.findOne({
       where: { username },
       ...addUserlevels,
     });
 
-    if (!dbUser) {
+    if (!rawUser) {
       throwNotFound("user not found");
       return;
     }
 
-    const { password, ...safeUser } = userlevelsToArray(dbUser);
+    const { password, ...safeUser } = userlevelsToArray(rawUser);
 
     const passwordCorrect = await bcrypt.compare(reqPwd, password);
 
     if (!passwordCorrect) {
       throwAuthError("invalid password");
-      return;
     }
 
     const accessToken = jwt.sign(
@@ -125,26 +121,24 @@ const login = asyncHandler(
 const me = asyncHandler(async (req, res: Response<userTypes.TUser>) => {
   if (!req.decodedToken || !req.decodedToken.id) {
     throwAuthError("invalid token");
-    return;
   }
 
-  const dbUser = await User.findOne({
+  const rawUser = await User.findOne({
     attributes: { exclude: ["password"] },
     where: { id: Number(req.decodedToken.id) },
     ...addUserlevels,
   });
 
-  if (!dbUser) {
+  if (!rawUser) {
     throwNotFound("user not found");
     return;
   }
-
-  res.status(200).json(userlevelsToArray(dbUser));
+  res.status(200).json(userlevelsToArray(rawUser));
 });
 
 // @desc Refresh access token
 // @route GET /auth/refresh
-// @access Public - because access token has expired
+// @access Public
 const refresh = (
   req: AuthenticatedRequest,
   res: Response<{ accessToken: string }>
@@ -165,23 +159,22 @@ const refresh = (
     ) => {
       if (err) {
         throwAuthError("Forbidden");
-        return;
       }
 
       const id = Number((decoded as JwtPayload).id);
 
-      const dbUser = await User.findOne({
+      const rawUser = await User.findOne({
         attributes: { exclude: ["password"] },
         where: { id },
         ...addUserlevels,
       });
 
-      if (!dbUser) {
+      if (!rawUser) {
         throwAuthError("Unauthorized");
         return;
       }
 
-      const user = userlevelsToArray(dbUser);
+      const user = userlevelsToArray(rawUser);
 
       const accessToken = jwt.sign(
         {

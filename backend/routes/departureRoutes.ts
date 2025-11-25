@@ -13,9 +13,9 @@ router.route("/").get(authorizer("user"), departures.getAllDepartures);
 router
   .route("/deletemany")
   .delete(authorizer("user"), departures.deleteDepartures);
-router.route("/timetable/:dockId").get(departures.get20DeparturesByDockName);
+router.route("/timetable/:dockId").get(departures.get20DeparturesByDockId);
 router
-  .route("/line/:lineId")
+  .route("/byline/:lineId")
   .get(authorizer("user"), departures.getDeparturesByLineId);
 
 export default router;

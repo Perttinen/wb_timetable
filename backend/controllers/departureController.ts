@@ -3,54 +3,55 @@ import asyncHandler from "express-async-handler";
 import { Op } from "@sequelize/core";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import utc from "dayjs/plugin/utc";
+import isBetween from "dayjs/plugin/isBetween";
 
 import { Departure, Dock, Line } from "../../database/models";
 import { throwNotFound, throwValidationError } from "../util/errorThrowers";
-import { lineTypes, dockTypes, departureTypes } from "../../types";
+import { formatLines } from "./helperFunctions";
+import { departureTypes } from "../../types";
 
 dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(isBetween);
 
-type TFormatLinesEntry = {
-  lines: lineTypes.TLineRaw[];
-  dockId: number;
-};
+// @desc create
+// @route POST /departure/addone
+// @access user
+const createDeparture = asyncHandler(
+  async (
+    req: Request<unknown, unknown, departureTypes.TInputDeparture>,
+    res: Response<departureTypes.TDeparture>
+  ) => {
+    const { lineId, start } = req.body;
 
-const formatLines = (input: TFormatLinesEntry): lineTypes.TFormattedLine[] => {
-  const { lines, dockId } = input;
-
-  const formattedLines = [];
-  for (const line of lines) {
-    if (line.docks && line.startDock && line.endDock) {
-      line.docks.sort(
-        (a, b) => a.lineDock.delayFromStart - b.lineDock.delayFromStart
-      );
-
-      const isStartDock = line.startDock.id === dockId;
-      const isStopDock = line.docks.find((d) => d.id === dockId);
-
-      if (!isStartDock && !isStopDock) continue;
-
-      const delay = isStartDock ? 0 : isStopDock!.lineDock.delayFromStart;
-
-      const via = isStartDock
-        ? line.docks.map((dock) => dock.name)
-        : line.docks
-            .slice(line.docks.indexOf(isStopDock!) + 1)
-            .map((dock) => dock.name);
-
-      formattedLines.push({
-        lineId: line.id,
-        endDock: line.endDock.name,
-        delay,
-        via,
-      });
+    if (!lineId || !start) {
+      throwValidationError("lineId and start are required");
     }
-  }
-  return formattedLines;
-};
+    const response = await Departure.create({ lineId, start });
 
-// @desc delete many
-// @route DELETE /departures/deletemany
+    res.status(201).json(response);
+  }
+);
+
+// @desc createMany
+// @route POST /departure/addmany
+// @access user
+const createManyDepartures = asyncHandler(
+  async (
+    req: Request<unknown, unknown, departureTypes.TInputDeparture[]>,
+    res: Response<departureTypes.TDeparture[]>
+  ) => {
+    const departures = req.body;
+
+    const response = await Departure.bulkCreate(departures);
+
+    res.status(200).json(response);
+  }
+);
+
+// @desc deleteMany
+// @route DELETE /departure/deletemany
 // @access user
 const deleteDepartures = asyncHandler(
   async (
@@ -61,18 +62,24 @@ const deleteDepartures = asyncHandler(
 
     if (!lineId || !fromDate || !toDate || !fromTime || !toTime || !weekdays) {
       throwValidationError("Missing required fields");
-      return;
+    }
+
+    const getMinutes = (time: string) => {
+      const splitted = time.split(":");
+      return Number(splitted[0]) * 60 + Number(splitted[1]);
+    };
+
+    const fromMinutes = getMinutes(fromTime);
+    const toMinutes = getMinutes(toTime);
+
+    if (fromMinutes > toMinutes) {
+      throwValidationError("From time can't be greater than To time!");
     }
 
     const fromDateTime = dayjs(`${fromDate}T${fromTime}`);
-    const toDateTime = dayjs(`${toDate}T${toTime}`);
+    const toDateTime = dayjs(`${toDate}T${toTime}`).add(1, "minute");
 
-    const fromMinutes =
-      dayjs(fromTime, "HH:mm").hour() * 60 + dayjs(fromTime, "HH:mm").minute();
-    const toMinutes =
-      dayjs(toTime, "HH:mm").hour() * 60 + dayjs(toTime, "HH:mm").minute();
-
-    const departures = await Departure.findAll({
+    const rawDepartures = await Departure.findAll({
       where: {
         lineId,
         start: {
@@ -81,12 +88,14 @@ const deleteDepartures = asyncHandler(
       },
     });
 
-    const filteredDepartures = departures.filter((departure) => {
+    const filteredDepartures = rawDepartures.filter((departure) => {
       const start = dayjs(departure.start);
-      const minutes = start.hour() * 60 + start.minute();
-      const weekdayIndex = (start.day() + 6) % 7;
+      const startMinutes = start.hour() * 60 + start.minute();
+
       return (
-        minutes >= fromMinutes && minutes <= toMinutes && weekdays[weekdayIndex]
+        startMinutes >= fromMinutes &&
+        startMinutes <= toMinutes &&
+        weekdays[dayjs(departure.start).subtract(1, "day").day()]
       );
     });
 
@@ -106,42 +115,18 @@ const deleteDepartures = asyncHandler(
   }
 );
 
-//CONTINUE OPTIMIZING CONTROLLERS HERE!!!
-
-const createDeparture = asyncHandler(
-  async (
-    req: Request<unknown, unknown, departureTypes.TInputDeparture>,
-    res: Response<departureTypes.TDeparture>
-  ) => {
-    const { lineId, start } = req.body;
-    if (!lineId || !start) {
-      throwValidationError("lineId and start are required");
-      return;
-    }
-    const response = await Departure.create({ lineId, start });
-    res.status(200).json(response);
-  }
-);
-
-const createManyDepartures = asyncHandler(
-  async (
-    req: Request<unknown, unknown, departureTypes.TInputDeparture[]>,
-    res: Response<departureTypes.TDeparture[]>
-  ) => {
-    const departures = req.body;
-
-    const response = await Departure.bulkCreate(departures);
-    res.status(200).json(response);
-  }
-);
-
+// @desc getAll
+// @route GET /departure
+// @access user
 const getAllDepartures = asyncHandler(async (_req: Request, res: Response) => {
-  const departures: Departure[] = (await Departure.findAll({})).map((d) =>
-    d.toJSON()
-  );
+  const departures = (await Departure.findAll({})).map((d) => d.toJSON());
+
   res.status(200).json(departures);
 });
 
+// @desc getByLineId
+// @route POST /departure/byLine/:lineId
+// @access user
 const getDeparturesByLineId = asyncHandler(
   async (req: Request, res: Response) => {
     const lineId = req.params.lineId;
@@ -154,59 +139,56 @@ const getDeparturesByLineId = asyncHandler(
   }
 );
 
-const get20DeparturesByDockName = asyncHandler(
+// @desc get20NextByDockId
+// @route GET /departure/timetable/:dockId
+// @access public
+const get20DeparturesByDockId = asyncHandler(
   async (
     req: Request,
     res: Response<departureTypes.TDepartureForTimetable[]>
   ) => {
-    const dockDb = await Dock.findOne({
+    const rawDock = await Dock.findOne({
       where: { id: req.params.dockId },
     });
-    if (!dockDb) {
+
+    if (!rawDock) {
       throwNotFound(`dock name ${req.params.dockName} not found in db`);
       return;
     }
-    const dock: dockTypes.TDock = dockDb.toJSON();
-    const dockId = dock.id;
 
-    const lines: lineTypes.TLineRaw[] = (
-      await Line.findAll({
-        attributes: { exclude: ["startDockId", "endDockId"] },
-        include: [
-          {
-            association: "startDock",
-            attributes: ["id", "name"],
+    const rawLines = await Line.findAll({
+      attributes: { exclude: ["startDockId", "endDockId"] },
+      include: [
+        {
+          association: "startDock",
+          attributes: ["id", "name"],
+        },
+        {
+          association: "endDock",
+          attributes: ["id", "name"],
+        },
+        {
+          association: "docks",
+          attributes: ["id", "name"],
+          through: {
+            attributes: ["delayFromStart"],
           },
-          {
-            association: "endDock",
-            attributes: ["id", "name"],
-          },
-          {
-            association: "docks",
-            attributes: ["id", "name"],
-            through: {
-              attributes: ["delayFromStart"],
-            },
-          },
-        ],
-      })
-    ).map((lines) => lines.toJSON());
+        },
+      ],
+    });
 
-    const formattedLines = formatLines({ lines, dockId });
+    const formattedLines = formatLines({ lines: rawLines, dockId: rawDock.id });
 
     const relatedLineIds = formattedLines.map((line) => line.lineId);
 
-    const relatedDeparturesDb: Departure[] = await Departure.findAll({
+    const lineMap = new Map(formattedLines.map((line) => [line.lineId, line]));
+
+    const rawDepartures = await Departure.findAll({
       where: { lineId: relatedLineIds },
       order: [["start", "ASC"]] as [["start", "ASC"]],
     });
 
-    const relatedDepartures: departureTypes.TDeparture[] =
-      relatedDeparturesDb.map((d) => d.toJSON());
-
-    const lineMap = new Map(formattedLines.map((line) => [line.lineId, line]));
-
-    const dockDepartures = relatedDepartures.map((departure) => {
+    const dockDepartures = rawDepartures.map((departure) => {
       const line = lineMap.get(departure.lineId);
       if (!line) {
         throw new Error(
@@ -221,25 +203,21 @@ const get20DeparturesByDockName = asyncHandler(
         via: line.via,
       };
     });
-    const upcomingDepartures = dockDepartures.filter(
-      (departure) => departure.startTime > new Date(Date.now())
-    );
 
-    res
-      .status(200)
-      .json(
-        upcomingDepartures
-          .slice(0, 20)
-          .sort((a, b) => a.startTime.getTime() - b.startTime.getTime())
-      );
+    const upcomingDepartures = dockDepartures
+      .filter((departure) => departure.startTime.getTime() > Date.now())
+      .sort((a, b) => a.startTime.getTime() - b.startTime.getTime())
+      .slice(0, 20);
+
+    res.status(200).json(upcomingDepartures);
   }
 );
 
 export default {
   createDeparture,
   createManyDepartures,
-  getAllDepartures,
-  get20DeparturesByDockName,
-  getDeparturesByLineId,
   deleteDepartures,
+  get20DeparturesByDockId,
+  getAllDepartures,
+  getDeparturesByLineId,
 };

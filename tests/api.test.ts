@@ -427,9 +427,9 @@ describe("API", () => {
       );
       expect(response.status).toBe(200);
     });
-    test("user get departures by line id, GET /api/departure/line/:lineId", async () => {
+    test("user get departures by line id, GET /api/departure/byline/:lineId", async () => {
       const response = await request(app)
-        .get(`/api/departure/line/${lineIds[1]}`)
+        .get(`/api/departure/byline/${lineIds[1]}`)
         .set("Authorization", `Bearer ${testUser.token}`);
       expect(response.status).toBe(200);
     });

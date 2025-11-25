@@ -71,3 +71,44 @@ export const createReturnableLine = (
     stopDocks,
   };
 };
+
+type TFormatLinesEntry = {
+  lines: lineTypes.TLineRaw[];
+  dockId: number;
+};
+
+export const formatLines = (
+  input: TFormatLinesEntry
+): lineTypes.TFormattedLine[] => {
+  const { lines, dockId } = input;
+
+  const formattedLines = [];
+  for (const line of lines) {
+    if (line.docks && line.startDock && line.endDock) {
+      line.docks.sort(
+        (a, b) => a.lineDock.delayFromStart - b.lineDock.delayFromStart
+      );
+
+      const isStartDock = line.startDock.id === dockId;
+      const isStopDock = line.docks.find((d) => d.id === dockId);
+
+      if (!isStartDock && !isStopDock) continue;
+
+      const delay = isStartDock ? 0 : isStopDock!.lineDock.delayFromStart;
+
+      const via = isStartDock
+        ? line.docks.map((dock) => dock.name)
+        : line.docks
+            .slice(line.docks.indexOf(isStopDock!) + 1)
+            .map((dock) => dock.name);
+
+      formattedLines.push({
+        lineId: line.id,
+        endDock: line.endDock.name,
+        delay,
+        via,
+      });
+    }
+  }
+  return formattedLines;
+};
