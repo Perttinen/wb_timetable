@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
 import { User } from "../../../database/models";
-// import { IJsonUserFromDbNoLevels } from "../../../typesFile";
 import { throwAuthError, throwNotFound } from "../errorThrowers";
 
 dotenv.config();

@@ -37,6 +37,85 @@ export const api = createApi({
   ],
   endpoints: (builder) => ({
     //
+    //AUTH
+
+    login: builder.mutation<ILoginResponse, ILoginRequest>({
+      query: (credentials) => ({
+        url: "/auth/login",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
+    logout: builder.mutation({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
+      }),
+      onQueryStarted(arg, { dispatch }) {
+        dispatch(logOut());
+      },
+    }),
+    refresh: builder.mutation<{ accessToken: string }, void>({
+      query: () => ({
+        url: "/auth/refresh",
+        method: "GET",
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data } = await queryFulfilled;
+        console.log(data);
+        const { accessToken } = data;
+        dispatch(setCredentials({ accessToken }));
+      },
+    }),
+    getMe: builder.query<IJsonUserFlattenedLevels, void>({
+      query: () => "/auth/me",
+      providesTags: ["Me"],
+    }),
+    checkPassword: builder.mutation<boolean, authTypes.TCheckPasswordArgs>({
+      query: (pw) => ({
+        url: "/auth/checkpw",
+        method: "POST",
+        body: pw,
+      }),
+    }),
+
+    //DEPARTURE
+
+    getTimetable: builder.query<
+      departureTypes.TDepartureForTimetable[],
+      string
+    >({
+      query: (dockId) => ({
+        url: `/departure/timetable/${dockId}`,
+        method: "GET",
+      }),
+      providesTags: ["Timetable"],
+    }),
+    addDeparture: builder.mutation<IDeparture, IInputDeparture>({
+      query: (addDeparture) => ({
+        url: "/departure/addOne",
+        method: "POST",
+        body: addDeparture,
+      }),
+      invalidatesTags: ["Timetable"],
+    }),
+    addManyDepartures: builder.mutation<IDeparture[], IInputDeparture[]>({
+      query: (addManyDepartures) => ({
+        url: "/departure/addMany",
+        method: "POST",
+        body: addManyDepartures,
+      }),
+      invalidatesTags: ["Timetable"],
+    }),
+    deleteDepartures: builder.mutation<void, IDeleteDeparturesPayload>({
+      query: (deleteManyDepartures) => ({
+        url: "/departure/deletemany",
+        method: "DELETE",
+        body: deleteManyDepartures,
+      }),
+      invalidatesTags: ["Timetable"],
+    }),
+
     // DOCK
 
     getDocks: builder.query<dockTypes.TDock[], void>({
@@ -76,43 +155,6 @@ export const api = createApi({
         method: "GET",
       }),
       providesTags: ["GetDock"],
-    }),
-
-    //DEPARTURE
-
-    getTimetable: builder.query<
-      departureTypes.TDepartureForTimetable[],
-      string
-    >({
-      query: (dockId) => ({
-        url: `/departure/timetable/${dockId}`,
-        method: "GET",
-      }),
-      providesTags: ["Timetable"],
-    }),
-    addDeparture: builder.mutation<IDeparture, IInputDeparture>({
-      query: (addDeparture) => ({
-        url: "/departure/addOne",
-        method: "POST",
-        body: addDeparture,
-      }),
-      invalidatesTags: ["Timetable"],
-    }),
-    addManyDepartures: builder.mutation<IDeparture[], IInputDeparture[]>({
-      query: (addManyDepartures) => ({
-        url: "/departure/addMany",
-        method: "POST",
-        body: addManyDepartures,
-      }),
-      invalidatesTags: ["Timetable"],
-    }),
-    deleteDepartures: builder.mutation<void, IDeleteDeparturesPayload>({
-      query: (deleteManyDepartures) => ({
-        url: "/departure/deletemany",
-        method: "DELETE",
-        body: deleteManyDepartures,
-      }),
-      invalidatesTags: ["Timetable"],
     }),
 
     //LINE
@@ -156,6 +198,7 @@ export const api = createApi({
     }),
 
     //USER
+
     getUsers: builder.query<IJsonUserFlattenedLevels[], void>({
       query: () => ({ url: "/user", method: "GET" }),
       providesTags: ["Users"],
@@ -190,64 +233,11 @@ export const api = createApi({
       }),
       invalidatesTags: ["Users"],
     }),
+
     //USERLEVEL
+
     getUserlevels: builder.query<userlevelTypes.TUserlevel[], void>({
       query: () => ({ url: "/userlevel", method: "GET" }),
-    }),
-    //AUTH
-    login: builder.mutation<ILoginResponse, ILoginRequest>({
-      query: (credentials) => ({
-        url: "/auth/login",
-        method: "POST",
-        body: credentials,
-        invalidatesTags: ["Me"],
-      }),
-    }),
-    sendLogout: builder.mutation({
-      query: () => ({
-        url: "/auth/logout",
-        method: "POST",
-      }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const data = await queryFulfilled;
-          console.log(data);
-
-          dispatch(logOut());
-          setTimeout(() => {
-            dispatch(api.util.resetApiState());
-          }, 500);
-        } catch (err) {
-          console.log(err);
-        }
-      },
-    }),
-    refresh: builder.mutation<{ accessToken: string }, void>({
-      query: () => ({
-        url: "/auth/refresh",
-        method: "GET",
-      }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          console.log(data);
-          const { accessToken } = data;
-          dispatch(setCredentials({ accessToken }));
-        } catch (err) {
-          console.log(err);
-        }
-      },
-    }),
-    getMe: builder.query<IJsonUserFlattenedLevels, void>({
-      query: () => "/auth/me",
-      providesTags: ["Me"],
-    }),
-    checkPassword: builder.mutation<boolean, authTypes.TCheckPasswordArgs>({
-      query: (pw) => ({
-        url: "/auth/checkpw",
-        method: "POST",
-        body: pw,
-      }),
     }),
   }),
 });
@@ -276,4 +266,5 @@ export const {
   useGetMeQuery,
   useCheckPasswordMutation,
   useDeleteLineMutation,
+  useLogoutMutation,
 } = api;

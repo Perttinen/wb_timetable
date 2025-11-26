@@ -17,16 +17,15 @@ import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-import { api, useGetMeQuery } from "../redux/api";
-import { useDispatch } from "react-redux";
+import { useGetMeQuery, useLogoutMutation } from "../redux/api";
 import { UserCard } from "./UserCard";
 
 function Navbar() {
   const navigate = useNavigate();
   const theme = useTheme();
-  const dispatch = useDispatch();
   const [usercard, setUsercard] = useState(false);
   const { data: loggedUser } = useGetMeQuery();
+  const [logout] = useLogoutMutation();
 
   const getPagesByUserlevels = (userlevels: string[]) => {
     const pagesToShow = [];
@@ -46,10 +45,7 @@ function Navbar() {
   const handleLogout = () => {
     setAnchorElUser(null);
     void navigate("/");
-    setTimeout(() => {
-      console.log("reset");
-      dispatch(api.util.resetApiState());
-    }, 500);
+    void logout("justArg");
   };
 
   const pages = loggedUser ? getPagesByUserlevels(loggedUser.userlevels) : [];

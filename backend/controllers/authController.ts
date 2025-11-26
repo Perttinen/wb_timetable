@@ -92,7 +92,8 @@ const login = asyncHandler(
       { id: safeUser.id, userlevels: safeUser.userlevels },
       String(process.env.JWT_ACCESS),
       {
-        expiresIn: 15 * 60,
+        // Set this value also in auth/refresh!
+        expiresIn: "15m",
       }
     );
 
@@ -100,7 +101,7 @@ const login = asyncHandler(
       { id: safeUser.id },
       String(process.env.JWT_REFRESH),
       {
-        expiresIn: "3h",
+        expiresIn: "7d",
       }
     );
 
@@ -114,6 +115,19 @@ const login = asyncHandler(
     res.status(200).json({ token: accessToken, user: safeUser });
   }
 );
+
+// @desc logout
+// @route POST /auth/logout
+// @access public
+const logout = asyncHandler((req: Request, res: Response) => {
+  const cookies = req.cookies;
+
+  if (!cookies?.jwt) res.sendStatus(204);
+
+  res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
+
+  res.json({ message: "Cookie cleared" });
+});
 
 // @desc returns user based on access token
 // @route GET /auth/me
@@ -144,9 +158,10 @@ const refresh = (
   res: Response<{ accessToken: string }>
 ) => {
   const refreshToken = req.cookies.jwt;
+  console.log(`refreshing token ${new Date(Date.now()).toTimeString()}`);
 
   if (!refreshToken) {
-    throwAuthError("Unauthorized");
+    throwAuthError("You have to login at least once in week");
     return;
   }
 
@@ -182,6 +197,7 @@ const refresh = (
           userlevels: user.userlevels,
         },
         String(process.env.JWT_ACCESS),
+        // Set this value also in auth/login!
         { expiresIn: "15m" }
       );
 
@@ -193,6 +209,7 @@ const refresh = (
 export default {
   checkPassword,
   login,
+  logout,
   me,
   refresh,
 };

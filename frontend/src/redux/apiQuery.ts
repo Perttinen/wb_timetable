@@ -14,17 +14,12 @@ const baseQuery = fetchBaseQuery({
   baseUrl: "/api",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
-    const skipAuth = headers.get("X-Skip-Auth") === "true";
-    // const token = useSelector(selectCurrentToken);
     const token = selectCurrentToken(getState() as RootState);
 
-    if (!skipAuth) {
-      // const token = localStorage.getItem("token");
-
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
     }
+
     return headers;
   },
 });

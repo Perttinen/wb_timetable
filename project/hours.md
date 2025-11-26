@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 164,5
+#### total hours 166
+
+27.11.2025 Tokenrefetch issue fixed. Logout endpoint added. Hours: 1,5, Total: 166
 
 26.11.2025 Timezone issue fixed. Backend optimized and "ready". Hours: 7, Total: 164,5
 
