@@ -48,14 +48,14 @@ export const ChangePassword = ({
   const [checkPw, { isLoading: isCheckingPw }] = useCheckPasswordMutation();
 
   const handleSubmit = async (values: IConfirmedPasswordsType) => {
-    console.log("submitting: ", values);
-    console.log("user: ", user.id);
     const payload = {
       body: { password: values.newPassword },
       id: String(user.id),
     };
+
     try {
       const pwOk = await checkPw({ password: values.currentPassword });
+
       if (pwOk.data) {
         await updateUser(payload);
         showSnackbar({

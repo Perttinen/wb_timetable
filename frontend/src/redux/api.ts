@@ -1,5 +1,10 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { authTypes, dockTypes, departureTypes } from "../../../types";
+import {
+  authTypes,
+  dockTypes,
+  departureTypes,
+  userlevelTypes,
+} from "../../../types";
 import {
   IDeleteDeparturesPayload,
   IDeparture,
@@ -13,7 +18,6 @@ import {
   INewUserRequest,
   IUpdateLineArgs,
   IUpdateUserArgs,
-  IUserlevel,
 } from "../../../typesFile";
 import { apiQuery } from "./apiQuery";
 import { logOut, setCredentials } from "./authSlice";
@@ -32,7 +36,9 @@ export const api = createApi({
     "Me",
   ],
   endpoints: (builder) => ({
+    //
     // DOCK
+
     getDocks: builder.query<dockTypes.TDock[], void>({
       query: () => ({
         url: "/dock/",
@@ -71,7 +77,9 @@ export const api = createApi({
       }),
       providesTags: ["GetDock"],
     }),
+
     //DEPARTURE
+
     getTimetable: builder.query<
       departureTypes.TDepartureForTimetable[],
       string
@@ -106,7 +114,9 @@ export const api = createApi({
       }),
       invalidatesTags: ["Timetable"],
     }),
+
     //LINE
+
     getLines: builder.query<ILineReturnable[], void>({
       query: () => ({
         url: "/line",
@@ -163,11 +173,14 @@ export const api = createApi({
       invalidatesTags: ["Users"],
     }),
     updateUser: builder.mutation<IJsonUserFlattenedLevels, IUpdateUserArgs>({
-      query: ({ id, body }) => ({
-        url: `/user/${id}`,
-        method: "PATCH",
-        body,
-      }),
+      query: ({ id, body }) => {
+        console.log("updateUser request:", { id, body });
+        return {
+          url: `/user/${id}`,
+          method: "PATCH",
+          body,
+        };
+      },
       invalidatesTags: ["Users", "User"],
     }),
     deleteUser: builder.mutation<number, number>({
@@ -178,9 +191,8 @@ export const api = createApi({
       invalidatesTags: ["Users"],
     }),
     //USERLEVEL
-    getUserlevels: builder.query<IUserlevel[], void>({
+    getUserlevels: builder.query<userlevelTypes.TUserlevel[], void>({
       query: () => ({ url: "/userlevel", method: "GET" }),
-      // providesTags: ["Users"],
     }),
     //AUTH
     login: builder.mutation<ILoginResponse, ILoginRequest>({

@@ -27,7 +27,7 @@ const createNewDock = asyncHandler(
 
 // @desc delete all docks and all related data!!!
 // @route DELETE /dock/
-// @access admin
+// @access hal
 const deleteAllDocks = asyncHandler(async (_req, res) => {
   await Departure.destroy({ where: {} });
 

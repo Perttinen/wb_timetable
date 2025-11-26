@@ -1,28 +1,15 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 
-import { Dock, Line, LineDock } from "../../database/models";
+import { Line, LineDock } from "../../database/models";
 import { throwNotFound, throwValidationError } from "../util/errorThrowers";
-import { lineIncludes } from "./helperFunctions";
-import { createReturnableLine } from "./helperFunctions";
-import { lineTypes, dockTypes } from "../../types";
+import { dockIdsAreValid, lineIncludes } from "../util/helperFunctions";
+import { createReturnableLine } from "../util/helperFunctions";
+import { lineTypes } from "../../types";
 
-const dockIdsAreValid = async (
-  line: lineTypes.TLineToAdd
-): Promise<boolean> => {
-  const idsToValidate = [
-    line.startDockId,
-    line.endDockId,
-    ...line.stops.map(({ dockId }) => dockId),
-  ];
-  const validDocks = await Dock.findAll();
-  const validDockIds: number[] = validDocks.map((dock) => {
-    const dockJson: dockTypes.TDock = dock.toJSON();
-    return dockJson.id;
-  });
-  return idsToValidate.every((id) => validDockIds.includes(id));
-};
-
+// @desc create line
+// @route POST /line
+// @access admin
 const createNewLine = asyncHandler(
   async (
     req: Request<unknown, unknown, lineTypes.TLineToAdd>,
@@ -39,15 +26,12 @@ const createNewLine = asyncHandler(
 
     if (!(await dockIdsAreValid(req.body))) {
       throwValidationError("dock ids are not valid");
-      return;
     }
 
-    const createdLine: lineTypes.TLine = (
-      await Line.create({
-        startDockId,
-        endDockId,
-      })
-    ).toJSON();
+    const createdLine = await Line.create({
+      startDockId,
+      endDockId,
+    });
 
     if (stops.length > 0) {
       const stopsToAdd = stops.map((s) => ({
@@ -61,56 +45,82 @@ const createNewLine = asyncHandler(
       where: { id: createdLine.id },
       include: lineIncludes,
     });
+
     if (!newLine) {
       throwNotFound("line to create not found in db");
       return;
     }
+
     const lineToReturn = createReturnableLine(newLine);
+
     if (!lineToReturn) {
       throwNotFound(`created line id ${newLine.id} not found`);
       return;
     }
+
     res.status(201).json(lineToReturn);
   }
 );
 
-// for testing only
+// @desc delete all lines and all related data!!!
+// @route DELETE /line
+// @access hal
 const deleteAllLines = asyncHandler(async (_req: Request, res: Response) => {
   await LineDock.destroy({ where: {} });
+
   await Line.destroy({ where: {} });
+
   res.status(204).end();
 });
 
+// @desc delete line
+// @route DELETE /line/:id
+// @access admin
 const deleteLine = asyncHandler(async (req: Request, res: Response) => {
   await LineDock.destroy({ where: { lineId: req.params.id } });
+
   const lineDestroyed = await Line.destroy({ where: { id: req.params.id } });
+
   if (!lineDestroyed) {
     throwNotFound(`line ${req.params.id} not destroyed`);
-    return;
   }
-  res.status(204).send(lineDestroyed);
+
+  res.status(200).send(lineDestroyed);
 });
 
+// @desc get lines
+// @route GET /line
+// @access public
 const getAllLines = asyncHandler(async (_req: Request, res: Response) => {
-  const linesDb: Line[] = await Line.findAll({
+  const rawLines: Line[] = await Line.findAll({
     include: lineIncludes,
   });
 
-  res.status(200).json(linesDb.map((line) => createReturnableLine(line)));
+  const lines = rawLines.map((line) => createReturnableLine(line));
+
+  res.status(200).json(lines);
 });
 
+// @desc get line
+// @route GET /line/:id
+// @access user
 const getLine = asyncHandler(async (req: Request, res: Response) => {
-  const lineDb = await Line.findOne({
+  const rawLine = await Line.findOne({
     where: { id: req.params.id },
     include: lineIncludes,
   });
-  if (!lineDb) {
+
+  if (!rawLine) {
     throwNotFound(`line id ${req.params.id} not found`);
     return;
   }
-  res.status(200).json(createReturnableLine(lineDb));
+
+  res.status(200).json(createReturnableLine(rawLine));
 });
 
+// @desc update line
+// @route PATCH /line/:id
+// @access admin
 const updateLine = asyncHandler(
   async (
     req: Request<{ id: string }, unknown, lineTypes.TLineToAdd>,
@@ -118,38 +128,46 @@ const updateLine = asyncHandler(
   ) => {
     const { startDockId, stops, endDockId } = req.body;
     const lineId = req.params.id;
+
     if (!startDockId || !stops || !endDockId) {
       throwValidationError(
         "required { startDockId, stops, endDockId } input values missing"
       );
-      return;
     }
+
     if (!(await dockIdsAreValid(req.body))) {
       throwValidationError("dock ids are not valid");
-      return;
     }
+
     const lineToUpdate = await Line.findByPk(lineId);
 
     if (!lineToUpdate) {
       throwNotFound(`line ${lineId} not found`);
       return;
     }
+
     await LineDock.destroy({ where: { lineId } });
+
     await lineToUpdate.update({ startDockId, endDockId });
+
     const lineDocksToAdd = stops.map(({ dockId, delayFromStart }) => ({
       dockId,
       lineId: Number(lineId),
       delayFromStart,
     }));
+
     await LineDock.bulkCreate(lineDocksToAdd);
+
     const updatedLine = await Line.findOne({
       where: { id: lineId },
       include: lineIncludes,
     });
+
     if (!updatedLine) {
       throwNotFound(`updated line ${lineId} was not found after update`);
       return;
     }
+
     const lineToReturn = createReturnableLine(updatedLine);
 
     if (!lineToReturn) {
@@ -163,9 +181,9 @@ const updateLine = asyncHandler(
 
 export default {
   createNewLine,
+  deleteAllLines,
   deleteLine,
   getAllLines,
   getLine,
   updateLine,
-  deleteAllLines,
 };

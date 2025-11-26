@@ -3,141 +3,106 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { Op } from "@sequelize/core";
 
-import {
-  IJsonUser,
-  IJsonUserFlattenedLevels,
-  IJsonUserFromDbNoLevels,
-  IJsonUserPw,
-  INewUserRequest,
-  IUpdateUserInput,
-  IUserlevel,
-} from "../../typesFile";
 import { User, UserAndlevel, Userlevel } from "../../database/models";
-import { addUserlevels } from "./helperFunctions";
+import {
+  addUserlevels,
+  getUserlevels,
+  userlevelsToArray,
+  validateUserlevelInput,
+} from "../util/helperFunctions";
 import { throwNotFound, throwValidationError } from "../util/errorThrowers";
+import { userTypes } from "../../types";
 
-// Converts User object to json and flattens User.userlevels to array.
-
-const userlevelsToArray = (user: User): IJsonUserFlattenedLevels => {
-  const jsonUser: IJsonUser = user.toJSON();
-  let userlevelsToReturn: { userlevel: string }[];
-  if (jsonUser.userlevels) {
-    userlevelsToReturn = jsonUser.userlevels;
-  } else {
-    userlevelsToReturn = [];
-  }
-  return {
-    ...jsonUser,
-    userlevels: userlevelsToReturn.map(({ userlevel }) => userlevel),
-  };
-};
-
-const getUserlevels = async (): Promise<IUserlevel[]> => {
-  const userlevels: IUserlevel[] = (await Userlevel.findAll()).map((ul) =>
-    ul.toJSON()
-  );
-  return userlevels;
-};
-
-const validateUserlevelInput = ({
-  userlevel,
-  allUserlevels,
-}: {
-  userlevel: string[];
-  allUserlevels: IUserlevel[];
-}): number[] | null => {
-  const inputLevels = userlevel;
-  const validatedInputLevelIds = allUserlevels
-    .filter(({ userlevel }) => inputLevels.includes(userlevel))
-    .map(({ id }) => id);
-  if (
-    userlevel.length !== validatedInputLevelIds.length ||
-    validatedInputLevelIds.length === 0
-  )
-    return null;
-  return validatedInputLevelIds;
-};
-
+// @desc create user
+// @route POST /user
+// @access admin
 const createNewUser = asyncHandler(
   async (
-    req: Request<unknown, unknown, INewUserRequest>,
-    res: Response<IJsonUserFlattenedLevels>
+    req: Request<unknown, unknown, userTypes.TNewUserRequest>,
+    res: Response<userTypes.TUserSafe>
   ) => {
     const { username, password, userlevel } = req.body;
 
-    // Check required fields existence
     if (!username || !password || !userlevel) {
       throwValidationError("missing input field(s)");
-      return;
     }
 
-    // Validate input userlevels
     const allUserlevels = await getUserlevels();
+
     const validatedInputLevelIds = validateUserlevelInput({
       allUserlevels,
-      userlevel,
+      requestedUserlevels: userlevel,
     });
+
     if (!validatedInputLevelIds) {
       throwValidationError("invalid userlevel input");
       return;
     }
 
-    // create new user
     const passwordHash = await bcrypt.hash(password, 10);
-    const dbUser = await User.create({ username, password: passwordHash });
-    const newUser: IJsonUserPw = dbUser.toJSON();
 
-    // add users userlevels to user_and_levels junction table
+    const rawUser = await User.create({ username, password: passwordHash });
+
     const userlevelsToSave = validatedInputLevelIds.map((id) => {
-      return { userlevelId: id, userId: newUser.id };
+      return { userlevelId: id, userId: rawUser.id };
     });
+
     await UserAndlevel.bulkCreate(userlevelsToSave);
 
-    // get created user from db and response with it
     const createdUser = await User.findOne({
       attributes: { exclude: ["password"] },
-      where: { id: newUser.id },
+      where: { id: rawUser.id },
       ...addUserlevels,
     });
+
     if (createdUser) {
       res.status(201).json(userlevelsToArray(createdUser));
     }
   }
 );
 
-// for test purposes only
+// @desc delete all users except hal!!!
+// @route DELETE /user
+// @access hal
 const deleteAllUsers = asyncHandler(async (_req, res) => {
-  // deletes all users and related data (user_and_levels) from db
   const hal = await User.findOne({
     attributes: { exclude: ["password"] },
     where: { username: "hal" },
   });
+
   if (hal) {
-    const jsonHal: IJsonUserFromDbNoLevels = hal.toJSON();
     await UserAndlevel.destroy({
-      where: { userId: { [Op.not]: jsonHal.id } },
+      where: { userId: { [Op.not]: hal.id } },
     });
-    await User.destroy({ where: { id: { [Op.not]: jsonHal.id } } });
+    await User.destroy({ where: { id: { [Op.not]: hal.id } } });
   }
+
   res.status(204).end();
 });
 
+// @desc delete user
+// @route DELETE /user/:id
+// @access admin
 const deleteUser = asyncHandler(async (req, res) => {
   await UserAndlevel.destroy({
     where: { userId: req.params.id },
   });
-  const destroyedUsers = await User.destroy({ where: { id: req.params.id } });
-  if (!destroyedUsers) {
+
+  const destroyedUser = await User.destroy({ where: { id: req.params.id } });
+
+  if (!destroyedUser) {
     throwNotFound(`user ${req.params.id} not destroyed`);
-    return;
   }
+
   res.status(204).end();
 });
 
+// @desc get all users
+// @route GET /user
+// @access admin
 const getAllUsers = asyncHandler(
-  async (_req, res: Response<IJsonUserFlattenedLevels[]>) => {
-    // get all users but hal
-    const users = await User.findAll({
+  async (_req, res: Response<userTypes.TUserSafe[]>) => {
+    const rawUsers = await User.findAll({
       where: { username: { [Op.not]: "hal" } },
       attributes: { exclude: ["password"] },
       include: [
@@ -150,71 +115,83 @@ const getAllUsers = asyncHandler(
         },
       ],
     });
-    // response json users with userlevelIds flattened
-    res.status(200).json(
-      users
-        .map((u) => userlevelsToArray(u))
-        .sort((a, b) => {
-          const nameA = a.username.toUpperCase();
-          const nameB = b.username.toUpperCase();
-          if (nameA < nameB) {
-            return -1;
-          }
-          if (nameA > nameB) {
-            return 1;
-          }
-          return 0;
-        })
-    );
+
+    const users = rawUsers
+      .map((u) => userlevelsToArray(u))
+      .sort((a, b) => {
+        const nameA = a.username.toUpperCase();
+        const nameB = b.username.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
+
+    res.status(200).json(users);
   }
 );
 
+// @desc get user
+// @route GET /user/:id
+// @access admin
 const getUser = asyncHandler(
-  async (req, res: Response<IJsonUserFlattenedLevels>) => {
+  async (req, res: Response<userTypes.TUserSafe>) => {
     const user = await User.findOne({
       attributes: { exclude: ["password"] },
       where: { id: req.params.id },
       ...addUserlevels,
     });
+
     if (!user) {
       throwNotFound(`user ${req.params.id} not found`);
       return;
     }
+
     res.status(200).json(userlevelsToArray(user));
   }
 );
 
+// @desc update user
+// @route PATCH /user/:id
+// @access user/admin (all can change own password)
 const updateUser = asyncHandler(
   async (
-    req: Request<{ id: string }, unknown, IUpdateUserInput>,
-    res: Response<IJsonUserFlattenedLevels>
+    req: Request<{ id: string }, unknown, userTypes.TUpdateUserInput>,
+    res: Response<userTypes.TUserSafe>
   ) => {
     const id = req.params.id;
-    // Check required fields existence
+
     if (!id) {
       throwValidationError("id is required");
-      return;
     }
-    // get user to update and format to json
-    const userToUpdateDb = await User.findOne({ where: { id } });
-    if (!userToUpdateDb) {
+
+    const rawUserToUpdate = await User.findOne({ where: { id } });
+    if (!rawUserToUpdate) {
       throwNotFound(`User ${id} not found`);
       return;
     }
-    const updateUser: IJsonUserPw = userToUpdateDb.toJSON();
-    // check if properties to update in req.body. Change in updateUser if needed.
-    if (req.body.username) updateUser.username = req.body.username;
+
+    const userToUpdate = rawUserToUpdate.toJSON();
+
+    if (req.body.username) userToUpdate.username = req.body.username;
+
     if (req.body.password)
-      updateUser.password = await bcrypt.hash(req.body.password, 10);
+      userToUpdate.password = await bcrypt.hash(req.body.password, 10);
+
     if (req.body.disabled === true || req.body.disabled === false) {
-      updateUser.disabled = req.body.disabled;
+      userToUpdate.disabled = req.body.disabled;
     }
-    const userlevel = req.body.userlevels;
-    if (userlevel) {
+
+    const requestedUserlevels = req.body.userlevels;
+
+    if (requestedUserlevels) {
       const allUserlevels = await getUserlevels();
       const validatedInputLevelIds = validateUserlevelInput({
         allUserlevels,
-        userlevel,
+        requestedUserlevels,
       });
       if (!validatedInputLevelIds) {
         throwValidationError("invalid userlevel input");
@@ -226,26 +203,28 @@ const updateUser = asyncHandler(
       });
       await UserAndlevel.bulkCreate(userlevelsToSave);
     }
-    // Update original user, get proper user from db and response with it
-    await userToUpdateDb.update(updateUser);
+
+    await rawUserToUpdate.update(userToUpdate);
     const resUser = await User.findOne({
       attributes: { exclude: ["password"] },
       where: { id: id },
       ...addUserlevels,
     });
+
     if (!resUser) {
       throwNotFound("updated user not found drom db");
       return;
     }
+
     res.status(200).json(userlevelsToArray(resUser));
   }
 );
 
 export default {
   createNewUser,
+  deleteAllUsers,
   deleteUser,
   getAllUsers,
   getUser,
   updateUser,
-  deleteAllUsers,
 };

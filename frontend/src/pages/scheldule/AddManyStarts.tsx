@@ -72,7 +72,7 @@ const AddManyStarts = () => {
     const starts: IInputDeparture[] = createStartList(values);
     try {
       const result = await addDepartures(starts);
-      if (result) {
+      if (!("error" in result)) {
         showSnackbar({
           message: `${starts.length} starts successfully added!`,
           duration: 5000,

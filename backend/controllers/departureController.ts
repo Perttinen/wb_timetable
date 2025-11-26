@@ -8,7 +8,7 @@ import isBetween from "dayjs/plugin/isBetween";
 
 import { Departure, Dock, Line } from "../../database/models";
 import { throwNotFound, throwValidationError } from "../util/errorThrowers";
-import { formatLines } from "./helperFunctions";
+import { formatLines } from "../util/helperFunctions";
 import { departureTypes } from "../../types";
 
 dayjs.extend(customParseFormat);

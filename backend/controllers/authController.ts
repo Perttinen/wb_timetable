@@ -5,7 +5,7 @@ import asyncHandler from "express-async-handler";
 import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 
 import { User } from "../../database/models";
-import { addUserlevels, userlevelsToArray } from "./helperFunctions";
+import { addUserlevels, userlevelsToArray } from "../util/helperFunctions";
 import {
   throwAuthError,
   throwNotFound,
@@ -24,7 +24,7 @@ interface AuthenticatedRequest extends Request {
 
 // @desc password test
 // @route GET /auth/checkpw
-// @access admin/user
+// @access user
 const checkPassword = asyncHandler(
   async (
     req: Request<unknown, unknown, authTypes.TCheckPasswordArgs>,
@@ -46,7 +46,7 @@ const checkPassword = asyncHandler(
     const passwordCorrect = await bcrypt.compare(reqPwd, user.password);
 
     if (!passwordCorrect) {
-      throwAuthError("password incorrect");
+      throwAuthError("unauthorized");
     }
 
     res.status(200).json(passwordCorrect);
@@ -117,7 +117,7 @@ const login = asyncHandler(
 
 // @desc returns user based on access token
 // @route GET /auth/me
-// @access admin/user
+// @access user
 const me = asyncHandler(async (req, res: Response<userTypes.TUser>) => {
   if (!req.decodedToken || !req.decodedToken.id) {
     throwAuthError("invalid token");

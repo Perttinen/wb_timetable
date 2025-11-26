@@ -40,10 +40,12 @@ const ChangeLine = () => {
       endDockId: line!.endDock.id,
     };
     try {
-      await updateLine({ id: String(line?.id), body: payload });
-      const message = `line ${line?.id} succesfully updated`;
-      showSnackbar({ message, severity: "success", duration: 5000 });
-      void navigate("/logged/lines");
+      const result = await updateLine({ id: String(line?.id), body: payload });
+      if (!("error" in result)) {
+        const message = `line ${line?.id} succesfully updated`;
+        showSnackbar({ message, severity: "success", duration: 5000 });
+        void navigate("/logged/lines");
+      }
     } catch (e) {
       console.log(e);
     }

@@ -6,16 +6,17 @@ const errorHandler = (
   error: Error & { statusCode?: number; name?: string },
   _req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ): void => {
-  logger.error(`${error.name} ${error.message}`);
+  // logger.error(`${error.name} ${error.message}`);
+  logger.error(`${error}`);
 
   const status = getStatusCode(error.name) || 500;
   const message = error.message || "strange server error";
   const name = error.name || "Error";
   res.status(status).json({ error: { name, message } });
 
-  next(error);
+  // next(error);
 };
 
 export default errorHandler;

@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import { Sequelize } from "@sequelize/core";
 import { PostgresDialect } from "@sequelize/postgres";
 import { Umzug, SequelizeStorage } from "umzug";
+import chalk from "chalk";
 
 dotenv.config();
 
@@ -12,7 +13,10 @@ const sequelize: Sequelize =
         url: String(process.env.DB),
         dialect: PostgresDialect,
         ssl: true,
-        logging: process.env.NODE_ENV === "test" ? false : console.log,
+        logging:
+          process.env.NODE_ENV === "test"
+            ? false
+            : (msg) => console.log(chalk.magentaBright(msg)),
       }))
     : (console.log("prod database"),
       new Sequelize({
