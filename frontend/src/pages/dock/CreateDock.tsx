@@ -7,12 +7,12 @@ import {
   FormGroupContainer,
   FormMainContainer,
   FormTextField,
-} from "../../components/SmallOnes";
+} from "../../components/FormComponents";
 import { IDockname } from "../../../../typesFile";
-import { useAddDockMutation } from "../../redux/api";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
 import { getErrorMessage } from "../../utils/getErrorMessage";
+import { useAddDockMutation } from "../../redux/api/dockApi";
 
 const CreateDock = () => {
   const navigate = useNavigate();

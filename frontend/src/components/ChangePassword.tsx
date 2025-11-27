@@ -7,15 +7,17 @@ import {
   FormMainContainer,
   FormTextField,
   FormButtons,
-} from "./SmallOnes";
+} from "./FormComponents";
 import {
   IConfirmedPasswordsType,
   IJsonUserFlattenedLevels,
 } from "../../../typesFile";
-import { useCheckPasswordMutation, useUpdateUserMutation } from "../redux/api";
+
 import { showSnackbar } from "./SnackbarProvider";
 import { getErrorMessage } from "../utils/getErrorMessage";
 import Spinner from "./Spinner";
+import { useUpdateUserMutation } from "../redux/api/userApi";
+import { useCheckPasswordMutation } from "../redux/api/authApi";
 
 export const ChangePassword = ({
   pwChangeDialog,
@@ -48,14 +50,14 @@ export const ChangePassword = ({
   const [checkPw, { isLoading: isCheckingPw }] = useCheckPasswordMutation();
 
   const handleSubmit = async (values: IConfirmedPasswordsType) => {
-    console.log("submitting: ", values);
-    console.log("user: ", user.id);
     const payload = {
       body: { password: values.newPassword },
       id: String(user.id),
     };
+
     try {
       const pwOk = await checkPw({ password: values.currentPassword });
+
       if (pwOk.data) {
         await updateUser(payload);
         showSnackbar({

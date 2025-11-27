@@ -1,20 +1,21 @@
+import { useNavigate, useParams } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import { TimePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { Field, Form, Formik } from "formik";
+
 import {
   FormButtons,
   FormDatePicker,
   FormGroupContainer,
   FormMainContainer,
-} from "../../components/SmallOnes";
+} from "../../components/FormComponents";
 import { IDeleteDeparturesPayload } from "../../../../typesFile";
-import { useDeleteDeparturesMutation } from "../../redux/api";
-import { useNavigate, useParams } from "react-router-dom";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
+import { useDeleteDeparturesMutation } from "../../redux/api/departureApi";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);

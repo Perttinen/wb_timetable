@@ -1,21 +1,22 @@
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  useDeleteUserMutation,
-  useGetUserlevelsQuery,
-  useGetUserQuery,
-  useUpdateUserMutation,
-} from "../../redux/api";
+import { Field, Form, Formik } from "formik";
+import { Box, Typography, useTheme } from "@mui/material";
+
 import Spinner from "../../components/Spinner";
 import {
   FormButtons,
   FormGroupContainer,
   FormMainContainer,
   FormSelect,
-} from "../../components/SmallOnes";
-import { Field, Form, Formik } from "formik";
-import { Box, Typography, useTheme } from "@mui/material";
+} from "../../components/FormComponents";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import { getErrorMessage } from "../../utils/getErrorMessage";
+import {
+  useDeleteUserMutation,
+  useGetUserQuery,
+  useUpdateUserMutation,
+} from "../../redux/api/userApi";
+import { useGetUserlevelsQuery } from "../../redux/api/userlevelApi";
 
 const ChangeUser = () => {
   const { userId } = useParams<{ userId: string }>();

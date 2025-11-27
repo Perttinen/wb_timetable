@@ -6,9 +6,9 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { IJsonUserFlattenedLevels } from "../../../typesFile";
+import { userTypes } from "../../../types";
 
-export const UserDataTable = ({ user }: { user: IJsonUserFlattenedLevels }) => {
+export const UserDataTable = ({ user }: { user: userTypes.TUserSafe }) => {
   const userLevel = user.userlevels.includes("admin") ? "admin" : "user";
   return (
     <Box sx={{ margin: 1 }}>

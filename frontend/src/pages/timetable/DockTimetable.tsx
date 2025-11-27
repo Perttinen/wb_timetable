@@ -14,10 +14,10 @@ import {
 import dayjs from "dayjs";
 
 import { departureTypes } from "../../../../types";
-import { useGetDockQuery, useGetTimetableQuery } from "../../redux/api";
 import Spinner from "../../components/Spinner";
-// import { getErrorMessage } from "../../utils/getErrorMessage";
 import { showSnackbar } from "../../components/SnackbarProvider";
+import { useGetDockQuery } from "../../redux/api/dockApi";
+import { useGetTimetableQuery } from "../../redux/api/departureApi";
 
 const InfoCell = ({
   text,
@@ -198,10 +198,6 @@ const DockTimetable = ({ fullwidth }: Props) => {
     return () => clearInterval(interval);
   }, [fetchDepartures]);
 
-  if (departures?.length === 0) {
-    return <>{`No upcoming departures from ${dockId}`}</>;
-  }
-
   const isBusy = isLoadingDock || isLoadingTimetable;
 
   return (
@@ -238,7 +234,9 @@ const DockTimetable = ({ fullwidth }: Props) => {
                     textAlign: "center",
                   }}
                 >
-                  {dock.name}
+                  {departures?.length === 0
+                    ? `No upcoming departures from ${dock.name}`
+                    : dock.name}
                 </TableCell>
               </TableRow>
             </TableHead>

@@ -2,15 +2,15 @@ import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { Field, Form, Formik } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAddDepartureMutation } from "../../redux/api";
 
 import {
   FormGroupContainer,
   FormMainContainer,
   FormButtons,
-} from "../../components/SmallOnes";
+} from "../../components/FormComponents";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
+import { useAddDepartureMutation } from "../../redux/api/departureApi";
 
 const AddOneStart = () => {
   const navigate = useNavigate();

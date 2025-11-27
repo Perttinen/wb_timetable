@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router";
+
 import Spinner from "../../components/Spinner";
 import UniversalSelector from "../../components/UniversalSelector";
-import { useGetLinesQuery } from "../../redux/api";
+import { useGetLinesQuery } from "../../redux/api/lineApi";
 
 const Schedule = () => {
   const { data: lines, isLoading: IsLoadingLines } = useGetLinesQuery();

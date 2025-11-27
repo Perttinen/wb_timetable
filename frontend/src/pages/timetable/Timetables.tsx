@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
+
 import UniversalSelector from "../../components/UniversalSelector";
-import { useGetDocksQuery } from "../../redux/api";
 import Spinner from "../../components/Spinner";
+import { useGetDocksQuery } from "../../redux/api/dockApi";
 
 const Timetables = () => {
   const { data: docks, isLoading: isLoadingDocks } = useGetDocksQuery();

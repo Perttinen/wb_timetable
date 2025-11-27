@@ -8,7 +8,7 @@ const requestLogger = (
 ) => {
   logger.info("Method:", request.method);
   logger.info("Path:  ", request.url);
-  logger.info("Body:  ", request.body);
+  // logger.info("Body:  ", request.body);
   logger.info("---");
   next();
 };

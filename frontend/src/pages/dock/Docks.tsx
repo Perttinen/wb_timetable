@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useGetDocksQuery } from "../../redux/api";
+
 import Spinner from "../../components/Spinner";
 import UniversalSelector from "../../components/UniversalSelector";
+import { useGetDocksQuery } from "../../redux/api/dockApi";
 
 const Docks = () => {
   const navigate = useNavigate();

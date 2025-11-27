@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.get("/tese/", (_req, res) => {
   res.status(200).end();
 });
-
+app.use(requestLogger);
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/dock", dockRouter);
@@ -37,7 +37,6 @@ app.get(/^\/(?!api).*/, (_req, res) => {
   res.sendFile(indexPath);
 });
 
-app.use(requestLogger);
 app.use(unknownEndpoint);
 app.use(errorHandler);
 

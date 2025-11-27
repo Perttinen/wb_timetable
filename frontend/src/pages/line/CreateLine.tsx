@@ -10,10 +10,11 @@ import {
   FormGroupContainer,
   FormMainContainer,
   FormButtons,
-} from "../../components/SmallOnes";
-import { useAddLineMutation, useGetDocksQuery } from "../../redux/api";
+} from "../../components/FormComponents";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
+import { useGetDocksQuery } from "../../redux/api/dockApi";
+import { useAddLineMutation } from "../../redux/api/lineApi";
 
 const CreateLine = () => {
   const [errorMsg, setErrorMsg] = useState("");

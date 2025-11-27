@@ -1,20 +1,21 @@
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  useDeleteLineMutation,
-  useGetLineQuery,
-  useUpdateLineMutation,
-} from "../../redux/api";
+import { Box, Typography } from "@mui/material";
+import { Form, Formik } from "formik";
+
 import Spinner from "../../components/Spinner";
 import {
   FormButtons,
   FormGroupContainer,
   FormMainContainer,
   FormTextField,
-} from "../../components/SmallOnes";
-import { Box, Typography } from "@mui/material";
-import { Form, Formik } from "formik";
+} from "../../components/FormComponents";
 import { ILineToAdd, IStopdocks } from "../../../../typesFile";
 import { showSnackbar } from "../../components/SnackbarProvider";
+import {
+  useDeleteLineMutation,
+  useGetLineQuery,
+  useUpdateLineMutation,
+} from "../../redux/api/lineApi";
 
 const ChangeLine = () => {
   const { lineId } = useParams<{ lineId: string }>();
@@ -40,10 +41,12 @@ const ChangeLine = () => {
       endDockId: line!.endDock.id,
     };
     try {
-      await updateLine({ id: String(line?.id), body: payload });
-      const message = `line ${line?.id} succesfully updated`;
-      showSnackbar({ message, severity: "success", duration: 5000 });
-      void navigate("/logged/lines");
+      const result = await updateLine({ id: String(line?.id), body: payload });
+      if (!("error" in result)) {
+        const message = `line ${line?.id} succesfully updated`;
+        showSnackbar({ message, severity: "success", duration: 5000 });
+        void navigate("/logged/lines");
+      }
     } catch (e) {
       console.log(e);
     }

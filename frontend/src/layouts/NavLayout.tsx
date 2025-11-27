@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
-import { useGetMeQuery } from "../redux/api";
 import Spinner from "../components/Spinner";
+import { useGetMeQuery } from "../redux/api/authApi";
 
 const NavLayout = () => {
   const { data: loggedUser, isLoading: isLoadingLoggedUser } = useGetMeQuery();

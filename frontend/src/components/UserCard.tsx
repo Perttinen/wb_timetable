@@ -1,13 +1,10 @@
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import { Box } from "@mui/material";
+import { Box, Button, CardContent, CardActions, Card } from "@mui/material";
 import { useState } from "react";
-import { useGetMeQuery } from "../redux/api";
+
 import { UserDataTable } from "./UserDataTable";
 import { ChangePassword } from "./ChangePassword";
 import Spinner from "./Spinner";
+import { useGetMeQuery } from "../redux/api/authApi";
 
 export const UserCard = ({
   userCard,

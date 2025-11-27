@@ -2,11 +2,14 @@ import { Response } from "express";
 import asyncHandler from "express-async-handler";
 
 import { Userlevel } from "../../database/models";
-import { IUserlevel } from "../../typesFile";
+import { userlevelTypes } from "../../types";
 import { Op } from "@sequelize/core";
 
+// @desc get all userlevels
+// @route GET /userlevel/
+// @access admin
 const getUserlevels = asyncHandler(
-  async (_req, res: Response<IUserlevel[]>) => {
+  async (_req, res: Response<userlevelTypes.TUserlevel[]>) => {
     const userlevels = await Userlevel.findAll({
       where: { userlevel: { [Op.not]: "hal" } },
     });

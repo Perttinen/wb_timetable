@@ -9,12 +9,13 @@ import {
   FormTimePicker,
   FormGroupContainer,
   FormButtons,
-} from "../../components/SmallOnes";
+} from "../../components/FormComponents";
 import { IInputDeparture } from "../../../../typesFile";
-import { useAddManyDeparturesMutation, useGetLineQuery } from "../../redux/api";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
 import { getErrorMessage } from "../../utils/getErrorMessage";
+import { useAddManyDeparturesMutation } from "../../redux/api/departureApi";
+import { useGetLineQuery } from "../../redux/api/lineApi";
 
 const AddManyStarts = () => {
   const { lineId } = useParams<{ lineId: string }>();
@@ -72,7 +73,7 @@ const AddManyStarts = () => {
     const starts: IInputDeparture[] = createStartList(values);
     try {
       const result = await addDepartures(starts);
-      if (result) {
+      if (!("error" in result)) {
         showSnackbar({
           message: `${starts.length} starts successfully added!`,
           duration: 5000,

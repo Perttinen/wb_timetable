@@ -50,3 +50,8 @@ export type TFormattedLine = {
   delay: number;
   via: string[];
 };
+
+export type TUpdateLineArgs = {
+  id: string;
+  body: TLineToAdd;
+};

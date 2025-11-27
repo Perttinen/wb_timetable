@@ -1,4 +1,4 @@
-export const throwNotFound = (message: string) => {
+export const throwNotFound = (message: string): never => {
   const error = new Error(message);
   error.name = "NotFoundError";
   throw error;
