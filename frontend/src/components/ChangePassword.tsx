@@ -7,15 +7,17 @@ import {
   FormMainContainer,
   FormTextField,
   FormButtons,
-} from "./SmallOnes";
+} from "./FormComponents";
 import {
   IConfirmedPasswordsType,
   IJsonUserFlattenedLevels,
 } from "../../../typesFile";
-import { useCheckPasswordMutation, useUpdateUserMutation } from "../redux/api";
+
 import { showSnackbar } from "./SnackbarProvider";
 import { getErrorMessage } from "../utils/getErrorMessage";
 import Spinner from "./Spinner";
+import { useUpdateUserMutation } from "../redux/api/userApi";
+import { useCheckPasswordMutation } from "../redux/api/authApi";
 
 export const ChangePassword = ({
   pwChangeDialog,

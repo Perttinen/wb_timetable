@@ -111,15 +111,6 @@ export interface IUpdateUserInput {
   username?: string;
 }
 
-export interface ILoginResponse {
-  user: IJsonUserFlattenedLevels;
-  token: string;
-}
-export interface ILoginRequest {
-  username: string;
-  password: string;
-}
-
 export interface IStopdocks {
   stopDocks: { name: string; id: number; delayFromStart: number }[];
 }

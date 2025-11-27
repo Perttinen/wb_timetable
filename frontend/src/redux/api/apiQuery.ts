@@ -3,12 +3,10 @@ import {
   FetchArgs,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
-
-import { getErrorMessage } from "../utils/getErrorMessage";
-import { showSnackbar } from "../components/SnackbarProvider";
-import { setCredentials } from "./authSlice";
-import { RootState } from "./store";
-import { selectCurrentToken } from "./authSlice";
+import { selectCurrentToken, setCredentials } from "../authSlice";
+import { RootState } from "../store";
+import { getErrorMessage } from "../../utils/getErrorMessage";
+import { showSnackbar } from "../../components/SnackbarProvider";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "/api",

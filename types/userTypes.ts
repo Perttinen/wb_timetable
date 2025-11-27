@@ -63,3 +63,8 @@ export type TNewUserRequest = {
   password: string;
   userlevel: string[];
 };
+
+export type TUpdateUserArgs = {
+  id: string;
+  body: TUpdateUserInput;
+};

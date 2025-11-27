@@ -3,9 +3,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { IJsonUserFlattenedLevels, ILineReturnable } from "../../../typesFile";
 import { Grid } from "@mui/material";
-import { dockTypes } from "../../../types";
+
+import { dockTypes, userTypes, lineTypes } from "../../../types";
 
 type DockInput = {
   type: "docks";
@@ -14,12 +14,12 @@ type DockInput = {
 
 type LineInput = {
   type: "lines";
-  data: ILineReturnable[];
+  data: lineTypes.TLineReturnable[];
 };
 
 type UserInput = {
   type: "users";
-  data: IJsonUserFlattenedLevels[];
+  data: userTypes.TUserSafe[];
 };
 
 interface Props {

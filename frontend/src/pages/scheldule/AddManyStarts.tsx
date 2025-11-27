@@ -9,12 +9,13 @@ import {
   FormTimePicker,
   FormGroupContainer,
   FormButtons,
-} from "../../components/SmallOnes";
+} from "../../components/FormComponents";
 import { IInputDeparture } from "../../../../typesFile";
-import { useAddManyDeparturesMutation, useGetLineQuery } from "../../redux/api";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
 import { getErrorMessage } from "../../utils/getErrorMessage";
+import { useAddManyDeparturesMutation } from "../../redux/api/departureApi";
+import { useGetLineQuery } from "../../redux/api/lineApi";
 
 const AddManyStarts = () => {
   const { lineId } = useParams<{ lineId: string }>();

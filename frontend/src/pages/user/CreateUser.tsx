@@ -8,11 +8,12 @@ import {
   FormMainContainer,
   FormSelect,
   FormTextField,
-} from "../../components/SmallOnes";
-import { useAddUserMutation, useGetUserlevelsQuery } from "../../redux/api";
+} from "../../components/FormComponents";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
 import { getErrorMessage } from "../../utils/getErrorMessage";
+import { useAddUserMutation } from "../../redux/api/userApi";
+import { useGetUserlevelsQuery } from "../../redux/api/userlevelApi";
 
 const CreateUser = () => {
   const navigate = useNavigate();

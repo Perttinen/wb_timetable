@@ -1,7 +1,8 @@
-import Spinner from "../../components/Spinner";
-import { useGetUsersQuery } from "../../redux/api";
 import { useNavigate } from "react-router-dom";
+
+import Spinner from "../../components/Spinner";
 import UniversalSelector from "../../components/UniversalSelector";
+import { useGetUsersQuery } from "../../redux/api/userApi";
 
 const Users = () => {
   const { data: users, isLoading: isLoadingUsers } = useGetUsersQuery();

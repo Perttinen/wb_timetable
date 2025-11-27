@@ -1,24 +1,24 @@
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
-import { Link } from "react-router-dom";
-import { useTheme } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
+import {
+  MenuItem,
+  Tooltip,
+  Button,
+  Avatar,
+  Container,
+  Menu,
+  Typography,
+  IconButton,
+  Toolbar,
+  Box,
+  AppBar,
+} from "@mui/material";
+import AdbIcon from "@mui/icons-material/Adb";
+import { useTheme } from "@mui/material/styles";
 
-import { useGetMeQuery, useLogoutMutation } from "../redux/api";
 import { UserCard } from "./UserCard";
+import { useGetMeQuery, useLogoutMutation } from "../redux/api/authApi";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ function Navbar() {
   const handleLogout = () => {
     setAnchorElUser(null);
     void navigate("/");
-    void logout("justArg");
+    void logout();
   };
 
   const pages = loggedUser ? getPagesByUserlevels(loggedUser.userlevels) : [];

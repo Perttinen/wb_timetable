@@ -1,20 +1,21 @@
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  useDeleteLineMutation,
-  useGetLineQuery,
-  useUpdateLineMutation,
-} from "../../redux/api";
+import { Box, Typography } from "@mui/material";
+import { Form, Formik } from "formik";
+
 import Spinner from "../../components/Spinner";
 import {
   FormButtons,
   FormGroupContainer,
   FormMainContainer,
   FormTextField,
-} from "../../components/SmallOnes";
-import { Box, Typography } from "@mui/material";
-import { Form, Formik } from "formik";
+} from "../../components/FormComponents";
 import { ILineToAdd, IStopdocks } from "../../../../typesFile";
 import { showSnackbar } from "../../components/SnackbarProvider";
+import {
+  useDeleteLineMutation,
+  useGetLineQuery,
+  useUpdateLineMutation,
+} from "../../redux/api/lineApi";
 
 const ChangeLine = () => {
   const { lineId } = useParams<{ lineId: string }>();

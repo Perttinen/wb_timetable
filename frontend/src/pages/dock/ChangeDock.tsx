@@ -7,14 +7,14 @@ import {
   FormGroupContainer,
   FormMainContainer,
   FormTextField,
-} from "../../components/SmallOnes";
+} from "../../components/FormComponents";
+import { showSnackbar } from "../../components/SnackbarProvider";
+import Spinner from "../../components/Spinner";
 import {
   useChangeDockMutation,
   useDeleteDockMutation,
   useGetDockQuery,
-} from "../../redux/api";
-import { showSnackbar } from "../../components/SnackbarProvider";
-import Spinner from "../../components/Spinner";
+} from "../../redux/api/dockApi";
 
 const ChangeDock = () => {
   const { dockId } = useParams<{ dockId: string }>();

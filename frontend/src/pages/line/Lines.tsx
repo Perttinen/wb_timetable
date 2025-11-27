@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useGetLinesQuery } from "../../redux/api";
+
 import UniversalSelector from "../../components/UniversalSelector";
 import Spinner from "../../components/Spinner";
+import { useGetLinesQuery } from "../../redux/api/lineApi";
 
 const Lines = () => {
   const navigate = useNavigate();
