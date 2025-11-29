@@ -6,6 +6,7 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import { Grid } from "@mui/material";
 
 import { dockTypes, userTypes, lineTypes } from "../../../types";
+import { PropsWithChildren } from "react";
 
 type DockInput = {
   type: "docks";
@@ -23,45 +24,59 @@ type UserInput = {
 };
 
 interface Props {
-  onSelect: (dockId: number) => void;
+  onSelect: (id: number) => void;
   onAdd?: { function: () => void; text: string };
   caption: string;
   input: DockInput | LineInput | UserInput;
+  // | ScheduleInput;
 }
 
-const DockSelector = ({ onAdd, onSelect, caption, input }: Props) => {
+type ListButtonProps = PropsWithChildren<{
+  id: number;
+  onClick: (id: number) => void;
+}>;
+
+const ListButton = (props: ListButtonProps) => {
+  const { id, onClick } = props;
+  return (
+    <Button
+      // key={id}
+      onClick={() => onClick(id)}
+      fullWidth
+      variant="contained"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+      }}
+    >
+      {props.children}
+    </Button>
+  );
+};
+
+const UniversalSelector = ({ onAdd, onSelect, caption, input }: Props) => {
   const theme = useTheme();
 
   const createButtons = () => {
     if (input.type === "docks") {
       return input.data.map((dock) => (
-        <Button
+        <ListButton
           key={dock.id}
+          id={dock.id}
           onClick={() => onSelect(dock.id)}
-          fullWidth
-          variant="contained"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-          }}
         >
           <Typography sx={{ fontSize: "1rem" }}>{dock.name}</Typography>
-        </Button>
+        </ListButton>
       ));
     }
+
     if (input.type === "lines") {
       return input.data.map((line) => (
-        <Button
+        <ListButton
           key={line.id}
+          id={line.id}
           onClick={() => onSelect(line.id)}
-          fullWidth
-          variant="contained"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-          }}
         >
           <Typography sx={{ fontSize: "1rem" }}>
             {line.startDock.name} - {line.endDock.name}
@@ -73,9 +88,10 @@ const DockSelector = ({ onAdd, onSelect, caption, input }: Props) => {
                   .join(" | ")}`
               : "\u00A0"}
           </Typography>
-        </Button>
+        </ListButton>
       ));
     }
+
     if (input.type === "users") {
       const getUserlevel = (userlevels: string[]) => {
         if (userlevels.includes("admin")) {
@@ -84,11 +100,10 @@ const DockSelector = ({ onAdd, onSelect, caption, input }: Props) => {
         return "user";
       };
       return input.data.map((user) => (
-        <Button
+        <ListButton
           key={user.id}
+          id={user.id}
           onClick={() => onSelect(user.id)}
-          fullWidth
-          variant="contained"
         >
           <Grid
             container
@@ -114,7 +129,7 @@ const DockSelector = ({ onAdd, onSelect, caption, input }: Props) => {
               </Typography>
             </Grid>
           </Grid>
-        </Button>
+        </ListButton>
       ));
     }
   };
@@ -138,16 +153,7 @@ const DockSelector = ({ onAdd, onSelect, caption, input }: Props) => {
         sx={{ marginTop: { md: 2 }, marginX: 2 }}
       >
         {onAdd && (
-          <Button
-            onClick={() => onAdd.function()}
-            fullWidth
-            variant="contained"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-            }}
-          >
+          <ListButton id={1} onClick={() => onAdd.function()}>
             <Typography
               sx={{
                 fontSize: "1rem",
@@ -159,7 +165,7 @@ const DockSelector = ({ onAdd, onSelect, caption, input }: Props) => {
               <AddCircleOutlineOutlinedIcon fontSize="medium" />
               {onAdd.text}
             </Typography>
-          </Button>
+          </ListButton>
         )}
         {createButtons()}
       </Box>
@@ -167,4 +173,4 @@ const DockSelector = ({ onAdd, onSelect, caption, input }: Props) => {
   );
 };
 
-export default DockSelector;
+export default UniversalSelector;

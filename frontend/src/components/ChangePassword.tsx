@@ -8,16 +8,13 @@ import {
   FormTextField,
   FormButtons,
 } from "./FormComponents";
-import {
-  IConfirmedPasswordsType,
-  IJsonUserFlattenedLevels,
-} from "../../../typesFile";
-
 import { showSnackbar } from "./SnackbarProvider";
 import { getErrorMessage } from "../utils/getErrorMessage";
 import Spinner from "./Spinner";
 import { useUpdateUserMutation } from "../redux/api/userApi";
 import { useCheckPasswordMutation } from "../redux/api/authApi";
+import { TConfirmedPasswordsType } from "../../../types/authTypes";
+import { TUserSafe } from "../../../types/userTypes";
 
 export const ChangePassword = ({
   pwChangeDialog,
@@ -26,7 +23,7 @@ export const ChangePassword = ({
 }: {
   pwChangeDialog: boolean;
   setPwChangeDialog: (val: boolean) => void;
-  user: IJsonUserFlattenedLevels;
+  user: TUserSafe;
 }) => {
   const handleClose = () => {
     setPwChangeDialog(false);
@@ -49,7 +46,7 @@ export const ChangePassword = ({
   const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
   const [checkPw, { isLoading: isCheckingPw }] = useCheckPasswordMutation();
 
-  const handleSubmit = async (values: IConfirmedPasswordsType) => {
+  const handleSubmit = async (values: TConfirmedPasswordsType) => {
     const payload = {
       body: { password: values.newPassword },
       id: String(user.id),
@@ -76,7 +73,7 @@ export const ChangePassword = ({
     }
   };
 
-  const initialValues: IConfirmedPasswordsType = {
+  const initialValues: TConfirmedPasswordsType = {
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",

@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 166
+#### total hours 167,5
+
+27.11.2025 Api refactored. Hours: 1,5, Total: 167,5
 
 26.11.2025 Tokenrefetch issue fixed. Logout endpoint added. Hours: 1,5, Total: 166
 

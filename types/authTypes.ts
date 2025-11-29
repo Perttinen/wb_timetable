@@ -17,3 +17,9 @@ export type TLoginRequest = {
   username: string;
   password: string;
 };
+
+export type TConfirmedPasswordsType = {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
