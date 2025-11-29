@@ -17,7 +17,7 @@ export const authApi = api.injectEndpoints({
         dispatch(logOut());
         setTimeout(() => {
           dispatch(api.util.resetApiState());
-        }, 500);
+        }, 2000);
       },
     }),
     refresh: builder.mutation<{ accessToken: string }, void>({
