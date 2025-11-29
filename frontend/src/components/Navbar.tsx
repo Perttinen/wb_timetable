@@ -16,9 +16,11 @@ import {
 } from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useTheme } from "@mui/material/styles";
+import { useDispatch, UseDispatch } from "react-redux";
 
 import { UserCard } from "./UserCard";
 import { useGetMeQuery, useLogoutMutation } from "../redux/api/authApi";
+import { api } from "../redux/api/baseApi";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -26,6 +28,7 @@ function Navbar() {
   const [usercard, setUsercard] = useState(false);
   const { data: loggedUser } = useGetMeQuery();
   const [logout] = useLogoutMutation();
+  const dispatch = useDispatch();
 
   const getPagesByUserlevels = (userlevels: string[]) => {
     const pagesToShow = [];
@@ -45,7 +48,10 @@ function Navbar() {
   const handleLogout = () => {
     setAnchorElUser(null);
     void navigate("/");
-    void logout();
+    setTimeout(() => {
+      void logout();
+      dispatch(api.util.resetApiState());
+    }, 2000);
   };
 
   const pages = loggedUser ? getPagesByUserlevels(loggedUser.userlevels) : [];

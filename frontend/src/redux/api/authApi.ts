@@ -15,9 +15,6 @@ export const authApi = api.injectEndpoints({
       query: () => ({ url: "/auth/logout", method: "POST" }),
       onQueryStarted(arg, { dispatch }) {
         dispatch(logOut());
-        setTimeout(() => {
-          dispatch(api.util.resetApiState());
-        }, 2000);
       },
     }),
     refresh: builder.mutation<{ accessToken: string }, void>({
