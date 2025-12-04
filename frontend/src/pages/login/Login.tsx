@@ -14,7 +14,7 @@ import {
   FormTextField,
 } from "../../components/FormComponents";
 import { setCredentials } from "../../redux/authSlice";
-import { useLoginMutation } from "../../redux/api/authApi";
+import { useLoginMutation, useLogoutMutation } from "../../redux/api/authApi";
 import { api } from "../../redux/api/baseApi";
 
 const loginSchema = yup.object({
@@ -32,8 +32,11 @@ const Login = () => {
   const navigate = useNavigate();
   const [login, { isLoading: isLogging }] = useLoginMutation();
   const dispatch = useDispatch();
+  const [logout] = useLogoutMutation();
+
   useEffect(() => {
     dispatch(api.util.resetApiState());
+    void logout();
   }, []);
 
   const handleSubmit = async (values: {
