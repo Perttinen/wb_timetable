@@ -8,11 +8,10 @@ import {
   FormMainContainer,
   FormTextField,
 } from "../../components/FormComponents";
-import { IDockname } from "../../../../typesFile";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
-import { getErrorMessage } from "../../utils/getErrorMessage";
 import { useAddDockMutation } from "../../redux/api/dockApi";
+import showErrorSnack from "../../utils/showErrorSnack";
 
 const CreateDock = () => {
   const navigate = useNavigate();
@@ -20,8 +19,8 @@ const CreateDock = () => {
 
   const dockSchema = Yup.object().shape({
     name: Yup.string()
-      .min(2, "Name must be 2-32 charecters!")
-      .max(32, "Name must be 2-32 charecters!")
+      .min(2, "Name must be 2-15 charecters!")
+      .max(15, "Name must be 2-15 charecters!")
       .required("Name is required!"),
   });
 
@@ -29,7 +28,7 @@ const CreateDock = () => {
     name: "",
   };
 
-  const handleSubmit = async (values: IDockname) => {
+  const handleSubmit = async (values: { name: string }) => {
     try {
       const result = await addDock(values).unwrap();
       if (result) {
@@ -41,11 +40,7 @@ const CreateDock = () => {
         void navigate("/logged/docks");
       }
     } catch (e) {
-      let message = getErrorMessage(e);
-      if (message === "Validation error") {
-        message = `${values.name} already exists`;
-      }
-      showSnackbar({ severity: "error", duration: 6000, message });
+      showErrorSnack(e);
     }
   };
 

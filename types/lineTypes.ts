@@ -55,3 +55,11 @@ export type TUpdateLineArgs = {
   id: string;
   body: TLineToAdd;
 };
+
+export type TStopdocks = {
+  stopDocks: {
+    name: string;
+    id: number;
+    delayFromStart: number;
+  }[];
+};

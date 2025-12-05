@@ -10,20 +10,23 @@ import {
   FormGroupContainer,
   FormButtons,
 } from "../../components/FormComponents";
-import { IInputDeparture } from "../../../../typesFile";
+import { TInputDeparture } from "../../../../types/departureTypes";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
-import { getErrorMessage } from "../../utils/getErrorMessage";
 import { useAddManyDeparturesMutation } from "../../redux/api/departureApi";
 import { useGetLineQuery } from "../../redux/api/lineApi";
+import showErrorSnack from "../../utils/showErrorSnack";
 
 const AddManyStarts = () => {
   const { lineId } = useParams<{ lineId: string }>();
+
   const navigate = useNavigate();
+
   const theme = useTheme();
 
   const [addDepartures, { isLoading: isAddingDepartures }] =
     useAddManyDeparturesMutation();
+
   const { data: line, isLoading: isLoadingLine } = useGetLineQuery(
     Number(lineId)
   );
@@ -46,8 +49,9 @@ const AddManyStarts = () => {
     lineId: Number(lineId),
   };
 
-  const createStartList = (values: FormValues) => {
+  const createStartList = (values: FormValues): TInputDeparture[] => {
     const startArray = [];
+
     for (
       let start = values.fromDate;
       start.isBefore(values.toDate.add(1, "day"));
@@ -66,13 +70,15 @@ const AddManyStarts = () => {
         }
       }
     }
+
     return startArray;
   };
 
   const handleSubmit = async (values: FormValues) => {
-    const starts: IInputDeparture[] = createStartList(values);
+    const starts = createStartList(values);
     try {
       const result = await addDepartures(starts);
+
       if (!("error" in result)) {
         showSnackbar({
           message: `${starts.length} starts successfully added!`,
@@ -82,11 +88,7 @@ const AddManyStarts = () => {
         void navigate("/logged/schedule");
       }
     } catch (e) {
-      showSnackbar({
-        message: getErrorMessage(e),
-        duration: 10000,
-        severity: "error",
-      });
+      showErrorSnack(e);
     }
   };
 

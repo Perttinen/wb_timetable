@@ -20,7 +20,7 @@ import { useTheme } from "@mui/material/styles";
 import { UserCard } from "./UserCard";
 import { useGetMeQuery } from "../redux/api/authApi";
 
-function Navbar() {
+const Navbar = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [usercard, setUsercard] = useState(false);
@@ -48,7 +48,7 @@ function Navbar() {
 
   const pages = loggedUser ? getPagesByUserlevels(loggedUser.userlevels) : [];
 
-  const settings = [
+  const userMenuItems = [
     { label: "Profile", function: () => showProfile() },
     { label: "Logout", function: () => handleLogout() },
   ];
@@ -211,13 +211,10 @@ function Navbar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting.label}
-                    onClick={() => setting.function()}
-                  >
+                {userMenuItems.map((item) => (
+                  <MenuItem key={item.label} onClick={() => item.function()}>
                     <Typography sx={{ textAlign: "center" }}>
-                      {setting.label}
+                      {item.label}
                     </Typography>
                   </MenuItem>
                 ))}
@@ -229,5 +226,6 @@ function Navbar() {
       <UserCard setUserCard={setUsercard} userCard={usercard} />
     </>
   );
-}
+};
+
 export default Navbar;

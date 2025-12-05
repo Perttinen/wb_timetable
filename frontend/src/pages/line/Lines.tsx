@@ -11,12 +11,9 @@ const Lines = () => {
   const handleSelectLine = (lineId: number) => {
     void navigate(`/logged/lines/change/${lineId}`);
   };
-  const handleNewLine = () => {
-    void navigate(`/logged/lines/create`);
-  };
 
   const onAdd = {
-    function: handleNewLine,
+    function: () => navigate(`/logged/lines/create`),
     text: "create new line",
   };
 

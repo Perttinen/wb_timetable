@@ -28,7 +28,6 @@ interface Props {
   onAdd?: { function: () => void; text: string };
   caption: string;
   input: DockInput | LineInput | UserInput;
-  // | ScheduleInput;
 }
 
 type ListButtonProps = PropsWithChildren<{
@@ -40,7 +39,6 @@ const ListButton = (props: ListButtonProps) => {
   const { id, onClick } = props;
   return (
     <Button
-      // key={id}
       onClick={() => onClick(id)}
       fullWidth
       variant="contained"
