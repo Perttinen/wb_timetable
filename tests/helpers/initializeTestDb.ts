@@ -22,10 +22,6 @@ interface ILine {
 }
 
 const create20Docks = async () => {
-  // const docks: { name: string }[] = [];
-  // for (let i = 1; i < 21; i++) {
-  //   docks.push({ name: `dock${i}` });
-  // }
   const returnDocks: IDock[] = (await Dock.bulkCreate(docks)).map((d) =>
     d.toJSON()
   );
@@ -47,7 +43,6 @@ const deleteAllButHal = async () => {
 };
 
 const create4Lines = async (docks: IDock[]) => {
-  // creates 4 lines with some stop points
   const lines = [
     { startDockId: docks[0].id, endDockId: docks[5].id },
     { startDockId: docks[2].id, endDockId: docks[7].id },

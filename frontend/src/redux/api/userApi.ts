@@ -7,10 +7,12 @@ export const userApi = api.injectEndpoints({
       query: () => ({ url: "/user", method: "GET" }),
       providesTags: ["Users"],
     }),
+
     getUser: builder.query<userTypes.TUserSafe, string>({
       query: (userId) => ({ url: `/user/${userId}`, method: "GET" }),
       providesTags: ["User"],
     }),
+
     addUser: builder.mutation<userTypes.TUserSafe, userTypes.TNewUserRequest>({
       query: (newUser) => ({
         url: "/user",
@@ -19,6 +21,7 @@ export const userApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Users"],
     }),
+
     updateUser: builder.mutation<
       userTypes.TUserSafe,
       userTypes.TUpdateUserArgs
@@ -33,6 +36,7 @@ export const userApi = api.injectEndpoints({
       },
       invalidatesTags: ["Users", "User"],
     }),
+
     deleteUser: builder.mutation<number, number>({
       query: (id) => ({
         url: `/user/${id}`,

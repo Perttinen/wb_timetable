@@ -10,6 +10,7 @@ export const lineApi = api.injectEndpoints({
       }),
       providesTags: ["Lines"],
     }),
+
     getLine: builder.query<lineTypes.TLineReturnable, number>({
       query: (id) => ({
         url: `/line/${id}`,
@@ -17,6 +18,7 @@ export const lineApi = api.injectEndpoints({
       }),
       providesTags: ["Line"],
     }),
+
     addLine: builder.mutation<lineTypes.TLineReturnable, lineTypes.TLineToAdd>({
       query: (newLine) => ({
         url: "/line",
@@ -25,6 +27,7 @@ export const lineApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Lines"],
     }),
+
     updateLine: builder.mutation<
       lineTypes.TLineReturnable,
       lineTypes.TUpdateLineArgs
@@ -36,6 +39,7 @@ export const lineApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Lines", "Line", "Timetable"],
     }),
+
     deleteLine: builder.mutation<number, number>({
       query: (id) => ({
         url: `/line/${id}`,

@@ -177,8 +177,6 @@ const get20DeparturesByDockId = asyncHandler(
       ],
     });
 
-    console.log(rawLines.map((l) => l.toJSON()));
-
     const formattedLines = formatLines({ lines: rawLines, dockId: rawDock.id });
 
     const relatedLineIds = formattedLines.map((line) => line.lineId);

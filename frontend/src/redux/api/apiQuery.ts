@@ -3,10 +3,11 @@ import {
   FetchArgs,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
+
 import { selectCurrentToken, setCredentials } from "../authSlice";
 import { RootState } from "../store";
 import { getErrorMessage } from "../../utils/getErrorMessage";
-import { showSnackbar } from "../../components/SnackbarProvider";
+import showErrorSnack from "../../utils/showErrorSnack";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "/api",
@@ -59,28 +60,18 @@ export const apiQuery = async (
 
     if ("error" in result && result.error) {
       const message = getErrorMessage(result.error);
-      console.error(`Api error: ${message}`);
-
-      showSnackbar({
-        message,
-        severity: "error",
-        duration: 10000,
-      });
       if (message.includes("jwt expired") || message.includes("Unauthorized")) {
         window.location.href = "/";
-        showSnackbar({
-          message,
-          severity: "error",
-          duration: 10000,
-        });
       }
+      console.error(`Api error: ${message}`);
+      showErrorSnack(result.error);
       return { error: result.error };
     }
     return { data: result.data };
   } catch (e) {
     const message = getErrorMessage(e);
     console.error("Unexpected exception:", message);
-    showSnackbar({ message, severity: "error", duration: 10000 });
+    showErrorSnack(e);
     return { error: e };
   }
 };
