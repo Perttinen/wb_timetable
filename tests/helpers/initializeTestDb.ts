@@ -8,7 +8,8 @@ import {
 } from "../../database/models";
 import { IJsonUser } from "../../typesFile";
 import { Op } from "@sequelize/core";
-import { docks } from "../testHelpers/data/docks";
+import { docks } from "./docks";
+// import { createUser, login } from "./api";
 
 interface IDock {
   id: number;
@@ -28,7 +29,7 @@ const create20Docks = async () => {
   return returnDocks;
 };
 
-const deleteAllButHal = async () => {
+export const deleteAllButHal = async () => {
   const hal = await User.findOne({
     attributes: { exclude: ["password"] },
     where: { username: "hal" },
@@ -114,7 +115,7 @@ const create10Departures = async (lineIds: number[]) => {
     depaerturesToAdd.push(...departures);
   }
 
-  await Departure.bulkCreate(depaerturesToAdd);
+  return (await Departure.bulkCreate(depaerturesToAdd)).map((d) => d.toJSON());
 };
 
 const initializeDb = async () => {
@@ -128,8 +129,8 @@ const initializeDb = async () => {
     // add initial values
     const docksDb = await create20Docks();
     const lineIdsDb = await create4Lines(docksDb);
-    await create10Departures(lineIdsDb);
-    return { docksDb, lineIdsDb };
+    const departuresDb = await create10Departures(lineIdsDb);
+    return { docksDb, lineIdsDb, departuresDb };
   } catch (e) {
     if (e instanceof Error) {
       console.log(e.message);

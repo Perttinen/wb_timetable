@@ -35,7 +35,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ["./tests/testHelpers/data/anyObjects.ts"],
+    files: ["./tests/helpers/anyObjects.ts"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unsafe-assignment": "off",

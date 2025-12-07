@@ -13,6 +13,11 @@ export type TUserSafe = {
   username: string;
 };
 
+export type TTestUser = {
+  user: TUserSafe;
+  token?: string;
+};
+
 // export type IJsonUserFlattenedLevels = {
 //   username:string
 //   id: number;
