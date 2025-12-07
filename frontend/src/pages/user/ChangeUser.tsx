@@ -17,9 +17,11 @@ import {
   useUpdateUserMutation,
 } from "../../redux/api/userApi";
 import { useGetUserlevelsQuery } from "../../redux/api/userlevelApi";
+import showErrorSnack from "../../utils/showErrorSnack";
 
 const ChangeUser = () => {
   const { userId } = useParams<{ userId: string }>();
+
   const { data: user, isLoading: isLoadingUser } = useGetUserQuery(
     String(userId)
   );
@@ -28,8 +30,11 @@ const ChangeUser = () => {
     useGetUserlevelsQuery();
 
   const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
+
   const [deleteUser, { isLoading: isDeletingUser }] = useDeleteUserMutation();
+
   const navigate = useNavigate();
+
   const theme = useTheme();
 
   interface IFormvalues {
@@ -54,8 +59,7 @@ const ChangeUser = () => {
       });
       void navigate("/logged/users");
     } catch (e) {
-      const message = getErrorMessage(e);
-      showSnackbar({ severity: "error", duration: 10000, message });
+      showErrorSnack(e);
     }
   };
 
@@ -117,7 +121,6 @@ const ChangeUser = () => {
                 userlevel: getUserlevel(user.userlevels),
                 disabled: user.disabled,
               }}
-              // validationSchema={dockSchema}
               onSubmit={handleSubmit}
               enableReinitialize={true}
             >

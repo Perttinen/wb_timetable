@@ -11,15 +11,14 @@ export const authApi = api.injectEndpoints({
         body: credentials,
       }),
     }),
+
     logout: builder.mutation<void, void>({
       query: () => ({ url: "/auth/logout", method: "POST" }),
       onQueryStarted(arg, { dispatch }) {
         dispatch(logOut());
-        setTimeout(() => {
-          dispatch(api.util.resetApiState());
-        }, 500);
       },
     }),
+
     refresh: builder.mutation<{ accessToken: string }, void>({
       query: () => ({ url: "/auth/refresh", method: "GET" }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -27,10 +26,12 @@ export const authApi = api.injectEndpoints({
         dispatch(setCredentials({ accessToken: data.accessToken }));
       },
     }),
+
     getMe: builder.query<userTypes.TUserSafe, void>({
       query: () => "/auth/me",
       providesTags: ["Me"],
     }),
+
     checkPassword: builder.mutation<boolean, authTypes.TCheckPasswordArgs>({
       query: (pw) => ({
         url: "/auth/checkpw",

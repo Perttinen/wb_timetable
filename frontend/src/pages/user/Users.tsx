@@ -8,16 +8,12 @@ const Users = () => {
   const { data: users, isLoading: isLoadingUsers } = useGetUsersQuery();
   const navigate = useNavigate();
 
-  const handleNewUser = () => {
-    void navigate("/logged/users/create");
-  };
-
   const handleUserSelection = (userId: number) => {
     void navigate(`/logged/users/change/${userId}`);
   };
 
   const onAdd = {
-    function: handleNewUser,
+    function: () => navigate("/logged/users/create"),
     text: "create new user",
   };
 

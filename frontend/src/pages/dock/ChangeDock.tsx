@@ -15,6 +15,8 @@ import {
   useDeleteDockMutation,
   useGetDockQuery,
 } from "../../redux/api/dockApi";
+import { getErrorMessage } from "../../utils/getErrorMessage";
+import showErrorSnack from "../../utils/showErrorSnack";
 
 const ChangeDock = () => {
   const { dockId } = useParams<{ dockId: string }>();
@@ -28,8 +30,8 @@ const ChangeDock = () => {
 
   const dockSchema = Yup.object().shape({
     name: Yup.string()
-      .min(2, "Name must be 2-32 charecters!")
-      .max(32, "Name must be 2-32 charecters!")
+      .min(2, "Name must be 2-15 charecters!")
+      .max(15, "Name must be 2-15 charecters!")
       .required("Name is required!"),
   });
 
@@ -47,7 +49,7 @@ const ChangeDock = () => {
         }
       }
     } catch (e) {
-      console.log(e);
+      showErrorSnack(e);
     }
   };
 
@@ -62,7 +64,11 @@ const ChangeDock = () => {
         }
       }
     } catch (e) {
-      console.log(e);
+      showSnackbar({
+        severity: "error",
+        duration: 10000,
+        message: getErrorMessage(e),
+      });
     }
   };
 
@@ -83,7 +89,7 @@ const ChangeDock = () => {
           >
             <Form>
               <FormGroupContainer>
-                <FormTextField label="" name="name" type="inputLabel" />
+                <FormTextField label="name" name="name" type="inputLabel" />
               </FormGroupContainer>
               <FormButtons
                 buttons={["cancel", "delete", "save"]}

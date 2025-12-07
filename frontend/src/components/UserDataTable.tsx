@@ -6,10 +6,12 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+
 import { userTypes } from "../../../types";
 
 export const UserDataTable = ({ user }: { user: userTypes.TUserSafe }) => {
   const userLevel = user.userlevels.includes("admin") ? "admin" : "user";
+
   return (
     <Box sx={{ margin: 1 }}>
       <Table size="small" aria-label="purchases">

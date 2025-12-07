@@ -1,7 +1,6 @@
-import { Alert, Box, Button, Snackbar } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { FieldArray, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -15,11 +14,12 @@ import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
 import { useGetDocksQuery } from "../../redux/api/dockApi";
 import { useAddLineMutation } from "../../redux/api/lineApi";
+import showErrorSnack from "../../utils/showErrorSnack";
 
 const CreateLine = () => {
-  const [errorMsg, setErrorMsg] = useState("");
-
   const navigate = useNavigate();
+
+  const [addLine, { isLoading: isAddingLine }] = useAddLineMutation();
 
   const { data: docks, isLoading: isLoadingDocks } = useGetDocksQuery();
 
@@ -43,18 +43,18 @@ const CreateLine = () => {
       .required("End point is required!"),
   });
 
-  type StoppiType = {
+  type TStop = {
     dockId: number;
     delayFromStart: number;
   };
 
-  type RouteFormValuesType = {
+  type TRouteFormValues = {
     startDockId: number;
-    stops: StoppiType[];
+    stops: TStop[];
     endDockId: number;
   };
 
-  const docksAreUnique = (values: RouteFormValuesType) => {
+  const docksAreUnique = (values: TRouteFormValues) => {
     const ids: number[] = [];
     ids.push(values.startDockId);
     ids.push(values.endDockId);
@@ -63,9 +63,7 @@ const CreateLine = () => {
     return ids.length === distinctIds.length;
   };
 
-  const [addLine, { isLoading: isAddingLine }] = useAddLineMutation();
-
-  const handleSubmit = async (values: RouteFormValuesType) => {
+  const handleSubmit = async (values: TRouteFormValues) => {
     try {
       if (docksAreUnique(values)) {
         const result = await addLine(values).unwrap();
@@ -77,10 +75,14 @@ const CreateLine = () => {
           void navigate("/logged/lines");
         }
       } else {
-        setErrorMsg("All docks should be unique!");
+        showSnackbar({
+          message: "All docks should be unique!",
+          severity: "error",
+          duration: 10000,
+        });
       }
     } catch (e) {
-      console.error(e);
+      showErrorSnack(e);
     }
   };
 
@@ -137,7 +139,6 @@ const CreateLine = () => {
                                       selectKey="name"
                                       selectValue="id"
                                     />
-                                    {/* <FormSelect options={docks} name={dock} label={fieldLabel} /> */}
                                     <Box
                                       display={"flex"}
                                       flexDirection={"row"}
@@ -149,7 +150,6 @@ const CreateLine = () => {
                                         label="minutes from start"
                                         name={time}
                                       />
-                                      {/* <Box display={'flex'} flexDirection={'row'} alignContent={'center'} > */}
                                       <Button
                                         onClick={() =>
                                           arrayHelpers.remove(index)
@@ -164,7 +164,6 @@ const CreateLine = () => {
                                       >
                                         delete
                                       </Button>
-                                      {/* </Box> */}
                                     </Box>
                                   </>
                                 </FormGroupContainer>
@@ -209,13 +208,6 @@ const CreateLine = () => {
               </Formik>
             )}
           </FormMainContainer>
-          <Snackbar
-            open={errorMsg !== ""}
-            autoHideDuration={4000}
-            onClose={() => setErrorMsg("")}
-          >
-            <Alert severity="error">{errorMsg}</Alert>
-          </Snackbar>
         </Box>
       )}
     </>

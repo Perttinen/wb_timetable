@@ -1,4 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
+
 import Spinner from "../components/Spinner";
 import { useGetMeQuery } from "../redux/api/authApi";
 

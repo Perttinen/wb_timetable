@@ -14,6 +14,7 @@ export const UserCard = ({
   setUserCard: (val: boolean) => void;
 }) => {
   const { data: user, isLoading: isLoadingUser } = useGetMeQuery();
+
   const [pwChangeDialog, setPwChangeDialog] = useState(false);
 
   const isBusy = isLoadingUser;

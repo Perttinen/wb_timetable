@@ -19,167 +19,28 @@ import { showSnackbar } from "../../components/SnackbarProvider";
 import { useGetDockQuery } from "../../redux/api/dockApi";
 import { useGetTimetableQuery } from "../../redux/api/departureApi";
 
-const InfoCell = ({
-  text,
-  borderBottom,
-}: {
-  text: string;
-  borderBottom: "1" | "0";
-}) => {
-  return (
-    <TableCell
-      sx={{
-        color: "red",
-        lineHeight: "inherit",
-        fontSize: "inherit",
-        borderBottom,
-      }}
-    >
-      {text}
-    </TableCell>
-  );
-};
-
-const DepartureWithViaRow = ({
-  departure,
-}: {
-  departure: departureTypes.TDepartureForTimetable;
-}) => {
-  return (
-    <>
-      <TableRow sx={{ borderBottom: 0, lineHeight: "30px" }}>
-        <TableCell
-          sx={{
-            color: "inherit",
-            borderBottom: "inherit",
-            fontSize: "inherit",
-          }}
-        >
-          {departure.destination.toUpperCase()}
-        </TableCell>
-        <InfoCell text="extra" borderBottom="0" />
-        <TableCell
-          rowSpan={2}
-          sx={{
-            color: "inherit",
-            borderBottom: "inherit",
-            fontSize: "inherit",
-          }}
-          width={"15%"}
-        >
-          {dayjs(departure.startTime)?.format("HH:mm")}
-        </TableCell>
-      </TableRow>
-      <TableRow sx={{ fontSize: "1rem", lineHeight: "20px" }}>
-        <TableCell
-          sx={{
-            color: "inherit",
-            lineHeight: "inherit",
-            fontSize: "inherit",
-          }}
-          colSpan={3}
-        >
-          <Stack direction={"row"}>
-            <Typography
-              sx={{
-                lineHeight: "inherit",
-                fontSize: "inherit",
-              }}
-            >
-              via:
-            </Typography>
-            {departure.via.map((v, i) => (
-              <Typography
-                sx={{
-                  lineHeight: "inherit",
-                  fontSize: "inherit",
-                }}
-                key={i}
-                ml={"10px"}
-              >
-                {v}
-                {i < departure.via.length - 1 && " | "}
-              </Typography>
-            ))}
-          </Stack>
-        </TableCell>
-      </TableRow>
-    </>
-  );
-};
-
-const DepartureRow = ({
-  departure,
-}: {
-  departure: departureTypes.TDepartureForTimetable;
-}) => {
-  return (
-    <>
-      <TableRow sx={{ lineHeight: "50px", borderBottom: "1" }}>
-        <TableCell
-          sx={{
-            color: "inherit",
-            lineHeight: "inherit",
-            fontSize: "inherit",
-          }}
-        >
-          {departure.destination.toUpperCase()}
-        </TableCell>
-        <InfoCell text="cancelled" borderBottom="1" />
-        <TableCell
-          sx={{
-            color: "inherit",
-            lineHeight: "inherit",
-            fontSize: "inherit",
-          }}
-        >
-          {dayjs(departure.startTime)?.format("HH:mm")}
-        </TableCell>
-      </TableRow>
-    </>
-  );
-};
-
-const DateRow = ({
-  departure,
-}: {
-  departure: departureTypes.TDepartureForTimetable;
-}) => {
-  return (
-    <TableRow>
-      <TableCell
-        colSpan={3}
-        align="center"
-        sx={{
-          lineHeight: "50px",
-          color: "inherit",
-          fontSize: "inherit",
-        }}
-      >
-        {dayjs(departure.startTime).toDate().toDateString()}
-      </TableCell>
-    </TableRow>
-  );
-};
-
 interface Props {
   fullwidth: boolean;
 }
 
 const DockTimetable = ({ fullwidth }: Props) => {
   const { dockId } = useParams<{ dockId: string }>();
+
   const {
     data: dock,
     isLoading: isLoadingDock,
     error: getDockError,
   } = useGetDockQuery(Number(dockId));
+
   const {
     data: departures,
     isLoading: isLoadingTimetable,
     refetch: fetchDepartures,
     error: getTimetableError,
   } = useGetTimetableQuery(String(dockId));
+
   const url = useLocation();
+
   if (getTimetableError || getDockError) {
     showSnackbar({
       message: "unable to refresh data!",
@@ -187,6 +48,7 @@ const DockTimetable = ({ fullwidth }: Props) => {
       duration: 10000,
     });
   }
+
   const height = url.pathname.includes("logged")
     ? { xs: "calc(100dvh - 56px)", sm: "calc(100vh - 64px)" }
     : { xs: "100dvh" };
@@ -208,7 +70,7 @@ const DockTimetable = ({ fullwidth }: Props) => {
           component={Paper}
           sx={{
             borderRadius: "0",
-            bgcolor: "darkblue",
+            bgcolor: "#0a0a0a",
             width: "100%",
             maxWidth: fullwidth ? "100%" : 1200,
             margin: "0 auto",
@@ -217,9 +79,8 @@ const DockTimetable = ({ fullwidth }: Props) => {
         >
           <Table padding="none" stickyHeader>
             <colgroup>
-              <col width="62%" />
-              <col width="30%" />
-              <col width="8%" />
+              <col />
+              <col style={{ width: "60px" }} />
             </colgroup>
             <TableHead>
               <TableRow sx={{ borderBottom: 0 }}>
@@ -227,10 +88,10 @@ const DockTimetable = ({ fullwidth }: Props) => {
                   colSpan={3}
                   height={50}
                   sx={{
-                    color: "lightgrey",
+                    color: "lightgoldenrodyellow",
                     fontSize: "2rem",
                     fontWeight: "bold",
-                    bgcolor: "darkblue",
+                    bgcolor: "#0a0a0a",
                     textAlign: "center",
                   }}
                 >
@@ -241,7 +102,11 @@ const DockTimetable = ({ fullwidth }: Props) => {
               </TableRow>
             </TableHead>
             <TableBody
-              sx={{ color: "lightgoldenrodyellow", fontSize: "1.3rem" }}
+              sx={{
+                color: "lightgoldenrodyellow",
+                fontSize: "1.3rem",
+                fontWeight: "bold",
+              }}
             >
               {departures.map((departure, index, arr) => (
                 <Fragment key={index}>
@@ -269,6 +134,133 @@ const DockTimetable = ({ fullwidth }: Props) => {
         </TableContainer>
       )}
     </>
+  );
+};
+
+const DepartureWithViaRow = ({
+  departure,
+}: {
+  departure: departureTypes.TDepartureForTimetable;
+}) => {
+  return (
+    <>
+      <TableRow sx={{ borderBottom: 0, lineHeight: "30px" }}>
+        <TableCell
+          sx={{
+            color: "inherit",
+            borderBottom: "inherit",
+            fontSize: "inherit",
+            fontWeight: "inherit",
+            paddingLeft: 1,
+          }}
+        >
+          {departure.destination.toUpperCase()}
+        </TableCell>
+        <TableCell
+          rowSpan={2}
+          sx={{
+            color: "inherit",
+            borderBottom: "inherit",
+            fontSize: "inherit",
+            fontWeight: "inherit",
+            paddingRight: 1,
+          }}
+        >
+          {dayjs(departure.startTime)?.format("HH:mm")}
+        </TableCell>
+      </TableRow>
+      <TableRow sx={{ fontSize: "1rem", lineHeight: "20px" }}>
+        <TableCell
+          sx={{
+            color: "inherit",
+            lineHeight: "inherit",
+            fontSize: "inherit",
+            paddingLeft: 1,
+          }}
+          colSpan={3}
+        >
+          <Stack direction={"row"}>
+            <Typography
+              sx={{
+                lineHeight: "inherit",
+                fontSize: "inherit",
+              }}
+            >
+              via:
+            </Typography>
+            {departure.via.map((v, i) => (
+              <Typography
+                sx={{
+                  lineHeight: "inherit",
+                  fontSize: "inherit",
+                }}
+                key={i}
+                ml={"10px"}
+              >
+                {v}
+                {i < departure.via.length - 1 && ", "}
+              </Typography>
+            ))}
+          </Stack>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};
+
+const DepartureRow = ({
+  departure,
+}: {
+  departure: departureTypes.TDepartureForTimetable;
+}) => {
+  return (
+    <>
+      <TableRow sx={{ lineHeight: "50px", borderBottom: "1" }}>
+        <TableCell
+          sx={{
+            color: "inherit",
+            lineHeight: "inherit",
+            fontSize: "inherit",
+            paddingLeft: 1,
+          }}
+        >
+          {departure.destination.toUpperCase()}
+        </TableCell>
+        <TableCell
+          sx={{
+            color: "inherit",
+            lineHeight: "inherit",
+            fontSize: "inherit",
+            paddingRight: 1,
+          }}
+        >
+          {dayjs(departure.startTime)?.format("HH:mm")}
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};
+
+const DateRow = ({
+  departure,
+}: {
+  departure: departureTypes.TDepartureForTimetable;
+}) => {
+  return (
+    <TableRow>
+      <TableCell
+        colSpan={3}
+        align="center"
+        sx={{
+          lineHeight: "50px",
+          color: "inherit",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+        }}
+      >
+        {dayjs(departure.startTime).toDate().toDateString()}
+      </TableCell>
+    </TableRow>
   );
 };
 

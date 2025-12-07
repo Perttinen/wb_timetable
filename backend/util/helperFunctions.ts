@@ -120,13 +120,18 @@ type TFormatLinesEntry = {
   lines: lineTypes.TLineRaw[];
   dockId: number;
 };
-
 export const formatLines = ({
   lines,
   dockId,
 }: TFormatLinesEntry): lineTypes.TFormattedLine[] =>
   lines.flatMap(({ id, docks, startDock, endDock }) => {
-    if (!docks?.length || !startDock || !endDock) return [];
+    if (!startDock || !endDock) return [];
+
+    if (!docks?.length) {
+      return startDock.id === dockId
+        ? [{ lineId: id, endDock: endDock.name, delay: 0, via: [] }]
+        : [];
+    }
 
     const sortedDocks = [...docks].sort(
       (a, b) => a.lineDock.delayFromStart - b.lineDock.delayFromStart

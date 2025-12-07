@@ -9,13 +9,14 @@ import {
   FormMainContainer,
   FormTextField,
 } from "../../components/FormComponents";
-import { ILineToAdd, IStopdocks } from "../../../../typesFile";
+import { TLineToAdd, TStopdocks } from "../../../../types/lineTypes";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import {
   useDeleteLineMutation,
   useGetLineQuery,
   useUpdateLineMutation,
 } from "../../redux/api/lineApi";
+import showErrorSnack from "../../utils/showErrorSnack";
 
 const ChangeLine = () => {
   const { lineId } = useParams<{ lineId: string }>();
@@ -24,31 +25,35 @@ const ChangeLine = () => {
   const [deleteLine] = useDeleteLineMutation();
 
   const navigate = useNavigate();
+
   const { data: line, isLoading: isLoadingLine } = useGetLineQuery(
     Number(lineId)
   );
 
-  const isBusy = isLoadingLine;
-
-  const handleSubmit = async (values: IStopdocks) => {
+  const handleSubmit = async (values: TStopdocks) => {
     const stops = values.stopDocks.map((dock) => ({
       dockId: dock.id,
       delayFromStart: dock.delayFromStart,
     }));
-    const payload: ILineToAdd = {
-      startDockId: line!.startDock.id,
-      stops,
-      endDockId: line!.endDock.id,
-    };
-    try {
-      const result = await updateLine({ id: String(line?.id), body: payload });
-      if (!("error" in result)) {
-        const message = `line ${line?.id} succesfully updated`;
-        showSnackbar({ message, severity: "success", duration: 5000 });
-        void navigate("/logged/lines");
+    if (line && !isLoadingLine) {
+      try {
+        const payload: TLineToAdd = {
+          startDockId: line.startDock.id,
+          stops,
+          endDockId: line.endDock.id,
+        };
+        const result = await updateLine({
+          id: String(line?.id),
+          body: payload,
+        });
+        if (!("error" in result)) {
+          const message = `line ${line?.id} succesfully updated`;
+          showSnackbar({ message, severity: "success", duration: 5000 });
+          void navigate("/logged/lines");
+        }
+      } catch (e) {
+        showErrorSnack(e);
       }
-    } catch (e) {
-      console.log(e);
     }
   };
 
@@ -61,9 +66,11 @@ const ChangeLine = () => {
         void navigate("/logged/lines");
       }
     } catch (e) {
-      console.log(e);
+      showErrorSnack(e);
     }
   };
+
+  const isBusy = isLoadingLine;
 
   return (
     <>
@@ -74,7 +81,6 @@ const ChangeLine = () => {
             initialValues={{
               stopDocks: line.stopDocks,
             }}
-            // validationSchema={dockSchema}
             onSubmit={handleSubmit}
             enableReinitialize={true}
           >
@@ -84,7 +90,6 @@ const ChangeLine = () => {
                   START: {line.startDock.name.toLocaleUpperCase()}
                 </Typography>
               </FormGroupContainer>
-
               {line.stopDocks.map((d, i) => {
                 return (
                   <FormGroupContainer key={i}>
@@ -105,7 +110,6 @@ const ChangeLine = () => {
                   </FormGroupContainer>
                 );
               })}
-
               <FormGroupContainer>
                 <Typography justifySelf={"center"}>
                   DESTINATION: {line.endDock.name.toLocaleUpperCase()}

@@ -4,8 +4,6 @@ import { Form, Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 
-import { getErrorMessage } from "../../utils/getErrorMessage";
-import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
 import {
   FormButtons,
@@ -14,26 +12,24 @@ import {
   FormTextField,
 } from "../../components/FormComponents";
 import { setCredentials } from "../../redux/authSlice";
-import { useLoginMutation } from "../../redux/api/authApi";
+import { useLoginMutation, useLogoutMutation } from "../../redux/api/authApi";
 import { api } from "../../redux/api/baseApi";
+import showErrorSnack from "../../utils/showErrorSnack";
 
 const loginSchema = yup.object({
-  username: yup
-    .string()
-    .min(3, "Username should be of minimum 3 characters length")
-    .required("Password is required"),
-  password: yup
-    .string()
-    .min(4, "Password should be of minimum 4 characters length")
-    .required("Password is required"),
+  username: yup.string().required("Password is required"),
+  password: yup.string().required("Password is required"),
 });
 
 const Login = () => {
   const navigate = useNavigate();
   const [login, { isLoading: isLogging }] = useLoginMutation();
   const dispatch = useDispatch();
+  const [logout] = useLogoutMutation();
+
   useEffect(() => {
     dispatch(api.util.resetApiState());
+    void logout();
   }, []);
 
   const handleSubmit = async (values: {
@@ -45,8 +41,7 @@ const Login = () => {
       dispatch(setCredentials({ accessToken: result.token }));
       void navigate("/logged/timetables");
     } catch (e) {
-      const message = getErrorMessage(e);
-      showSnackbar({ message, severity: "error", duration: 10000 });
+      showErrorSnack(e);
     }
   };
 

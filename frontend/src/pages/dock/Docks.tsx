@@ -12,12 +12,9 @@ const Docks = () => {
   const handleSelectDock = (dockId: number) => {
     void navigate(`/logged/docks/change/${dockId}`);
   };
-  const handleNewDock = () => {
-    void navigate(`/logged/docks/create`);
-  };
 
   const onAdd = {
-    function: handleNewDock,
+    function: () => navigate(`/logged/docks/create`),
     text: "create new dock",
   };
 

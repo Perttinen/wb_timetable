@@ -46,7 +46,7 @@ const createManyDepartures = asyncHandler(
 
     const response = await Departure.bulkCreate(departures);
 
-    res.status(200).json(response);
+    res.status(201).json(response);
   }
 );
 

@@ -11,6 +11,7 @@ import {
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
 import { useAddDepartureMutation } from "../../redux/api/departureApi";
+import showErrorSnack from "../../utils/showErrorSnack";
 
 const AddOneStart = () => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const AddOneStart = () => {
         void navigate("/logged/schedule");
       }
     } catch (e) {
-      console.error(e);
+      showErrorSnack(e);
     }
   };
 

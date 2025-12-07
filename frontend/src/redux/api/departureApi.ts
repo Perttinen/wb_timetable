@@ -13,6 +13,7 @@ export const departureApi = api.injectEndpoints({
       }),
       providesTags: ["Timetable"],
     }),
+
     addDeparture: builder.mutation<
       departureTypes.TDeparture,
       departureTypes.TInputDeparture
@@ -24,6 +25,7 @@ export const departureApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Timetable"],
     }),
+
     addManyDepartures: builder.mutation<
       departureTypes.TDeparture[],
       departureTypes.TInputDeparture[]
@@ -35,6 +37,7 @@ export const departureApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Timetable"],
     }),
+
     deleteDepartures: builder.mutation<
       void,
       departureTypes.TDeleteDeparturesPayload

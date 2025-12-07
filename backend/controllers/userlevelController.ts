@@ -6,7 +6,7 @@ import { userlevelTypes } from "../../types";
 import { Op } from "@sequelize/core";
 
 // @desc get all userlevels
-// @route GET /userlevel/
+// @route GET /userlevel
 // @access admin
 const getUserlevels = asyncHandler(
   async (_req, res: Response<userlevelTypes.TUserlevel[]>) => {

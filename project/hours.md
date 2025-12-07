@@ -1,10 +1,16 @@
 ## Hours
 
-#### total hours 166
+#### total hours 178
+
+7.12.2025 Test refactored. Hours: 3,5, Total: 178
+
+4.12.2025 Frontend refactored. Hours: 7, Total: 174,5
+
+27.11.2025 Api refactored. Hours: 1,5, Total: 167,5
 
 26.11.2025 Tokenrefetch issue fixed. Logout endpoint added. Hours: 1,5, Total: 166
 
-26.11.2025 Timezone issue fixed. Backend optimized and "ready". Hours: 7, Total: 164,5
+26.11.2025 Timezone issue fixed. Backend refactored and "ready". Hours: 7, Total: 164,5
 
 24.11.2025 Token stored in state, refreshing with cookieToken. Code optimizing started with controllers. types.ts reorganization started. Hours: 6, Total: 157,5
 
