@@ -1,6 +1,11 @@
 import { api } from "./baseApi";
 import { userTypes } from "../../../../types";
 
+interface IUpdateUserArgs {
+  id: string;
+  body: userTypes.TUpdateUserRequest;
+}
+
 export const userApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query<userTypes.TUserSafe[], void>({
@@ -22,10 +27,7 @@ export const userApi = api.injectEndpoints({
       invalidatesTags: ["Users"],
     }),
 
-    updateUser: builder.mutation<
-      userTypes.TUserSafe,
-      userTypes.TUpdateUserArgs
-    >({
+    updateUser: builder.mutation<userTypes.TUserSafe, IUpdateUserArgs>({
       query: ({ id, body }) => {
         console.log("updateUser request:", { id, body });
         return {

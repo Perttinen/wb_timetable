@@ -9,7 +9,6 @@ import {
   FormMainContainer,
   FormTextField,
 } from "../../components/FormComponents";
-import { TLineToAdd, TStopdocks } from "../../../../types/lineTypes";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import {
   useDeleteLineMutation,
@@ -17,6 +16,11 @@ import {
   useUpdateLineMutation,
 } from "../../redux/api/lineApi";
 import showErrorSnack from "../../utils/showErrorSnack";
+import { lineTypes } from "../../../../types";
+
+interface IStopdocks {
+  stopDocks: { name: string; id: number; delayFromStart: number }[];
+}
 
 const ChangeLine = () => {
   const { lineId } = useParams<{ lineId: string }>();
@@ -30,14 +34,14 @@ const ChangeLine = () => {
     Number(lineId)
   );
 
-  const handleSubmit = async (values: TStopdocks) => {
+  const handleSubmit = async (values: IStopdocks) => {
     const stops = values.stopDocks.map((dock) => ({
       dockId: dock.id,
       delayFromStart: dock.delayFromStart,
     }));
     if (line && !isLoadingLine) {
       try {
-        const payload: TLineToAdd = {
+        const payload: lineTypes.TLineRequest = {
           startDockId: line.startDock.id,
           stops,
           endDockId: line.endDock.id,

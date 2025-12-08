@@ -31,7 +31,7 @@ export const validateUserlevelInput = ({
 };
 
 export const dockIdsAreValid = async (
-  line: lineTypes.TLineToAdd
+  line: lineTypes.TLineRequest
 ): Promise<boolean> => {
   const idsToValidate = [
     line.startDockId,
@@ -46,8 +46,16 @@ export const dockIdsAreValid = async (
   return idsToValidate.every((id) => validDockIds.has(id));
 };
 
+interface IUserRaw {
+  password: string;
+  id: number;
+  disabled: boolean;
+  userlevels: { userlevel: string; id: number }[];
+  username: string;
+}
+
 export const userlevelsToArray = (user: User): userTypes.TUser => {
-  const jsonUser: userTypes.TUserRaw = user.toJSON();
+  const jsonUser: IUserRaw = user.toJSON();
 
   return {
     ...jsonUser,
@@ -87,7 +95,7 @@ export const lineIncludes = [
 
 export const createReturnableLine = (
   line: Line
-): lineTypes.TLineReturnable | null => {
+): lineTypes.TLineResponse | null => {
   const { id, startDock, endDock, docks }: lineTypes.TLineRaw = line.toJSON();
 
   if (!id || !startDock || !endDock || !docks) {
@@ -116,14 +124,22 @@ export const createReturnableLine = (
   };
 };
 
-type TFormatLinesEntry = {
+interface IFormatLinesEntry {
   lines: lineTypes.TLineRaw[];
   dockId: number;
-};
+}
+
+interface IFormattedLine {
+  lineId: number;
+  endDock: string;
+  delay: number;
+  via: string[];
+}
+
 export const formatLines = ({
   lines,
   dockId,
-}: TFormatLinesEntry): lineTypes.TFormattedLine[] =>
+}: IFormatLinesEntry): IFormattedLine[] =>
   lines.flatMap(({ id, docks, startDock, endDock }) => {
     if (!startDock || !endDock) return [];
 

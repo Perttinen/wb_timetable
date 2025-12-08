@@ -32,7 +32,7 @@ export const authApi = api.injectEndpoints({
       providesTags: ["Me"],
     }),
 
-    checkPassword: builder.mutation<boolean, authTypes.TCheckPasswordArgs>({
+    checkPassword: builder.mutation<boolean, { password: string }>({
       query: (pw) => ({
         url: "/auth/checkpw",
         method: "POST",

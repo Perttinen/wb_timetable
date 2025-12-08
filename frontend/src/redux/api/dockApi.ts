@@ -13,7 +13,7 @@ export const dockApi = api.injectEndpoints({
       providesTags: ["GetDock"],
     }),
 
-    addDock: builder.mutation<dockTypes.TDock, dockTypes.TDockname>({
+    addDock: builder.mutation<dockTypes.TDock, { name: string }>({
       query: (newDock) => ({ url: "/dock", method: "POST", body: newDock }),
       invalidatesTags: ["GetDocks"],
     }),

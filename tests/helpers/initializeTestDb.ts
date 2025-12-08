@@ -6,7 +6,6 @@ import {
   User,
   UserAndlevel,
 } from "../../database/models";
-import { IJsonUser } from "../../typesFile";
 import { Op } from "@sequelize/core";
 import { docks } from "./docks";
 // import { createUser, login } from "./api";
@@ -28,6 +27,13 @@ const create20Docks = async () => {
   );
   return returnDocks;
 };
+
+interface IJsonUser {
+  id: number;
+  userlevels?: { userlevel: string }[];
+  disabled: boolean;
+  username: string;
+}
 
 export const deleteAllButHal = async () => {
   const hal = await User.findOne({

@@ -6,6 +6,7 @@ export type TDeleteDeparturesPayload = {
   toTime: string;
   weekdays: boolean[];
 };
+
 export type TInputDeparture = {
   lineId: number;
   start: Date;

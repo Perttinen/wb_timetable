@@ -159,7 +159,7 @@ const getUser = asyncHandler(
 // @access user/admin (all can change own password)
 const updateUser = asyncHandler(
   async (
-    req: Request<{ id: string }, unknown, userTypes.TUpdateUserInput>,
+    req: Request<{ id: string }, unknown, userTypes.TUpdateUserRequest>,
     res: Response<userTypes.TUserSafe>
   ) => {
     const id = req.params.id;

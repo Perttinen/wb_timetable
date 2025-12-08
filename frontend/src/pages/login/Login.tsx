@@ -15,6 +15,7 @@ import { setCredentials } from "../../redux/authSlice";
 import { useLoginMutation, useLogoutMutation } from "../../redux/api/authApi";
 import { api } from "../../redux/api/baseApi";
 import showErrorSnack from "../../utils/showErrorSnack";
+import { authTypes } from "../../../../types";
 
 const loginSchema = yup.object({
   username: yup.string().required("Password is required"),
@@ -32,10 +33,7 @@ const Login = () => {
     void logout();
   }, []);
 
-  const handleSubmit = async (values: {
-    username: string;
-    password: string;
-  }) => {
+  const handleSubmit = async (values: authTypes.TLoginRequest) => {
     try {
       const result = await login(values).unwrap();
       dispatch(setCredentials({ accessToken: result.token }));

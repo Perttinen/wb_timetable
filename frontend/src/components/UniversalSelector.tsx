@@ -15,7 +15,7 @@ type DockInput = {
 
 type LineInput = {
   type: "lines";
-  data: lineTypes.TLineReturnable[];
+  data: lineTypes.TLineResponse[];
 };
 
 type UserInput = {

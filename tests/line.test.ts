@@ -5,13 +5,13 @@ import initializeDb from "./helpers/initializeTestDb";
 import { login } from "./helpers/api";
 import { TTestUser } from "../types/userTypes";
 import { TDock } from "../types/dockTypes";
-import { TLineReturnable } from "../types/lineTypes";
+import { TLineResponse } from "../types/lineTypes";
 import { TLoginResponse } from "../types/authTypes";
 
 describe("Line API", () => {
   const hal: TTestUser = {} as TTestUser;
   let docks: TDock[] = [] as TDock[];
-  let testLine: TLineReturnable;
+  let testLine: TLineResponse;
 
   beforeAll(async () => {
     const db = await initializeDb();
@@ -45,7 +45,7 @@ describe("Line API", () => {
       .set("Authorization", `Bearer ${hal.token}`)
       .send(payload);
     expect(response.status).toBe(201);
-    testLine = response.body as TLineReturnable;
+    testLine = response.body as TLineResponse;
   });
 
   test("Get line, GET /line/:id", async () => {
@@ -82,7 +82,7 @@ describe("Line API", () => {
       .set("Authorization", `Bearer ${hal.token}`)
       .send(payload);
     expect(response.status).toBe(200);
-    const body = response.body as TLineReturnable;
+    const body = response.body as TLineResponse;
     expect(body.stopDocks).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ id: docks[1].id, delayFromStart: 50 }),

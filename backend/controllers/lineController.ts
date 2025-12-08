@@ -12,8 +12,8 @@ import { lineTypes } from "../../types";
 // @access admin
 const createNewLine = asyncHandler(
   async (
-    req: Request<unknown, unknown, lineTypes.TLineToAdd>,
-    res: Response<lineTypes.TLineReturnable>
+    req: Request<unknown, unknown, lineTypes.TLineRequest>,
+    res: Response<lineTypes.TLineResponse>
   ) => {
     const { startDockId, stops, endDockId } = req.body;
 
@@ -123,8 +123,8 @@ const getLine = asyncHandler(async (req: Request, res: Response) => {
 // @access admin
 const updateLine = asyncHandler(
   async (
-    req: Request<{ id: string }, unknown, lineTypes.TLineToAdd>,
-    res: Response<lineTypes.TLineReturnable>
+    req: Request<{ id: string }, unknown, lineTypes.TLineRequest>,
+    res: Response<lineTypes.TLineResponse>
   ) => {
     const { startDockId, stops, endDockId } = req.body;
     const lineId = req.params.id;

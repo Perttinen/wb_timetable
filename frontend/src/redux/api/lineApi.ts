@@ -3,7 +3,7 @@ import { api } from "./baseApi";
 
 export const lineApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getLines: builder.query<lineTypes.TLineReturnable[], void>({
+    getLines: builder.query<lineTypes.TLineResponse[], void>({
       query: () => ({
         url: "/line",
         method: "GET",
@@ -11,7 +11,7 @@ export const lineApi = api.injectEndpoints({
       providesTags: ["Lines"],
     }),
 
-    getLine: builder.query<lineTypes.TLineReturnable, number>({
+    getLine: builder.query<lineTypes.TLineResponse, number>({
       query: (id) => ({
         url: `/line/${id}`,
         method: "GET",
@@ -19,7 +19,7 @@ export const lineApi = api.injectEndpoints({
       providesTags: ["Line"],
     }),
 
-    addLine: builder.mutation<lineTypes.TLineReturnable, lineTypes.TLineToAdd>({
+    addLine: builder.mutation<lineTypes.TLineResponse, lineTypes.TLineRequest>({
       query: (newLine) => ({
         url: "/line",
         method: "POST",
@@ -29,8 +29,8 @@ export const lineApi = api.injectEndpoints({
     }),
 
     updateLine: builder.mutation<
-      lineTypes.TLineReturnable,
-      lineTypes.TUpdateLineArgs
+      lineTypes.TLineResponse,
+      lineTypes.TUpdateLineRequest
     >({
       query: ({ id, body }) => ({
         url: `/line/${id}`,

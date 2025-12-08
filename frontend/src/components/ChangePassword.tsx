@@ -13,8 +13,13 @@ import { getErrorMessage } from "../utils/getErrorMessage";
 import Spinner from "./Spinner";
 import { useUpdateUserMutation } from "../redux/api/userApi";
 import { useCheckPasswordMutation } from "../redux/api/authApi";
-import { TConfirmedPasswordsType } from "../../../types/authTypes";
 import { TUserSafe } from "../../../types/userTypes";
+
+interface IConfirmedPasswords {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
 
 export const ChangePassword = ({
   pwChangeDialog,
@@ -46,7 +51,7 @@ export const ChangePassword = ({
   const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
   const [checkPw, { isLoading: isCheckingPw }] = useCheckPasswordMutation();
 
-  const handleSubmit = async (values: TConfirmedPasswordsType) => {
+  const handleSubmit = async (values: IConfirmedPasswords) => {
     const payload = {
       body: { password: values.newPassword },
       id: String(user.id),
@@ -73,7 +78,7 @@ export const ChangePassword = ({
     }
   };
 
-  const initialValues: TConfirmedPasswordsType = {
+  const initialValues: IConfirmedPasswords = {
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",

@@ -17,13 +17,13 @@ export type TLineRaw = {
   }[];
 };
 
-export type TLineToAdd = {
+export type TLineRequest = {
   startDockId: number;
   stops: { dockId: number; delayFromStart: number }[];
   endDockId: number;
 };
 
-export type TLineReturnable = {
+export type TLineResponse = {
   id: number;
   startDock: {
     name: string;
@@ -39,27 +39,8 @@ export type TLineReturnable = {
     delayFromStart: number;
   }[];
 };
-export type TLine = {
-  id: number;
-  startDockId: number;
-  endDockId: number;
-};
-export type TFormattedLine = {
-  lineId: number;
-  endDock: string;
-  delay: number;
-  via: string[];
-};
 
-export type TUpdateLineArgs = {
+export type TUpdateLineRequest = {
   id: string;
-  body: TLineToAdd;
-};
-
-export type TStopdocks = {
-  stopDocks: {
-    name: string;
-    id: number;
-    delayFromStart: number;
-  }[];
+  body: TLineRequest;
 };
