@@ -14,6 +14,8 @@ import { setCredentials } from "../../redux/authSlice";
 import { useLoginMutation } from "../../redux/api/authApi";
 import showErrorSnack from "../../utils/showErrorSnack";
 import { authTypes } from "../../../../types";
+import { showSnackbar } from "../../components/SnackbarProvider";
+import { error } from "console";
 
 const loginSchema = yup.object({
   username: yup.string().required("Password is required"),
@@ -28,8 +30,16 @@ const Login = () => {
   const handleSubmit = async (values: authTypes.TLoginRequest) => {
     try {
       const result = await login(values).unwrap();
-      dispatch(setCredentials({ accessToken: result.token }));
-      void navigate("/logged/timetables");
+      if (result.user.disabled) {
+        showSnackbar({
+          duration: 10000,
+          severity: "error",
+          message: `user ${result.user.username} disabled`,
+        });
+      } else {
+        dispatch(setCredentials({ accessToken: result.token }));
+        void navigate("/logged/timetables");
+      }
     } catch (e) {
       showErrorSnack(e);
     }
