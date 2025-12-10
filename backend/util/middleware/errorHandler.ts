@@ -9,7 +9,7 @@ const errorHandler = (
   _next: NextFunction
 ): void => {
   // logger.error(`${error.name} ${error.message}`);
-  logger.error(`${error}`);
+  logger.error(`${getStatusCode(error.name)} ${error}`);
 
   const status = getStatusCode(error.name) || 500;
   const message = error.message || "strange server error";

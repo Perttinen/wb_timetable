@@ -13,6 +13,7 @@ const getStatusCode = (errorName: string) => {
   errorStatusMap.set("TokenExpiredError", 401);
   errorStatusMap.set("AuthError", 401);
   errorStatusMap.set("SequelizeValidationError", 422);
+  errorStatusMap.set("TokenExpiredError", 403);
 
   return errorStatusMap.get(errorName);
 };

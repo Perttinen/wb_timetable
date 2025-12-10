@@ -7,6 +7,7 @@ interface IErrorWithMessage {
 }
 
 export const getErrorMessage = (error: unknown): string => {
+  console.log("error: ", error);
   if (
     typeof error === "object" &&
     error !== null &&

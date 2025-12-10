@@ -49,6 +49,8 @@ const ChangeDock = () => {
         }
       }
     } catch (e) {
+      console.log(e);
+
       showErrorSnack(e);
     }
   };
