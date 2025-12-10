@@ -90,8 +90,7 @@ const login = asyncHandler(
       String(process.env.JWT_ACCESS),
       {
         // Set this value also in auth/refresh!
-        expiresIn: 15,
-        // expiresIn: "15m",
+        expiresIn: "15m",
       }
     );
 
@@ -99,8 +98,7 @@ const login = asyncHandler(
       { id: safeUser.id },
       String(process.env.JWT_REFRESH),
       {
-        expiresIn: "30s",
-        // expiresIn: "7d",
+        expiresIn: "7d",
       }
     );
 
@@ -108,8 +106,7 @@ const login = asyncHandler(
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 1 * 30 * 1000,
-      // maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.status(200).json({ token: accessToken, user: safeUser });
@@ -198,8 +195,7 @@ const refresh = (
         },
         String(process.env.JWT_ACCESS),
         // Set this value also in auth/login!
-        { expiresIn: 15 }
-        // { expiresIn: "15m" }
+        { expiresIn: "15m" }
       );
 
       res.json({ accessToken });

@@ -1,5 +1,4 @@
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
 import { Form, Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -12,8 +11,7 @@ import {
   FormTextField,
 } from "../../components/FormComponents";
 import { setCredentials } from "../../redux/authSlice";
-import { useLoginMutation, useLogoutMutation } from "../../redux/api/authApi";
-import { api } from "../../redux/api/baseApi";
+import { useLoginMutation } from "../../redux/api/authApi";
 import showErrorSnack from "../../utils/showErrorSnack";
 import { authTypes } from "../../../../types";
 
@@ -26,12 +24,6 @@ const Login = () => {
   const navigate = useNavigate();
   const [login, { isLoading: isLogging }] = useLoginMutation();
   const dispatch = useDispatch();
-  const [logout] = useLogoutMutation();
-
-  useEffect(() => {
-    dispatch(api.util.resetApiState());
-    void logout();
-  }, []);
 
   const handleSubmit = async (values: authTypes.TLoginRequest) => {
     try {

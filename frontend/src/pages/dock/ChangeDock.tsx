@@ -15,7 +15,6 @@ import {
   useDeleteDockMutation,
   useGetDockQuery,
 } from "../../redux/api/dockApi";
-import { getErrorMessage } from "../../utils/getErrorMessage";
 import showErrorSnack from "../../utils/showErrorSnack";
 
 const ChangeDock = () => {
@@ -41,16 +40,12 @@ const ChangeDock = () => {
         const result = await changeDock({
           name: values.name,
           id: dock.id,
-        });
-        if (!("error" in result)) {
-          const message = `dock ${dock.name} changed to ${values.name}`;
-          showSnackbar({ message, severity: "success", duration: 5000 });
-          void navigate("/logged/docks");
-        }
+        }).unwrap();
+        const message = `dock ${dock.name} changed to ${result.name}`;
+        showSnackbar({ message, severity: "success", duration: 5000 });
+        void navigate("/logged/docks");
       }
     } catch (e) {
-      console.log(e);
-
       showErrorSnack(e);
     }
   };
@@ -58,19 +53,13 @@ const ChangeDock = () => {
   const handleDelete = async () => {
     try {
       if (dock?.id) {
-        const result = await deleteDock(dock.id);
-        if (!("error" in result)) {
-          const message = `dock ${dock.name} deleted`;
-          showSnackbar({ message, severity: "success", duration: 5000 });
-          void navigate("/logged/docks");
-        }
+        await deleteDock(dock.id).unwrap();
+        const message = `dock ${dock.name} deleted`;
+        showSnackbar({ message, severity: "success", duration: 5000 });
+        void navigate("/logged/docks");
       }
     } catch (e) {
-      showSnackbar({
-        severity: "error",
-        duration: 10000,
-        message: getErrorMessage(e),
-      });
+      showErrorSnack(e);
     }
   };
 

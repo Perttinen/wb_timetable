@@ -38,8 +38,10 @@ export const apiQuery = async (
 ) => {
   try {
     let result = await baseQuery(args, api, extraOptions);
-
-    if (result?.error?.status === 403 || result?.error?.status === 401) {
+    if (
+      result?.error?.status === 403 ||
+      getErrorMessage(result.error) === "token missing"
+    ) {
       const refreshResult = await baseQuery("/auth/refresh", api, extraOptions);
       if (isRefreshResponse(refreshResult?.data)) {
         api.dispatch(setCredentials({ ...refreshResult.data }));
@@ -49,60 +51,17 @@ export const apiQuery = async (
           refreshResult?.error?.status === 403 ||
           getErrorMessage(refreshResult.error).includes("You have to login")
         ) {
-          // console.log("rf: ", refreshResult);
           showErrorSnack(refreshResult.error);
-          // console.log("return refresh error: ", {
-          //   error: {
-          //     ...refreshResult.error,
-          //     data: { message: "Your login has expired." },
-          //   },
-          // });
-          // return {
-          //   error: {
-          //     ...refreshResult.error,
-          //     data: { message: "Your login has expired." },
-          //   },
-          // };
         }
-        console.log("return if not refreshed: ", refreshResult);
         return refreshResult;
       }
     }
-
-    // if ("error" in result && result.error) {
-    //   const message = getErrorMessage(result.error);
-    // if (message.includes("jwt expired")) {
-    //   console.log("return jwt expired: ", {
-    //     error: {
-    //       ...result.error,
-    //       data: { message: "Session expired. Please log in again." },
-    //     },
-    //   });
-
-    //   return {
-    //     error: {
-    //       ...result.error,
-    //       data: { message: "Session expired. Please log in again." },
-    //     },
-    //   };
-    // }
-    //   console.error(`Api error: ${message}`);
-    //   showErrorSnack(result.error);
-
-    //   console.log("return if session expired: ", { error: result.error });
-    //   return { error: result.error };
-    // }
     console.log(result);
 
-    console.log("return result: ", { data: result.data });
     return result;
-    // return { data: result.data };
   } catch (e) {
-    console.log("catch");
-    const message = getErrorMessage(e);
-    console.error("Unexpected exception:", message);
+    console.error("Unexpected exception:", getErrorMessage(e));
     showErrorSnack(e);
-    console.log("return unexpected: ", { error: e });
     return { error: e };
   }
 };
