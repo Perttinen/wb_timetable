@@ -43,6 +43,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
+    setAnchorElUser(null);
     void navigate("/");
     setTimeout(() => logout(), 500);
   };

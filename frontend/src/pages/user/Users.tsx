@@ -17,11 +17,9 @@ const Users = () => {
     text: "create new user",
   };
 
-  const isBusy = isLoadingUsers;
-
   return (
     <>
-      {isBusy && <Spinner />}
+      {isLoadingUsers && <Spinner />}
       {!isLoadingUsers && users && (
         <UniversalSelector
           onSelect={handleUserSelection}

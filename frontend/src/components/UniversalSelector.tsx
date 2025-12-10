@@ -106,7 +106,6 @@ const UniversalSelector = ({ onAdd, onSelect, caption, input }: Props) => {
           <Grid
             container
             direction="row"
-            width={1000}
             sx={{
               justifyContent: "space-between",
             }}

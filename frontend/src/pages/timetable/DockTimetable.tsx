@@ -45,7 +45,7 @@ const DockTimetable = ({ fullwidth }: Props) => {
     showSnackbar({
       message: "unable to refresh data!",
       severity: "error",
-      duration: 10000,
+      duration: 60000,
     });
   }
 
