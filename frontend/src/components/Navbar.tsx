@@ -78,7 +78,6 @@ const Navbar = () => {
       <AppBar position="sticky">
         <Container maxWidth="lg">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -94,7 +93,7 @@ const Navbar = () => {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              WB-LINE
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
