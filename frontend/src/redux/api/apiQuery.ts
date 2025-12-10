@@ -56,7 +56,6 @@ export const apiQuery = async (
         return refreshResult;
       }
     }
-    console.log(result);
 
     return result;
   } catch (e) {
