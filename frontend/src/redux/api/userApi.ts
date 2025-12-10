@@ -29,7 +29,6 @@ export const userApi = api.injectEndpoints({
 
     updateUser: builder.mutation<userTypes.TUserSafe, IUpdateUserArgs>({
       query: ({ id, body }) => {
-        console.log("updateUser request:", { id, body });
         return {
           url: `/user/${id}`,
           method: "PATCH",
