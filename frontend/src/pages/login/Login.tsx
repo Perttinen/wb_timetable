@@ -15,7 +15,6 @@ import { useLoginMutation } from "../../redux/api/authApi";
 import showErrorSnack from "../../utils/showErrorSnack";
 import { authTypes } from "../../../../types";
 import { showSnackbar } from "../../components/SnackbarProvider";
-import { error } from "console";
 
 const loginSchema = yup.object({
   username: yup.string().required("Password is required"),

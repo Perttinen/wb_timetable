@@ -14,7 +14,6 @@ import {
   Box,
   AppBar,
 } from "@mui/material";
-import AdbIcon from "@mui/icons-material/Adb";
 import { useTheme } from "@mui/material/styles";
 
 import { UserCard } from "./UserCard";
