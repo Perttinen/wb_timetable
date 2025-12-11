@@ -7,3 +7,5 @@ Waterbus timetable management tool.
 [Description](./project/description.md)
 
 [Working hours](./project/hours.md)
+
+[Tech Stack & Dependencies](./project/stack.md)

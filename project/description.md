@@ -81,6 +81,6 @@ To create content:
 ### Users (`/logged/users`) – _Admins only_
 
 - **Create user** – Add a new user with username, password, and user level.
-- **Select user** – Change user level, disable, or delete a user.
+- **Select user** – Change user level, disable or delete a user.
 
 ---
