@@ -1,16 +1,16 @@
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router"
 
-import Spinner from "../../components/Spinner";
-import UniversalSelector from "../../components/UniversalSelector";
-import { useGetLinesQuery } from "../../redux/api/lineApi";
+import Spinner from "../../components/Spinner"
+import UniversalSelector from "../../components/UniversalSelector"
+import { useGetLinesQuery } from "../../redux/api/lineApi"
 
 const Schedule = () => {
-  const { data: lines, isLoading: IsLoadingLines } = useGetLinesQuery();
-  const navigate = useNavigate();
+  const { data: lines, isLoading: IsLoadingLines } = useGetLinesQuery()
+  const navigate = useNavigate()
 
   const handleSelectLine = (lineId: number) => {
-    void navigate(`/logged/schedule/${lineId}`);
-  };
+    void navigate(`/logged/schedule/${lineId}`)
+  }
 
   return (
     <>
@@ -23,7 +23,7 @@ const Schedule = () => {
         />
       )}
     </>
-  );
-};
+  )
+}
 
-export default Schedule;
+export default Schedule

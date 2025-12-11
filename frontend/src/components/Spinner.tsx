@@ -1,4 +1,4 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material"
 
 const Spinner = () => {
   return (
@@ -18,7 +18,7 @@ const Spinner = () => {
     >
       <CircularProgress />
     </Box>
-  );
-};
+  )
+}
 
-export default Spinner;
+export default Spinner

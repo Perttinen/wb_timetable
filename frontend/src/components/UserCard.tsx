@@ -1,23 +1,23 @@
-import { Box, Button, CardContent, CardActions, Card } from "@mui/material";
-import { useState } from "react";
+import { Box, Button, CardContent, CardActions, Card } from "@mui/material"
+import { useState } from "react"
 
-import { UserDataTable } from "./UserDataTable";
-import { ChangePassword } from "./ChangePassword";
-import Spinner from "./Spinner";
-import { useGetMeQuery } from "../redux/api/authApi";
+import { UserDataTable } from "./UserDataTable"
+import { ChangePassword } from "./ChangePassword"
+import Spinner from "./Spinner"
+import { useGetMeQuery } from "../redux/api/authApi"
 
 export const UserCard = ({
   userCard,
   setUserCard,
 }: {
-  userCard: boolean;
-  setUserCard: (val: boolean) => void;
+  userCard: boolean
+  setUserCard: (val: boolean) => void
 }) => {
-  const { data: user, isLoading: isLoadingUser } = useGetMeQuery();
+  const { data: user, isLoading: isLoadingUser } = useGetMeQuery()
 
-  const [pwChangeDialog, setPwChangeDialog] = useState(false);
+  const [pwChangeDialog, setPwChangeDialog] = useState(false)
 
-  const isBusy = isLoadingUser;
+  const isBusy = isLoadingUser
 
   return (
     <div>
@@ -49,5 +49,5 @@ export const UserCard = ({
         </Card>
       )}
     </div>
-  );
-};
+  )
+}

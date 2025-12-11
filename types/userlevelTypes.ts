@@ -1,4 +1,4 @@
 export type TUserlevel = {
-  id: number;
-  userlevel: string;
-};
+  id: number
+  userlevel: string
+}

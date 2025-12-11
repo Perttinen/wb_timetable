@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
-import { throwNotFound } from "../errorThrowers";
+import { Request, Response } from "express"
+import { throwNotFound } from "../errorThrowers"
 
 const unknownEndpoint = (_request: Request, _response: Response) => {
-  throwNotFound("unknown endpoint");
-};
+  throwNotFound("unknown endpoint")
+}
 
-export default unknownEndpoint;
+export default unknownEndpoint

@@ -4,15 +4,15 @@ import {
   InferAttributes,
   InferCreationAttributes,
   CreationOptional,
-} from "@sequelize/core";
+} from "@sequelize/core"
 
-import db from "../db";
+import db from "../db"
 
-const { sequelize } = db;
+const { sequelize } = db
 
 class Dock extends Model<InferAttributes<Dock>, InferCreationAttributes<Dock>> {
-  declare id: CreationOptional<number>;
-  declare name: string;
+  declare id: CreationOptional<number>
+  declare name: string
 }
 
 Dock.init(
@@ -34,6 +34,6 @@ Dock.init(
     timestamps: false,
     modelName: "dock",
   }
-);
+)
 
-export default Dock;
+export default Dock

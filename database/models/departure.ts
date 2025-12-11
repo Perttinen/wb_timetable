@@ -4,20 +4,20 @@ import {
   InferAttributes,
   InferCreationAttributes,
   CreationOptional,
-} from "@sequelize/core";
-import db from "../db";
+} from "@sequelize/core"
+import db from "../db"
 
-import Line from "./line";
+import Line from "./line"
 
-const { sequelize } = db;
+const { sequelize } = db
 
 class Departure extends Model<
   InferAttributes<Departure>,
   InferCreationAttributes<Departure>
 > {
-  declare id: CreationOptional<number>;
-  declare lineId: number;
-  declare start: Date;
+  declare id: CreationOptional<number>
+  declare lineId: number
+  declare start: Date
 }
 
 Departure.init(
@@ -43,6 +43,6 @@ Departure.init(
     underscored: true,
     timestamps: false,
   }
-);
+)
 
-export default Departure;
+export default Departure

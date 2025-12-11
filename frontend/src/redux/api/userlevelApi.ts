@@ -1,5 +1,5 @@
-import { userlevelTypes } from "../../../../types";
-import { api } from "./baseApi";
+import { userlevelTypes } from "../../../../types"
+import { api } from "./baseApi"
 
 export const userlevelApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -7,6 +7,6 @@ export const userlevelApi = api.injectEndpoints({
       query: () => ({ url: "/userlevel", method: "GET" }),
     }),
   }),
-});
+})
 
-export const { useGetUserlevelsQuery } = userlevelApi;
+export const { useGetUserlevelsQuery } = userlevelApi

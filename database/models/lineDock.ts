@@ -4,22 +4,22 @@ import {
   InferAttributes,
   InferCreationAttributes,
   CreationOptional,
-} from "@sequelize/core";
+} from "@sequelize/core"
 
-import db from "../db";
+import db from "../db"
 
-import Dock from "./dock";
-import Line from "./line";
+import Dock from "./dock"
+import Line from "./line"
 
-const { sequelize } = db;
+const { sequelize } = db
 
 class LineDock extends Model<
   InferAttributes<LineDock>,
   InferCreationAttributes<LineDock>
 > {
-  declare id: CreationOptional<number>;
-  declare dockId: number;
-  declare lineId: number;
+  declare id: CreationOptional<number>
+  declare dockId: number
+  declare lineId: number
 }
 
 LineDock.init(
@@ -50,6 +50,6 @@ LineDock.init(
     timestamps: false,
     modelName: "lineDock",
   }
-);
+)
 
-export default LineDock;
+export default LineDock

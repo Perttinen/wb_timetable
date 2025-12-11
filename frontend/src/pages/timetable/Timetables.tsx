@@ -1,21 +1,21 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 
-import UniversalSelector from "../../components/UniversalSelector";
-import Spinner from "../../components/Spinner";
-import { useGetDocksQuery } from "../../redux/api/dockApi";
+import UniversalSelector from "../../components/UniversalSelector"
+import Spinner from "../../components/Spinner"
+import { useGetDocksQuery } from "../../redux/api/dockApi"
 
 const Timetables = () => {
-  const { data: docks, isLoading: isLoadingDocks } = useGetDocksQuery();
-  const navigate = useNavigate();
+  const { data: docks, isLoading: isLoadingDocks } = useGetDocksQuery()
+  const navigate = useNavigate()
 
-  const isLoggedRoute = location.pathname.includes("logged");
+  const isLoggedRoute = location.pathname.includes("logged")
 
   const handleSelectTimetable = (dockId: number | null) => {
     const dockTimetablePath = isLoggedRoute
       ? `/logged/timetables/${dockId}`
-      : `/timetables/${dockId}`;
-    void navigate(dockTimetablePath);
-  };
+      : `/timetables/${dockId}`
+    void navigate(dockTimetablePath)
+  }
 
   return (
     <>
@@ -28,7 +28,7 @@ const Timetables = () => {
         />
       )}
     </>
-  );
-};
+  )
+}
 
-export default Timetables;
+export default Timetables

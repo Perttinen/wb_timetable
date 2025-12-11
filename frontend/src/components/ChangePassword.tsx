@@ -1,24 +1,24 @@
-import { Form, Formik } from "formik";
-import { Box, Modal } from "@mui/material";
-import * as Yup from "yup";
+import { Form, Formik } from "formik"
+import { Box, Modal } from "@mui/material"
+import * as Yup from "yup"
 
 import {
   FormGroupContainer,
   FormMainContainer,
   FormTextField,
   FormButtons,
-} from "./FormComponents";
-import { showSnackbar } from "./SnackbarProvider";
-import { getErrorMessage } from "../utils/getErrorMessage";
-import Spinner from "./Spinner";
-import { useUpdateUserMutation } from "../redux/api/userApi";
-import { useCheckPasswordMutation } from "../redux/api/authApi";
-import { TUserSafe } from "../../../types/userTypes";
+} from "./FormComponents"
+import { showSnackbar } from "./SnackbarProvider"
+import { getErrorMessage } from "../utils/getErrorMessage"
+import Spinner from "./Spinner"
+import { useUpdateUserMutation } from "../redux/api/userApi"
+import { useCheckPasswordMutation } from "../redux/api/authApi"
+import { TUserSafe } from "../../../types/userTypes"
 
 interface IConfirmedPasswords {
-  currentPassword: string;
-  newPassword: string;
-  confirmPassword: string;
+  currentPassword: string
+  newPassword: string
+  confirmPassword: string
 }
 
 export const ChangePassword = ({
@@ -26,13 +26,13 @@ export const ChangePassword = ({
   setPwChangeDialog,
   user,
 }: {
-  pwChangeDialog: boolean;
-  setPwChangeDialog: (val: boolean) => void;
-  user: TUserSafe;
+  pwChangeDialog: boolean
+  setPwChangeDialog: (val: boolean) => void
+  user: TUserSafe
 }) => {
   const handleClose = () => {
-    setPwChangeDialog(false);
-  };
+    setPwChangeDialog(false)
+  }
 
   const passwordSchema = Yup.object().shape({
     currentPassword: Yup.string()
@@ -46,45 +46,45 @@ export const ChangePassword = ({
     confirmPassword: Yup.string()
       .required("Confirmation required!")
       .oneOf([Yup.ref("newPassword")], "Passwords must match"),
-  });
+  })
 
-  const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
-  const [checkPw, { isLoading: isCheckingPw }] = useCheckPasswordMutation();
+  const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation()
+  const [checkPw, { isLoading: isCheckingPw }] = useCheckPasswordMutation()
 
   const handleSubmit = async (values: IConfirmedPasswords) => {
     const payload = {
       body: { password: values.newPassword },
       id: String(user.id),
-    };
+    }
 
     try {
-      const pwOk = await checkPw({ password: values.currentPassword });
+      const pwOk = await checkPw({ password: values.currentPassword })
 
       if (pwOk.data) {
-        await updateUser(payload);
+        await updateUser(payload)
         showSnackbar({
           duration: 5000,
           severity: "success",
           message: "Password updated succesfully",
-        });
-        setPwChangeDialog(false);
+        })
+        setPwChangeDialog(false)
       }
     } catch (e) {
       showSnackbar({
         duration: 10000,
         severity: "error",
         message: getErrorMessage(e),
-      });
+      })
     }
-  };
+  }
 
   const initialValues: IConfirmedPasswords = {
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
-  };
+  }
 
-  const isBusy = isCheckingPw || isUpdatingUser;
+  const isBusy = isCheckingPw || isUpdatingUser
 
   return (
     <>
@@ -139,5 +139,5 @@ export const ChangePassword = ({
         </Box>
       </Modal>
     </>
-  );
-};
+  )
+}

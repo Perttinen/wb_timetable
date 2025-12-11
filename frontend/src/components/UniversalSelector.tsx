@@ -1,41 +1,41 @@
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material/styles";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import Button from "@mui/material/Button"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+import { useTheme } from "@mui/material/styles"
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined"
 
-import { dockTypes, userTypes, lineTypes } from "../../../types";
-import { PropsWithChildren } from "react";
+import { dockTypes, userTypes, lineTypes } from "../../../types"
+import { PropsWithChildren } from "react"
 
 type DockInput = {
-  type: "docks";
-  data: dockTypes.TDock[];
-};
+  type: "docks"
+  data: dockTypes.TDock[]
+}
 
 type LineInput = {
-  type: "lines";
-  data: lineTypes.TLineResponse[];
-};
+  type: "lines"
+  data: lineTypes.TLineResponse[]
+}
 
 type UserInput = {
-  type: "users";
-  data: userTypes.TUserSafe[];
-};
+  type: "users"
+  data: userTypes.TUserSafe[]
+}
 
 interface Props {
-  onSelect: (id: number) => void;
-  onAdd?: { function: () => void; text: string };
-  caption: string;
-  input: DockInput | LineInput | UserInput;
+  onSelect: (id: number) => void
+  onAdd?: { function: () => void; text: string }
+  caption: string
+  input: DockInput | LineInput | UserInput
 }
 
 type ListButtonProps = PropsWithChildren<{
-  id: number;
-  onClick: (id: number) => void;
-}>;
+  id: number
+  onClick: (id: number) => void
+}>
 
 const ListButton = (props: ListButtonProps) => {
-  const { id, onClick } = props;
+  const { id, onClick } = props
   return (
     <Button
       onClick={() => onClick(id)}
@@ -49,11 +49,11 @@ const ListButton = (props: ListButtonProps) => {
     >
       {props.children}
     </Button>
-  );
-};
+  )
+}
 
 const UniversalSelector = ({ onAdd, onSelect, caption, input }: Props) => {
-  const theme = useTheme();
+  const theme = useTheme()
 
   const createButtons = () => {
     if (input.type === "docks") {
@@ -65,7 +65,7 @@ const UniversalSelector = ({ onAdd, onSelect, caption, input }: Props) => {
         >
           <Typography sx={{ fontSize: "1rem" }}>{dock.name}</Typography>
         </ListButton>
-      ));
+      ))
     }
 
     if (input.type === "lines") {
@@ -86,7 +86,7 @@ const UniversalSelector = ({ onAdd, onSelect, caption, input }: Props) => {
               : "\u00A0"}
           </Typography>
         </ListButton>
-      ));
+      ))
     }
 
     if (input.type === "users") {
@@ -98,9 +98,9 @@ const UniversalSelector = ({ onAdd, onSelect, caption, input }: Props) => {
         >
           <Typography sx={{ fontSize: "1rem" }}>{user.username}</Typography>
         </ListButton>
-      ));
+      ))
     }
-  };
+  }
 
   return (
     <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
@@ -138,7 +138,7 @@ const UniversalSelector = ({ onAdd, onSelect, caption, input }: Props) => {
         {createButtons()}
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default UniversalSelector;
+export default UniversalSelector

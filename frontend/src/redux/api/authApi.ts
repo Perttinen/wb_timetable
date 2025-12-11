@@ -1,6 +1,6 @@
-import { api } from "./baseApi";
-import { logOut, setCredentials } from "../authSlice";
-import { authTypes, userTypes } from "../../../../types";
+import { api } from "./baseApi"
+import { logOut, setCredentials } from "../authSlice"
+import { authTypes, userTypes } from "../../../../types"
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -15,16 +15,16 @@ export const authApi = api.injectEndpoints({
     logout: builder.mutation<void, void>({
       query: () => ({ url: "/auth/logout", method: "POST" }),
       onQueryStarted(arg, { dispatch }) {
-        dispatch(logOut());
-        dispatch(api.util.resetApiState());
+        dispatch(logOut())
+        dispatch(api.util.resetApiState())
       },
     }),
 
     refresh: builder.mutation<{ accessToken: string }, void>({
       query: () => ({ url: "/auth/refresh", method: "GET" }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        const { data } = await queryFulfilled;
-        dispatch(setCredentials({ accessToken: data.accessToken }));
+        const { data } = await queryFulfilled
+        dispatch(setCredentials({ accessToken: data.accessToken }))
       },
     }),
 
@@ -41,7 +41,7 @@ export const authApi = api.injectEndpoints({
       }),
     }),
   }),
-});
+})
 
 export const {
   useLoginMutation,
@@ -49,4 +49,4 @@ export const {
   useRefreshMutation,
   useGetMeQuery,
   useCheckPasswordMutation,
-} = authApi;
+} = authApi

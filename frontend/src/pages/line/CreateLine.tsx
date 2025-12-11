@@ -1,7 +1,7 @@
-import { Box, Button } from "@mui/material";
-import { FieldArray, Form, Formik } from "formik";
-import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { Box, Button } from "@mui/material"
+import { FieldArray, Form, Formik } from "formik"
+import * as Yup from "yup"
+import { useNavigate } from "react-router-dom"
 
 import {
   FormSelect,
@@ -9,19 +9,19 @@ import {
   FormGroupContainer,
   FormMainContainer,
   FormButtons,
-} from "../../components/FormComponents";
-import { showSnackbar } from "../../components/SnackbarProvider";
-import Spinner from "../../components/Spinner";
-import { useGetDocksQuery } from "../../redux/api/dockApi";
-import { useAddLineMutation } from "../../redux/api/lineApi";
-import showErrorSnack from "../../utils/showErrorSnack";
+} from "../../components/FormComponents"
+import { showSnackbar } from "../../components/SnackbarProvider"
+import Spinner from "../../components/Spinner"
+import { useGetDocksQuery } from "../../redux/api/dockApi"
+import { useAddLineMutation } from "../../redux/api/lineApi"
+import showErrorSnack from "../../utils/showErrorSnack"
 
 const CreateLine = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [addLine, { isLoading: isAddingLine }] = useAddLineMutation();
+  const [addLine, { isLoading: isAddingLine }] = useAddLineMutation()
 
-  const { data: docks, isLoading: isLoadingDocks } = useGetDocksQuery();
+  const { data: docks, isLoading: isLoadingDocks } = useGetDocksQuery()
 
   const validationSchema = Yup.object().shape({
     startDockId: Yup.number()
@@ -41,52 +41,52 @@ const CreateLine = () => {
     endDockId: Yup.number()
       .min(0, "End point is required!")
       .required("End point is required!"),
-  });
+  })
 
   type TStop = {
-    dockId: number;
-    delayFromStart: number;
-  };
+    dockId: number
+    delayFromStart: number
+  }
 
   type TRouteFormValues = {
-    startDockId: number;
-    stops: TStop[];
-    endDockId: number;
-  };
+    startDockId: number
+    stops: TStop[]
+    endDockId: number
+  }
 
   const docksAreUnique = (values: TRouteFormValues) => {
-    const ids: number[] = [];
-    ids.push(values.startDockId);
-    ids.push(values.endDockId);
-    values.stops.forEach((stop) => ids.push(stop.dockId));
-    const distinctIds = [...new Set(ids)];
-    return ids.length === distinctIds.length;
-  };
+    const ids: number[] = []
+    ids.push(values.startDockId)
+    ids.push(values.endDockId)
+    values.stops.forEach((stop) => ids.push(stop.dockId))
+    const distinctIds = [...new Set(ids)]
+    return ids.length === distinctIds.length
+  }
 
   const handleSubmit = async (values: TRouteFormValues) => {
     try {
       if (docksAreUnique(values)) {
-        const result = await addLine(values).unwrap();
+        const result = await addLine(values).unwrap()
         if (result) {
-          const stops = result.stopDocks?.map((stop) => stop.name).join(" | ");
-          const via = stops ? `via: ${stops}` : "";
-          const message = `line ${result.startDock.name} - ${result.endDock.name} ${via}  created`;
-          showSnackbar({ message, severity: "success", duration: 5000 });
-          void navigate("/logged/lines");
+          const stops = result.stopDocks?.map((stop) => stop.name).join(" | ")
+          const via = stops ? `via: ${stops}` : ""
+          const message = `line ${result.startDock.name} - ${result.endDock.name} ${via}  created`
+          showSnackbar({ message, severity: "success", duration: 5000 })
+          void navigate("/logged/lines")
         }
       } else {
         showSnackbar({
           message: "All docks should be unique!",
           severity: "error",
           duration: 10000,
-        });
+        })
       }
     } catch (e) {
-      showErrorSnack(e);
+      showErrorSnack(e)
     }
-  };
+  }
 
-  const isBusy = isAddingLine || isLoadingDocks;
+  const isBusy = isAddingLine || isLoadingDocks
 
   return (
     <>
@@ -103,7 +103,7 @@ const CreateLine = () => {
                 }}
                 validationSchema={validationSchema}
                 onSubmit={async (values) => {
-                  await handleSubmit(values);
+                  await handleSubmit(values)
                 }}
               >
                 {(props) => (
@@ -123,9 +123,9 @@ const CreateLine = () => {
                         <div>
                           {props.values.stops.length > 0 &&
                             props.values.stops.map((_p, index) => {
-                              const dock = `stops[${index}].dockId`;
-                              const time = `stops[${index}].delayFromStart`;
-                              const fieldLabel = `dock`;
+                              const dock = `stops[${index}].dockId`
+                              const time = `stops[${index}].delayFromStart`
+                              const fieldLabel = `dock`
                               return (
                                 <FormGroupContainer
                                   key={index}
@@ -167,7 +167,7 @@ const CreateLine = () => {
                                     </Box>
                                   </>
                                 </FormGroupContainer>
-                              );
+                              )
                             })}
                           <Box
                             display={"flex"}
@@ -211,7 +211,7 @@ const CreateLine = () => {
         </Box>
       )}
     </>
-  );
-};
+  )
+}
 
-export default CreateLine;
+export default CreateLine

@@ -1,7 +1,7 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit"
 
-import authReducer from "./authSlice";
-import { api } from "./api/baseApi";
+import authReducer from "./authSlice"
+import { api } from "./api/baseApi"
 
 export const store = configureStore({
   devTools: process.env.NODE_ENV === "development" ? true : false,
@@ -11,7 +11,7 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(api.middleware),
-});
+})
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch

@@ -1,6 +1,6 @@
-import { DataTypes } from "@sequelize/core";
-import { Dock } from "../models";
-import type { Migration } from "../db";
+import { DataTypes } from "@sequelize/core"
+import { Dock } from "../models"
+import type { Migration } from "../db"
 
 export const up: Migration = async ({ context: queryInterface }) => {
   await queryInterface.createTable("lines", {
@@ -19,8 +19,8 @@ export const up: Migration = async ({ context: queryInterface }) => {
       references: { model: Dock, key: "id" },
       allowNull: false,
     },
-  });
-};
+  })
+}
 export const down: Migration = async ({ context: queryInterface }) => {
-  await queryInterface.dropTable("lines");
-};
+  await queryInterface.dropTable("lines")
+}

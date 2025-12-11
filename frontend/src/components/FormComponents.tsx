@@ -1,18 +1,18 @@
-import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
-import { DatePicker, TimePicker } from "@mui/x-date-pickers";
-import { Dayjs } from "dayjs";
-import { Field, useField } from "formik";
-import { PropsWithChildren } from "react";
+import { Box, Button, MenuItem, TextField, Typography } from "@mui/material"
+import { DatePicker, TimePicker } from "@mui/x-date-pickers"
+import { Dayjs } from "dayjs"
+import { Field, useField } from "formik"
+import { PropsWithChildren } from "react"
 
 type FormButtonsPropsType = {
-  onCancel?: (val: boolean) => void;
-  onDelete?: (val: boolean) => void;
-  submitLabel: string;
-  buttons: Array<"cancel" | "delete" | "save">;
-  disabledOnSubmit?: boolean;
-};
+  onCancel?: (val: boolean) => void
+  onDelete?: (val: boolean) => void
+  submitLabel: string
+  buttons: Array<"cancel" | "delete" | "save">
+  disabledOnSubmit?: boolean
+}
 const FormButtons = (props: FormButtonsPropsType) => {
-  const { buttons, submitLabel, onCancel, onDelete, disabledOnSubmit } = props;
+  const { buttons, submitLabel, onCancel, onDelete, disabledOnSubmit } = props
 
   return (
     <Box display={"flex"} flexDirection={"row"} justifyContent={"space-evenly"}>
@@ -42,12 +42,12 @@ const FormButtons = (props: FormButtonsPropsType) => {
         </Button>
       )}
     </Box>
-  );
-};
+  )
+}
 
 type FormMainContainerProps = PropsWithChildren<{
-  caption?: string;
-}>;
+  caption?: string
+}>
 const FormMainContainer = (props: FormMainContainerProps) => {
   return (
     <Box
@@ -70,12 +70,12 @@ const FormMainContainer = (props: FormMainContainerProps) => {
       )}
       {props.children}
     </Box>
-  );
-};
+  )
+}
 
 type FormGroupContainerProps = PropsWithChildren<{
-  caption?: string;
-}>;
+  caption?: string
+}>
 const FormGroupContainer = (props: FormGroupContainerProps) => {
   return (
     <Box
@@ -97,16 +97,16 @@ const FormGroupContainer = (props: FormGroupContainerProps) => {
       )}
       {props.children}
     </Box>
-  );
-};
+  )
+}
 
 type FormTextFieldProps = {
-  name: string;
-  label: string;
-  type?: string;
-};
+  name: string
+  label: string
+  type?: string
+}
 const FormTextField = (props: FormTextFieldProps) => {
-  const [field, meta] = useField(props);
+  const [field, meta] = useField(props)
   return (
     <TextField
       {...field}
@@ -117,16 +117,16 @@ const FormTextField = (props: FormTextFieldProps) => {
       error={meta.touched && Boolean(meta.error)}
       helperText={meta.touched && meta.error}
     />
-  );
-};
+  )
+}
 
 type FormSelectProps<T> = {
-  selectKey: keyof T;
-  selectValue: keyof T;
-  options: T[];
-  name: string;
-  label: string;
-};
+  selectKey: keyof T
+  selectValue: keyof T
+  options: T[]
+  name: string
+  label: string
+}
 // const FormSelect = <T extends object>(props: FormSelectProps<T>) => {
 const FormSelect = <T extends object>({
   options,
@@ -134,7 +134,7 @@ const FormSelect = <T extends object>({
   selectValue,
   ...props
 }: FormSelectProps<T>) => {
-  const [field, meta] = useField(props);
+  const [field, meta] = useField(props)
   return (
     <TextField
       {...field}
@@ -159,20 +159,20 @@ const FormSelect = <T extends object>({
         </MenuItem>
       ))}
     </TextField>
-  );
-};
+  )
+}
 
 type FormTimeOrDatePickerProps<T> = {
-  name: string;
-  label: string;
+  name: string
+  label: string
   setFieldValue: (
     field: string,
     value: React.SetStateAction<T>,
     shouldValidate?: boolean
-  ) => void;
-};
+  ) => void
+}
 const FormTimePicker = (props: FormTimeOrDatePickerProps<Dayjs | null>) => {
-  const [field] = useField<Dayjs | null>(props.name);
+  const [field] = useField<Dayjs | null>(props.name)
   return (
     <Field name={props.name}>
       {() => (
@@ -180,16 +180,16 @@ const FormTimePicker = (props: FormTimeOrDatePickerProps<Dayjs | null>) => {
           label={props.label}
           value={field.value}
           onChange={(newValue): void => {
-            props.setFieldValue(props.name, newValue);
+            props.setFieldValue(props.name, newValue)
           }}
         />
       )}
     </Field>
-  );
-};
+  )
+}
 
 const FormDatePicker = (props: FormTimeOrDatePickerProps<Dayjs | null>) => {
-  const [field] = useField<Dayjs | null>(props.name);
+  const [field] = useField<Dayjs | null>(props.name)
   return (
     <Field name={props.name}>
       {() => (
@@ -197,13 +197,13 @@ const FormDatePicker = (props: FormTimeOrDatePickerProps<Dayjs | null>) => {
           label={props.label}
           value={field.value}
           onChange={(newValue): void => {
-            props.setFieldValue(props.name, newValue);
+            props.setFieldValue(props.name, newValue)
           }}
         />
       )}
     </Field>
-  );
-};
+  )
+}
 
 export {
   FormButtons,
@@ -213,4 +213,4 @@ export {
   FormSelect,
   FormTextField,
   FormTimePicker,
-};
+}

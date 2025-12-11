@@ -1,34 +1,34 @@
-import { Dock, Line, User, Userlevel } from "../../database/models";
+import { Dock, Line, User, Userlevel } from "../../database/models"
 
-import { lineTypes, userTypes, userlevelTypes } from "../../types";
-import { throwValidationError } from "./errorThrowers";
+import { lineTypes, userTypes, userlevelTypes } from "../../types"
+import { throwValidationError } from "./errorThrowers"
 
 export const getUserlevels = async (): Promise<userlevelTypes.TUserlevel[]> =>
-  (await Userlevel.findAll()).map((ul) => ul.toJSON());
+  (await Userlevel.findAll()).map((ul) => ul.toJSON())
 
 export const validateUserlevelInput = ({
   requestedUserlevels,
   allUserlevels,
 }: {
-  requestedUserlevels: string[];
-  allUserlevels: userlevelTypes.TUserlevel[];
+  requestedUserlevels: string[]
+  allUserlevels: userlevelTypes.TUserlevel[]
 }): number[] => {
-  const requestedSet = new Set(requestedUserlevels);
+  const requestedSet = new Set(requestedUserlevels)
 
   const validatedIds = allUserlevels
     .filter(({ userlevel }) => requestedSet.has(userlevel))
-    .map(({ id }) => id);
+    .map(({ id }) => id)
 
   const isValid =
     validatedIds.length > 0 &&
-    requestedUserlevels.length === validatedIds.length;
+    requestedUserlevels.length === validatedIds.length
 
   if (!isValid) {
-    throwValidationError("Userlevels are invalid");
+    throwValidationError("Userlevels are invalid")
   }
 
-  return validatedIds;
-};
+  return validatedIds
+}
 
 export const dockIdsAreValid = async (
   line: lineTypes.TLineRequest
@@ -37,31 +37,31 @@ export const dockIdsAreValid = async (
     line.startDockId,
     line.endDockId,
     ...line.stops.map(({ dockId }) => dockId),
-  ];
+  ]
 
-  const rawDocks = await Dock.findAll();
+  const rawDocks = await Dock.findAll()
 
-  const validDockIds = new Set(rawDocks.map((dock) => dock.id));
+  const validDockIds = new Set(rawDocks.map((dock) => dock.id))
 
-  return idsToValidate.every((id) => validDockIds.has(id));
-};
+  return idsToValidate.every((id) => validDockIds.has(id))
+}
 
 interface IUserRaw {
-  password: string;
-  id: number;
-  disabled: boolean;
-  userlevels: { userlevel: string; id: number }[];
-  username: string;
+  password: string
+  id: number
+  disabled: boolean
+  userlevels: { userlevel: string; id: number }[]
+  username: string
 }
 
 export const userlevelsToArray = (user: User): userTypes.TUser => {
-  const jsonUser: IUserRaw = user.toJSON();
+  const jsonUser: IUserRaw = user.toJSON()
 
   return {
     ...jsonUser,
     userlevels: jsonUser.userlevels.map((userlevel) => userlevel.userlevel),
-  };
-};
+  }
+}
 
 export const addUserlevels = {
   include: [
@@ -73,7 +73,7 @@ export const addUserlevels = {
       },
     },
   ],
-};
+}
 
 export const lineIncludes = [
   {
@@ -91,15 +91,15 @@ export const lineIncludes = [
       attributes: ["delayFromStart"],
     },
   },
-];
+]
 
 export const createReturnableLine = (
   line: Line
 ): lineTypes.TLineResponse | null => {
-  const { id, startDock, endDock, docks }: lineTypes.TLineRaw = line.toJSON();
+  const { id, startDock, endDock, docks }: lineTypes.TLineRaw = line.toJSON()
 
   if (!id || !startDock || !endDock || !docks) {
-    return null;
+    return null
   }
 
   const stopDocks = docks
@@ -108,7 +108,7 @@ export const createReturnableLine = (
       name: dock.name,
       delayFromStart: dock.lineDock.delayFromStart,
     }))
-    .sort((a, b) => a.delayFromStart - b.delayFromStart);
+    .sort((a, b) => a.delayFromStart - b.delayFromStart)
 
   return {
     id,
@@ -121,19 +121,19 @@ export const createReturnableLine = (
       id: endDock.id,
     },
     stopDocks,
-  };
-};
+  }
+}
 
 interface IFormatLinesEntry {
-  lines: lineTypes.TLineRaw[];
-  dockId: number;
+  lines: lineTypes.TLineRaw[]
+  dockId: number
 }
 
 interface IFormattedLine {
-  lineId: number;
-  endDock: string;
-  delay: number;
-  via: string[];
+  lineId: number
+  endDock: string
+  delay: number
+  via: string[]
 }
 
 export const formatLines = ({
@@ -141,29 +141,29 @@ export const formatLines = ({
   dockId,
 }: IFormatLinesEntry): IFormattedLine[] =>
   lines.flatMap(({ id, docks, startDock, endDock }) => {
-    if (!startDock || !endDock) return [];
+    if (!startDock || !endDock) return []
 
     if (!docks?.length) {
       return startDock.id === dockId
         ? [{ lineId: id, endDock: endDock.name, delay: 0, via: [] }]
-        : [];
+        : []
     }
 
     const sortedDocks = [...docks].sort(
       (a, b) => a.lineDock.delayFromStart - b.lineDock.delayFromStart
-    );
+    )
 
-    const isStartDock = startDock.id === dockId;
-    const stopDock = sortedDocks.find((d) => d.id === dockId);
+    const isStartDock = startDock.id === dockId
+    const stopDock = sortedDocks.find((d) => d.id === dockId)
 
-    if (!isStartDock && !stopDock) return [];
+    if (!isStartDock && !stopDock) return []
 
-    const delay = isStartDock ? 0 : stopDock!.lineDock.delayFromStart;
+    const delay = isStartDock ? 0 : stopDock!.lineDock.delayFromStart
     const via = isStartDock
       ? sortedDocks.map((dock) => dock.name)
       : sortedDocks
           .slice(sortedDocks.indexOf(stopDock!) + 1)
-          .map((dock) => dock.name);
+          .map((dock) => dock.name)
 
-    return [{ lineId: id, endDock: endDock.name, delay, via }];
-  });
+    return [{ lineId: id, endDock: endDock.name, delay, via }]
+  })

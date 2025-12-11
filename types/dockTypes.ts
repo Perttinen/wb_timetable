@@ -1,4 +1,4 @@
 export type TDock = {
-  id: number;
-  name: string;
-};
+  id: number
+  name: string
+}

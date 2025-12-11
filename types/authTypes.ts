@@ -1,11 +1,11 @@
-import { TUserSafe } from "./userTypes";
+import { TUserSafe } from "./userTypes"
 
 export type TLoginResponse = {
-  user: TUserSafe;
-  token: string;
-};
+  user: TUserSafe
+  token: string
+}
 
 export type TLoginRequest = {
-  username: string;
-  password: string;
-};
+  username: string
+  password: string
+}

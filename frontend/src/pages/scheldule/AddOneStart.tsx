@@ -1,55 +1,55 @@
-import { DateTimePicker } from "@mui/x-date-pickers";
-import dayjs, { Dayjs } from "dayjs";
-import { Field, Form, Formik } from "formik";
-import { useNavigate, useParams } from "react-router-dom";
+import { DateTimePicker } from "@mui/x-date-pickers"
+import dayjs, { Dayjs } from "dayjs"
+import { Field, Form, Formik } from "formik"
+import { useNavigate, useParams } from "react-router-dom"
 
 import {
   FormGroupContainer,
   FormMainContainer,
   FormButtons,
-} from "../../components/FormComponents";
-import { showSnackbar } from "../../components/SnackbarProvider";
-import Spinner from "../../components/Spinner";
-import { useAddDepartureMutation } from "../../redux/api/departureApi";
-import showErrorSnack from "../../utils/showErrorSnack";
+} from "../../components/FormComponents"
+import { showSnackbar } from "../../components/SnackbarProvider"
+import Spinner from "../../components/Spinner"
+import { useAddDepartureMutation } from "../../redux/api/departureApi"
+import showErrorSnack from "../../utils/showErrorSnack"
 
 const AddOneStart = () => {
-  const navigate = useNavigate();
-  const { lineId } = useParams<{ lineId: string }>();
+  const navigate = useNavigate()
+  const { lineId } = useParams<{ lineId: string }>()
   const [addDeparture, { isLoading: isAddingDeparture }] =
-    useAddDepartureMutation();
+    useAddDepartureMutation()
 
   interface FormValues {
-    start: Dayjs;
-    lineId: number | "";
+    start: Dayjs
+    lineId: number | ""
   }
 
   const initialValues: FormValues = {
     start: dayjs(),
     lineId: Number(lineId),
-  };
+  }
 
   const handleSubmit = async (values: FormValues) => {
     const parsedValues = {
       start: values.start.toDate(),
       lineId: Number(values.lineId),
-    };
+    }
     try {
-      const result = await addDeparture(parsedValues);
+      const result = await addDeparture(parsedValues)
       if (result) {
         showSnackbar({
           message: "start successfully added!",
           severity: "success",
           duration: 5000,
-        });
-        void navigate("/logged/schedule");
+        })
+        void navigate("/logged/schedule")
       }
     } catch (e) {
-      showErrorSnack(e);
+      showErrorSnack(e)
     }
-  };
+  }
 
-  const isBusy = isAddingDeparture;
+  const isBusy = isAddingDeparture
 
   return (
     <>
@@ -65,7 +65,7 @@ const AddOneStart = () => {
                       label="Departure Time"
                       value={values.start}
                       onChange={(newValue): void => {
-                        void setFieldValue("start", newValue);
+                        void setFieldValue("start", newValue)
                       }}
                     />
                   )}
@@ -81,7 +81,7 @@ const AddOneStart = () => {
         </Formik>
       </FormMainContainer>
     </>
-  );
-};
+  )
+}
 
-export default AddOneStart;
+export default AddOneStart

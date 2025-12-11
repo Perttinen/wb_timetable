@@ -1,6 +1,6 @@
-import { Form, Formik } from "formik";
-import * as Yup from "yup";
-import { useNavigate } from "react-router";
+import { Form, Formik } from "formik"
+import * as Yup from "yup"
+import { useNavigate } from "react-router"
 
 import {
   FormButtons,
@@ -8,58 +8,58 @@ import {
   FormMainContainer,
   FormSelect,
   FormTextField,
-} from "../../components/FormComponents";
-import { showSnackbar } from "../../components/SnackbarProvider";
-import Spinner from "../../components/Spinner";
-import { getErrorMessage } from "../../utils/getErrorMessage";
-import { useAddUserMutation } from "../../redux/api/userApi";
-import { useGetUserlevelsQuery } from "../../redux/api/userlevelApi";
+} from "../../components/FormComponents"
+import { showSnackbar } from "../../components/SnackbarProvider"
+import Spinner from "../../components/Spinner"
+import { getErrorMessage } from "../../utils/getErrorMessage"
+import { useAddUserMutation } from "../../redux/api/userApi"
+import { useGetUserlevelsQuery } from "../../redux/api/userlevelApi"
 
 const CreateUser = () => {
-  const navigate = useNavigate();
-  const [addUser, { isLoading: isAddingUser }] = useAddUserMutation();
+  const navigate = useNavigate()
+  const [addUser, { isLoading: isAddingUser }] = useAddUserMutation()
   const { data: userlevels, isLoading: isLoadingUserlevels } =
-    useGetUserlevelsQuery();
+    useGetUserlevelsQuery()
 
   const userSchema = Yup.object().shape({
     username: Yup.string()
       .min(2, "Name must be 2-32 charecters!")
       .max(12, "Name must be 2-32 charecters!")
       .required("Name is required!"),
-  });
+  })
 
   interface INewUser {
-    username: string;
-    password: string;
-    userlevel: string;
+    username: string
+    password: string
+    userlevel: string
   }
 
   const handleSubmit = async (values: INewUser) => {
     const newUser = {
       ...values,
       userlevel: values.userlevel === "admin" ? ["user", "admin"] : ["user"],
-    };
+    }
 
     try {
-      const result = await addUser(newUser).unwrap();
+      const result = await addUser(newUser).unwrap()
       if (result) {
         showSnackbar({
           message: `user ${values.username} created`,
           duration: 5000,
           severity: "success",
-        });
-        void navigate("/logged/users");
+        })
+        void navigate("/logged/users")
       }
     } catch (e) {
-      let message = getErrorMessage(e);
+      let message = getErrorMessage(e)
       if (message === "Validation error") {
-        message = `${newUser.username} already exists`;
+        message = `${newUser.username} already exists`
       }
-      showSnackbar({ severity: "error", duration: 6000, message });
+      showSnackbar({ severity: "error", duration: 6000, message })
     }
-  };
+  }
 
-  const isBusy = isAddingUser || isLoadingUserlevels;
+  const isBusy = isAddingUser || isLoadingUserlevels
 
   return (
     <>
@@ -102,7 +102,7 @@ const CreateUser = () => {
         </FormMainContainer>
       )}
     </>
-  );
-};
+  )
+}
 
-export default CreateUser;
+export default CreateUser

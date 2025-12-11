@@ -1,5 +1,5 @@
-import { Fragment, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { Fragment, useEffect } from "react"
+import { useParams, useLocation } from "react-router-dom"
 import {
   Typography,
   TableContainer,
@@ -10,17 +10,17 @@ import {
   Stack,
   TableHead,
   Paper,
-} from "@mui/material";
-import dayjs from "dayjs";
+} from "@mui/material"
+import dayjs from "dayjs"
 
-import { departureTypes } from "../../../../types";
-import Spinner from "../../components/Spinner";
-import { showSnackbar } from "../../components/SnackbarProvider";
-import { useGetDockQuery } from "../../redux/api/dockApi";
-import { useGetTimetableQuery } from "../../redux/api/departureApi";
+import { departureTypes } from "../../../../types"
+import Spinner from "../../components/Spinner"
+import { showSnackbar } from "../../components/SnackbarProvider"
+import { useGetDockQuery } from "../../redux/api/dockApi"
+import { useGetTimetableQuery } from "../../redux/api/departureApi"
 
 interface Props {
-  fullwidth: boolean;
+  fullwidth: boolean
 }
 
 const baseStyle = {
@@ -28,63 +28,63 @@ const baseStyle = {
   fontWeight: "bold",
   bgcolor: "#0a0a0a",
   fontSize: "1.3rem",
-};
+}
 
 const viaCellStyle = {
   ...baseStyle,
   fontSize: "1rem",
   lineHeight: "20px",
   fontWeight: "1rem",
-};
+}
 
 const noBottomStyle = {
   ...baseStyle,
   borderBottom: 0,
-};
+}
 
 const basicRowStyle = {
   ...baseStyle,
   lineHeight: "50px",
-};
+}
 
 const DockTimetable = ({ fullwidth }: Props) => {
-  const { dockId } = useParams<{ dockId: string }>();
+  const { dockId } = useParams<{ dockId: string }>()
 
   const {
     data: dock,
     isLoading: isLoadingDock,
     error: getDockError,
-  } = useGetDockQuery(Number(dockId));
+  } = useGetDockQuery(Number(dockId))
 
   const {
     data: departures,
     isLoading: isLoadingTimetable,
     refetch: fetchDepartures,
     error: getTimetableError,
-  } = useGetTimetableQuery(String(dockId));
+  } = useGetTimetableQuery(String(dockId))
 
-  const url = useLocation();
+  const url = useLocation()
 
   if (getTimetableError || getDockError) {
     showSnackbar({
       message: "unable to refresh data!",
       severity: "error",
       duration: 60000,
-    });
+    })
   }
 
   const height = url.pathname.includes("logged")
     ? { xs: "calc(100dvh - 56px)", sm: "calc(100vh - 64px)" }
-    : { xs: "100dvh" };
+    : { xs: "100dvh" }
 
   useEffect(() => {
     const interval = setInterval(async () => {
-      await fetchDepartures();
-    }, 20000);
-    return () => clearInterval(interval);
-  }, [fetchDepartures]);
+      await fetchDepartures()
+    }, 20000)
+    return () => clearInterval(interval)
+  }, [fetchDepartures])
 
-  const isBusy = isLoadingDock || isLoadingTimetable;
+  const isBusy = isLoadingDock || isLoadingTimetable
 
   return (
     <>
@@ -150,13 +150,13 @@ const DockTimetable = ({ fullwidth }: Props) => {
         </TableContainer>
       )}
     </>
-  );
-};
+  )
+}
 
 const DepartureWithViaRow = ({
   departure,
 }: {
-  departure: departureTypes.TDepartureForTimetable;
+  departure: departureTypes.TDepartureForTimetable
 }) => {
   return (
     <>
@@ -188,13 +188,13 @@ const DepartureWithViaRow = ({
         </TableCell>
       </TableRow>
     </>
-  );
-};
+  )
+}
 
 const DepartureRow = ({
   departure,
 }: {
-  departure: departureTypes.TDepartureForTimetable;
+  departure: departureTypes.TDepartureForTimetable
 }) => {
   return (
     <>
@@ -207,13 +207,13 @@ const DepartureRow = ({
         </TableCell>
       </TableRow>
     </>
-  );
-};
+  )
+}
 
 const DateRow = ({
   departure,
 }: {
-  departure: departureTypes.TDepartureForTimetable;
+  departure: departureTypes.TDepartureForTimetable
 }) => {
   return (
     <TableRow>
@@ -221,7 +221,7 @@ const DateRow = ({
         {dayjs(departure.startTime).toDate().toDateString()}
       </TableCell>
     </TableRow>
-  );
-};
+  )
+}
 
-export default DockTimetable;
+export default DockTimetable

@@ -1,46 +1,46 @@
 export type TLineRaw = {
-  id: number;
+  id: number
   startDock?: {
-    name: string;
-    id: number;
-  };
+    name: string
+    id: number
+  }
   endDock?: {
-    name: string;
-    id: number;
-  };
+    name: string
+    id: number
+  }
   docks?: {
-    name: string;
-    id: number;
+    name: string
+    id: number
     lineDock: {
-      delayFromStart: number;
-    };
-  }[];
-};
+      delayFromStart: number
+    }
+  }[]
+}
 
 export type TLineRequest = {
-  startDockId: number;
-  stops: { dockId: number; delayFromStart: number }[];
-  endDockId: number;
-};
+  startDockId: number
+  stops: { dockId: number; delayFromStart: number }[]
+  endDockId: number
+}
 
 export type TLineResponse = {
-  id: number;
+  id: number
   startDock: {
-    name: string;
-    id: number;
-  };
+    name: string
+    id: number
+  }
   endDock: {
-    name: string;
-    id: number;
-  };
+    name: string
+    id: number
+  }
   stopDocks: {
-    name: string;
-    id: number;
-    delayFromStart: number;
-  }[];
-};
+    name: string
+    id: number
+    delayFromStart: number
+  }[]
+}
 
 export type TUpdateLineRequest = {
-  id: string;
-  body: TLineRequest;
-};
+  id: string
+  body: TLineRequest
+}

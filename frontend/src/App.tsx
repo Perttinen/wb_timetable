@@ -1,25 +1,25 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom"
 
-import Lines from "./pages/line/Lines";
+import Lines from "./pages/line/Lines"
 
-import NavLayout from "./layouts/NavLayout";
-import LoggedLayout from "./layouts/LoggedLayout";
-import ScheduleLine from "./pages/scheldule/ScheduleLine";
-import AddManyStarts from "./pages/scheldule/AddManyStarts";
-import Login from "./pages/login/Login";
-import Timetables from "./pages/timetable/Timetables";
-import DockTimetable from "./pages/timetable/DockTimetable";
-import Schedule from "./pages/scheldule/Schedule";
-import AddOneStart from "./pages/scheldule/AddOneStart";
-import RemoveDepartures from "./pages/scheldule/RemoveDepartures";
-import Docks from "./pages/dock/Docks";
-import CreateDock from "./pages/dock/CreateDock";
-import ChangeDock from "./pages/dock/ChangeDock";
-import ChangeLine from "./pages/line/ChangeLine";
-import CreateLine from "./pages/line/CreateLine";
-import Users from "./pages/user/Users";
-import CreateUser from "./pages/user/CreateUser";
-import ChangeUser from "./pages/user/ChangeUser";
+import NavLayout from "./layouts/NavLayout"
+import LoggedLayout from "./layouts/LoggedLayout"
+import ScheduleLine from "./pages/scheldule/ScheduleLine"
+import AddManyStarts from "./pages/scheldule/AddManyStarts"
+import Login from "./pages/login/Login"
+import Timetables from "./pages/timetable/Timetables"
+import DockTimetable from "./pages/timetable/DockTimetable"
+import Schedule from "./pages/scheldule/Schedule"
+import AddOneStart from "./pages/scheldule/AddOneStart"
+import RemoveDepartures from "./pages/scheldule/RemoveDepartures"
+import Docks from "./pages/dock/Docks"
+import CreateDock from "./pages/dock/CreateDock"
+import ChangeDock from "./pages/dock/ChangeDock"
+import ChangeLine from "./pages/line/ChangeLine"
+import CreateLine from "./pages/line/CreateLine"
+import Users from "./pages/user/Users"
+import CreateUser from "./pages/user/CreateUser"
+import ChangeUser from "./pages/user/ChangeUser"
 
 const App = () => {
   return (
@@ -71,7 +71,7 @@ const App = () => {
         </Route>
       </Route>
     </Routes>
-  );
-};
+  )
+}
 
-export default App;
+export default App
