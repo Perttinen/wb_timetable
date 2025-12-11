@@ -16,6 +16,10 @@ Basic login with username and password. New login required after 7 days. Login d
 
 ## Management Tool
 
+### Menu bar
+
+Responsive menu bar with navmenu(xs) or navbuttons (md) and usermenu. Usermenu is for showing own userdata, changing password and logout.
+
 ### Timetables (/logged/timetables)
 
 Same as public but with navbar.
@@ -40,7 +44,7 @@ Create new line - Select at least start point and end point from existing docks.
 
 Select line - Make changes in stop point delay times, or delete line.
 
-### Users (/logged/users)
+### Users (/logged/users), only for admins
 
 Create new user - Create new user with username, password and userlevel.
 
