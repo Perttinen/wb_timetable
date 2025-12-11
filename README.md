@@ -1,11 +1,14 @@
-## Timetable Project
+## WB-Line Project
 
-Waterbus timetable management tool.
+A **waterbus timetable management tool** built as part of the Helsinki University Fullstack Programming course (10 credits).
 
-10 credits project associated to Helsinki University fullstack programming course.
+### Project Resources
 
-[Description](./project/description.md)
+- [Project Description](./project/description.md)
+- [Working Hours](./project/hours.md)
+- [Tech Stack](./project/stack.md)
 
-[Working hours](./project/hours.md)
+### 🙏 Acknowledgements
 
-[Tech Stack & Dependencies](./project/stack.md)
+- **Helsinki University** – for providing this excellent MOOC and learning opportunity.
+- **[Dave Gray](https://github.com/gitdagray/)** – for his outstanding full stack development lessons. I highly recommend his courses to anyone interested in learning to code.
