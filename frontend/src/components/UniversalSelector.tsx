@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { Grid } from "@mui/material";
 
 import { dockTypes, userTypes, lineTypes } from "../../../types";
 import { PropsWithChildren } from "react";
@@ -15,7 +14,7 @@ type DockInput = {
 
 type LineInput = {
   type: "lines";
-  data: lineTypes.TLineReturnable[];
+  data: lineTypes.TLineResponse[];
 };
 
 type UserInput = {
@@ -91,42 +90,13 @@ const UniversalSelector = ({ onAdd, onSelect, caption, input }: Props) => {
     }
 
     if (input.type === "users") {
-      const getUserlevel = (userlevels: string[]) => {
-        if (userlevels.includes("admin")) {
-          return "admin";
-        }
-        return "user";
-      };
       return input.data.map((user) => (
         <ListButton
           key={user.id}
           id={user.id}
           onClick={() => onSelect(user.id)}
         >
-          <Grid
-            container
-            direction="row"
-            width={1000}
-            sx={{
-              justifyContent: "space-between",
-            }}
-          >
-            <Grid size={4}>
-              <Typography justifySelf={"flex-start"}>
-                {user.username}
-              </Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography justifySelf={"flex-start"}>
-                {getUserlevel(user.userlevels)}
-              </Typography>
-            </Grid>
-            <Grid size={3}>
-              <Typography justifySelf={"flex-start"}>
-                {user.disabled ? "Disabled" : "valid"}
-              </Typography>
-            </Grid>
-          </Grid>
+          <Typography sx={{ fontSize: "1rem" }}>{user.username}</Typography>
         </ListButton>
       ));
     }

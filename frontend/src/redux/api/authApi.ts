@@ -16,6 +16,7 @@ export const authApi = api.injectEndpoints({
       query: () => ({ url: "/auth/logout", method: "POST" }),
       onQueryStarted(arg, { dispatch }) {
         dispatch(logOut());
+        dispatch(api.util.resetApiState());
       },
     }),
 
@@ -32,7 +33,7 @@ export const authApi = api.injectEndpoints({
       providesTags: ["Me"],
     }),
 
-    checkPassword: builder.mutation<boolean, authTypes.TCheckPasswordArgs>({
+    checkPassword: builder.mutation<boolean, { password: string }>({
       query: (pw) => ({
         url: "/auth/checkpw",
         method: "POST",

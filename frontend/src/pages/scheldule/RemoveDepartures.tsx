@@ -12,10 +12,10 @@ import {
   FormGroupContainer,
   FormMainContainer,
 } from "../../components/FormComponents";
-import { IDeleteDeparturesPayload } from "../../../../typesFile";
 import { showSnackbar } from "../../components/SnackbarProvider";
 import Spinner from "../../components/Spinner";
 import { useDeleteDeparturesMutation } from "../../redux/api/departureApi";
+import { departureTypes } from "../../../../types";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -47,7 +47,7 @@ const RemoveStarts = () => {
   };
 
   const handleSubmit = async (values: FormValues) => {
-    const payload: IDeleteDeparturesPayload = {
+    const payload: departureTypes.TDeleteDeparturesPayload = {
       lineId: values.lineId as number,
       fromDate: values.fromDate.format("YYYY-MM-DD"),
       toDate: values.toDate.format("YYYY-MM-DD"),

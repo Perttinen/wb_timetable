@@ -127,7 +127,13 @@ type FormSelectProps<T> = {
   name: string;
   label: string;
 };
-const FormSelect = <T extends object>(props: FormSelectProps<T>) => {
+// const FormSelect = <T extends object>(props: FormSelectProps<T>) => {
+const FormSelect = <T extends object>({
+  options,
+  selectKey,
+  selectValue,
+  ...props
+}: FormSelectProps<T>) => {
   const [field, meta] = useField(props);
   return (
     <TextField
@@ -144,12 +150,12 @@ const FormSelect = <T extends object>(props: FormSelectProps<T>) => {
       error={meta.touched && Boolean(meta.error)}
       helperText={meta.touched && meta.error}
     >
-      {props.options.map((opt) => (
+      {options.map((opt) => (
         <MenuItem
-          key={String(opt[props.selectValue])}
-          value={opt[props.selectValue] as string | number}
+          key={String(opt[selectValue])}
+          value={opt[selectValue] as string | number}
         >
-          {String(opt[props.selectKey])}
+          {String(opt[selectKey])}
         </MenuItem>
       ))}
     </TextField>

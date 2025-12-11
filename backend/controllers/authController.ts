@@ -15,7 +15,7 @@ import { authTypes, userTypes } from "../../types";
 
 dotenv.config();
 
-interface AuthenticatedRequest extends Request {
+interface IAuthenticatedRequest extends Request {
   cookies: {
     jwt?: string;
     [key: string]: string | undefined;
@@ -27,7 +27,7 @@ interface AuthenticatedRequest extends Request {
 // @access user
 const checkPassword = asyncHandler(
   async (
-    req: Request<unknown, unknown, authTypes.TCheckPasswordArgs>,
+    req: Request<unknown, unknown, { password: string }>,
     res: Response<boolean>
   ) => {
     const reqPwd = req.body.password;
@@ -58,11 +58,8 @@ const checkPassword = asyncHandler(
 // @access Public
 const login = asyncHandler(
   async (
-    req: Request<unknown, unknown, authTypes.TLoginArgs>,
-    res: Response<{
-      token: string;
-      user: userTypes.TUserSafe;
-    }>
+    req: Request<unknown, unknown, authTypes.TLoginRequest>,
+    res: Response<authTypes.TLoginResponse>
   ) => {
     const { username, password: reqPwd } = req.body;
 
@@ -154,7 +151,7 @@ const me = asyncHandler(async (req, res: Response<userTypes.TUser>) => {
 // @route GET /auth/refresh
 // @access Public
 const refresh = (
-  req: AuthenticatedRequest,
+  req: IAuthenticatedRequest,
   res: Response<{ accessToken: string }>
 ) => {
   const refreshToken = req.cookies.jwt;

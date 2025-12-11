@@ -1,5 +1,4 @@
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
 import { Form, Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -12,9 +11,10 @@ import {
   FormTextField,
 } from "../../components/FormComponents";
 import { setCredentials } from "../../redux/authSlice";
-import { useLoginMutation, useLogoutMutation } from "../../redux/api/authApi";
-import { api } from "../../redux/api/baseApi";
+import { useLoginMutation } from "../../redux/api/authApi";
 import showErrorSnack from "../../utils/showErrorSnack";
+import { authTypes } from "../../../../types";
+import { showSnackbar } from "../../components/SnackbarProvider";
 
 const loginSchema = yup.object({
   username: yup.string().required("Password is required"),
@@ -25,21 +25,20 @@ const Login = () => {
   const navigate = useNavigate();
   const [login, { isLoading: isLogging }] = useLoginMutation();
   const dispatch = useDispatch();
-  const [logout] = useLogoutMutation();
 
-  useEffect(() => {
-    dispatch(api.util.resetApiState());
-    void logout();
-  }, []);
-
-  const handleSubmit = async (values: {
-    username: string;
-    password: string;
-  }) => {
+  const handleSubmit = async (values: authTypes.TLoginRequest) => {
     try {
       const result = await login(values).unwrap();
-      dispatch(setCredentials({ accessToken: result.token }));
-      void navigate("/logged/timetables");
+      if (result.user.disabled) {
+        showSnackbar({
+          duration: 10000,
+          severity: "error",
+          message: `user ${result.user.username} disabled`,
+        });
+      } else {
+        dispatch(setCredentials({ accessToken: result.token }));
+        void navigate("/logged/timetables");
+      }
     } catch (e) {
       showErrorSnack(e);
     }

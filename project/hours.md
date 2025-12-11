@@ -1,6 +1,8 @@
 ## Hours
 
-#### total hours 178
+#### total hours 180
+
+8.12.2025 Types refactored. Hours: 2, Total: 180
 
 7.12.2025 Test refactored. Hours: 3,5, Total: 178
 

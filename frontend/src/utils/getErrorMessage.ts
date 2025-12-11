@@ -1,3 +1,4 @@
+import { SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 interface IErrorWithMessage {
@@ -6,17 +7,30 @@ interface IErrorWithMessage {
   };
 }
 
-export const getErrorMessage = (error: unknown): string => {
-  if (
+const isFetchBaseQueryError = (
+  error: unknown
+): error is FetchBaseQueryError => {
+  return (
     typeof error === "object" &&
     error !== null &&
-    "data" in error &&
-    typeof (error as FetchBaseQueryError).data === "object"
-  ) {
-    const data = (error as FetchBaseQueryError).data as IErrorWithMessage;
+    "status" in error &&
+    "data" in error
+  );
+};
+
+const isSerializedError = (error: unknown): error is SerializedError => {
+  return typeof error === "object" && error !== null && "message" in error;
+};
+
+export const getErrorMessage = (error: unknown): string => {
+  if (isFetchBaseQueryError(error)) {
+    const data = error.data as IErrorWithMessage;
     return data?.error?.message || "Unexpected exception";
   }
-  console.error("Unexpected exception: ", error);
+
+  if (isSerializedError(error)) {
+    return error.message || "Unexpected exception";
+  }
 
   return "Unexpected exception";
 };

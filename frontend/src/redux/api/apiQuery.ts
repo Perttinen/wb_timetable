@@ -38,39 +38,28 @@ export const apiQuery = async (
 ) => {
   try {
     let result = await baseQuery(args, api, extraOptions);
-
-    if (result?.error?.status === 403 || result?.error?.status === 401) {
+    if (
+      result?.error?.status === 403 ||
+      getErrorMessage(result.error) === "token missing"
+    ) {
       const refreshResult = await baseQuery("/auth/refresh", api, extraOptions);
-
       if (isRefreshResponse(refreshResult?.data)) {
         api.dispatch(setCredentials({ ...refreshResult.data }));
         result = await baseQuery(args, api, extraOptions);
       } else {
-        if (refreshResult?.error?.status === 403) {
-          return {
-            error: {
-              ...refreshResult.error,
-              data: { message: "Your login has expired." },
-            },
-          };
+        if (
+          refreshResult?.error?.status === 403 ||
+          getErrorMessage(refreshResult.error).includes("You have to login")
+        ) {
+          showErrorSnack(refreshResult.error);
         }
         return refreshResult;
       }
     }
 
-    if ("error" in result && result.error) {
-      const message = getErrorMessage(result.error);
-      if (message.includes("jwt expired") || message.includes("Unauthorized")) {
-        window.location.href = "/";
-      }
-      console.error(`Api error: ${message}`);
-      showErrorSnack(result.error);
-      return { error: result.error };
-    }
-    return { data: result.data };
+    return result;
   } catch (e) {
-    const message = getErrorMessage(e);
-    console.error("Unexpected exception:", message);
+    console.error("Unexpected exception:", getErrorMessage(e));
     showErrorSnack(e);
     return { error: e };
   }

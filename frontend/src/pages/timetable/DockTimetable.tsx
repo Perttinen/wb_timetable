@@ -23,6 +23,30 @@ interface Props {
   fullwidth: boolean;
 }
 
+const baseStyle = {
+  color: "lightgoldenrodyellow",
+  fontWeight: "bold",
+  bgcolor: "#0a0a0a",
+  fontSize: "1.3rem",
+};
+
+const viaCellStyle = {
+  ...baseStyle,
+  fontSize: "1rem",
+  lineHeight: "20px",
+  fontWeight: "1rem",
+};
+
+const noBottomStyle = {
+  ...baseStyle,
+  borderBottom: 0,
+};
+
+const basicRowStyle = {
+  ...baseStyle,
+  lineHeight: "50px",
+};
+
 const DockTimetable = ({ fullwidth }: Props) => {
   const { dockId } = useParams<{ dockId: string }>();
 
@@ -45,7 +69,7 @@ const DockTimetable = ({ fullwidth }: Props) => {
     showSnackbar({
       message: "unable to refresh data!",
       severity: "error",
-      duration: 10000,
+      duration: 60000,
     });
   }
 
@@ -69,8 +93,8 @@ const DockTimetable = ({ fullwidth }: Props) => {
         <TableContainer
           component={Paper}
           sx={{
+            ...baseStyle,
             borderRadius: "0",
-            bgcolor: "#0a0a0a",
             width: "100%",
             maxWidth: fullwidth ? "100%" : 1200,
             margin: "0 auto",
@@ -88,11 +112,9 @@ const DockTimetable = ({ fullwidth }: Props) => {
                   colSpan={3}
                   height={50}
                   sx={{
-                    color: "lightgoldenrodyellow",
-                    fontSize: "2rem",
-                    fontWeight: "bold",
-                    bgcolor: "#0a0a0a",
+                    ...baseStyle,
                     textAlign: "center",
+                    fontSize: "2rem",
                   }}
                 >
                   {departures?.length === 0
@@ -101,13 +123,7 @@ const DockTimetable = ({ fullwidth }: Props) => {
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody
-              sx={{
-                color: "lightgoldenrodyellow",
-                fontSize: "1.3rem",
-                fontWeight: "bold",
-              }}
-            >
+            <TableBody>
               {departures.map((departure, index, arr) => (
                 <Fragment key={index}>
                   {/* print date row when date changes or start is after today   */}
@@ -144,59 +160,26 @@ const DepartureWithViaRow = ({
 }) => {
   return (
     <>
-      <TableRow sx={{ borderBottom: 0, lineHeight: "30px" }}>
-        <TableCell
-          sx={{
-            color: "inherit",
-            borderBottom: "inherit",
-            fontSize: "inherit",
-            fontWeight: "inherit",
-            paddingLeft: 1,
-          }}
-        >
+      <TableRow>
+        <TableCell sx={{ ...noBottomStyle, paddingLeft: 1 }}>
           {departure.destination.toUpperCase()}
         </TableCell>
-        <TableCell
-          rowSpan={2}
-          sx={{
-            color: "inherit",
-            borderBottom: "inherit",
-            fontSize: "inherit",
-            fontWeight: "inherit",
-            paddingRight: 1,
-          }}
-        >
+        <TableCell rowSpan={2} sx={{ ...noBottomStyle, paddingRight: 1 }}>
           {dayjs(departure.startTime)?.format("HH:mm")}
         </TableCell>
       </TableRow>
-      <TableRow sx={{ fontSize: "1rem", lineHeight: "20px" }}>
+      <TableRow>
         <TableCell
           sx={{
-            color: "inherit",
-            lineHeight: "inherit",
-            fontSize: "inherit",
+            ...viaCellStyle,
             paddingLeft: 1,
           }}
           colSpan={3}
         >
           <Stack direction={"row"}>
-            <Typography
-              sx={{
-                lineHeight: "inherit",
-                fontSize: "inherit",
-              }}
-            >
-              via:
-            </Typography>
+            <Typography sx={viaCellStyle}>via:</Typography>
             {departure.via.map((v, i) => (
-              <Typography
-                sx={{
-                  lineHeight: "inherit",
-                  fontSize: "inherit",
-                }}
-                key={i}
-                ml={"10px"}
-              >
+              <Typography sx={viaCellStyle} key={i} ml={"10px"}>
                 {v}
                 {i < departure.via.length - 1 && ", "}
               </Typography>
@@ -215,25 +198,11 @@ const DepartureRow = ({
 }) => {
   return (
     <>
-      <TableRow sx={{ lineHeight: "50px", borderBottom: "1" }}>
-        <TableCell
-          sx={{
-            color: "inherit",
-            lineHeight: "inherit",
-            fontSize: "inherit",
-            paddingLeft: 1,
-          }}
-        >
+      <TableRow>
+        <TableCell sx={{ ...basicRowStyle, paddingLeft: 1 }}>
           {departure.destination.toUpperCase()}
         </TableCell>
-        <TableCell
-          sx={{
-            color: "inherit",
-            lineHeight: "inherit",
-            fontSize: "inherit",
-            paddingRight: 1,
-          }}
-        >
+        <TableCell sx={{ ...basicRowStyle, paddingRight: 1 }}>
           {dayjs(departure.startTime)?.format("HH:mm")}
         </TableCell>
       </TableRow>
@@ -248,16 +217,7 @@ const DateRow = ({
 }) => {
   return (
     <TableRow>
-      <TableCell
-        colSpan={3}
-        align="center"
-        sx={{
-          lineHeight: "50px",
-          color: "inherit",
-          fontSize: "inherit",
-          fontWeight: "inherit",
-        }}
-      >
+      <TableCell colSpan={3} align="center" sx={basicRowStyle}>
         {dayjs(departure.startTime).toDate().toDateString()}
       </TableCell>
     </TableRow>

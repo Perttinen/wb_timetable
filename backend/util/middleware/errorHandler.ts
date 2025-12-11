@@ -8,15 +8,11 @@ const errorHandler = (
   res: Response,
   _next: NextFunction
 ): void => {
-  // logger.error(`${error.name} ${error.message}`);
-  logger.error(`${error}`);
-
+  logger.error(`${getStatusCode(error.name)} ${error}`);
   const status = getStatusCode(error.name) || 500;
   const message = error.message || "strange server error";
   const name = error.name || "Error";
   res.status(status).json({ error: { name, message } });
-
-  // next(error);
 };
 
 export default errorHandler;

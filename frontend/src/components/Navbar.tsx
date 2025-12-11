@@ -14,17 +14,17 @@ import {
   Box,
   AppBar,
 } from "@mui/material";
-import AdbIcon from "@mui/icons-material/Adb";
 import { useTheme } from "@mui/material/styles";
 
 import { UserCard } from "./UserCard";
-import { useGetMeQuery } from "../redux/api/authApi";
+import { useGetMeQuery, useLogoutMutation } from "../redux/api/authApi";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [usercard, setUsercard] = useState(false);
   const { data: loggedUser } = useGetMeQuery();
+  const [logout] = useLogoutMutation();
 
   const getPagesByUserlevels = (userlevels: string[]) => {
     const pagesToShow = [];
@@ -44,6 +44,7 @@ const Navbar = () => {
   const handleLogout = () => {
     setAnchorElUser(null);
     void navigate("/");
+    setTimeout(() => logout(), 500);
   };
 
   const pages = loggedUser ? getPagesByUserlevels(loggedUser.userlevels) : [];
@@ -76,7 +77,6 @@ const Navbar = () => {
       <AppBar position="sticky">
         <Container maxWidth="lg">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -92,7 +92,7 @@ const Navbar = () => {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              WB-LINE
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -139,7 +139,6 @@ const Navbar = () => {
                 ))}
               </Menu>
             </Box>
-            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
             <Typography
               variant="h5"
               noWrap
@@ -156,7 +155,7 @@ const Navbar = () => {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              WB-LINE
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => {
