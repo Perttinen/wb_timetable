@@ -15,6 +15,7 @@ To create content:
 1. Create new docks or use existing ones.
 2. Combine docks into a line, or use an existing line.
 3. Schedule the line.
+4. Open the timetabe of start dock (or one of the stopdocks) of sheduled line!
 
 ---
 
@@ -55,8 +56,8 @@ To create content:
 ### Schedule (`/logged/schedule`)
 
 - **Add one start** – Add a single departure for the selected line.
-- **Add many starts** – Add multiple departures by selecting weekdays and a date range.
-- **Remove starts** – Remove departures within selected time periods and weekdays.
+- **Add many starts** – Add multiple departures by selecting weekdays and a date range. Values are inclusive.
+- **Remove starts** – Remove departures within selected time periods and weekdays. Values are inclusive.
   - _Note: “From time” must be earlier than “To time”._
 
 ---
