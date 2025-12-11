@@ -1,5 +1,5 @@
-import { departureTypes } from "../../../../types";
-import { api } from "./baseApi";
+import { departureTypes } from "../../../../types"
+import { api } from "./baseApi"
 
 export const departureApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -50,11 +50,11 @@ export const departureApi = api.injectEndpoints({
       invalidatesTags: ["Timetable"],
     }),
   }),
-});
+})
 
 export const {
   useAddDepartureMutation,
   useAddManyDeparturesMutation,
   useDeleteDeparturesMutation,
   useGetTimetableQuery,
-} = departureApi;
+} = departureApi

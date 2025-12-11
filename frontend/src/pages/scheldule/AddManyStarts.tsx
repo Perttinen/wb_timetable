@@ -1,7 +1,7 @@
-import { Box, Button, Typography, useTheme } from "@mui/material";
-import dayjs, { Dayjs } from "dayjs";
-import { Field, FieldArray, Form, Formik } from "formik";
-import { useNavigate, useParams } from "react-router-dom";
+import { Box, Button, Typography, useTheme } from "@mui/material"
+import dayjs, { Dayjs } from "dayjs"
+import { Field, FieldArray, Form, Formik } from "formik"
+import { useNavigate, useParams } from "react-router-dom"
 
 import {
   FormDatePicker,
@@ -9,36 +9,36 @@ import {
   FormTimePicker,
   FormGroupContainer,
   FormButtons,
-} from "../../components/FormComponents";
-import { TInputDeparture } from "../../../../types/departureTypes";
-import { showSnackbar } from "../../components/SnackbarProvider";
-import Spinner from "../../components/Spinner";
-import { useAddManyDeparturesMutation } from "../../redux/api/departureApi";
-import { useGetLineQuery } from "../../redux/api/lineApi";
-import showErrorSnack from "../../utils/showErrorSnack";
+} from "../../components/FormComponents"
+import { TInputDeparture } from "../../../../types/departureTypes"
+import { showSnackbar } from "../../components/SnackbarProvider"
+import Spinner from "../../components/Spinner"
+import { useAddManyDeparturesMutation } from "../../redux/api/departureApi"
+import { useGetLineQuery } from "../../redux/api/lineApi"
+import showErrorSnack from "../../utils/showErrorSnack"
 
 const AddManyStarts = () => {
-  const { lineId } = useParams<{ lineId: string }>();
+  const { lineId } = useParams<{ lineId: string }>()
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const theme = useTheme();
+  const theme = useTheme()
 
   const [addDepartures, { isLoading: isAddingDepartures }] =
-    useAddManyDeparturesMutation();
+    useAddManyDeparturesMutation()
 
   const { data: line, isLoading: isLoadingLine } = useGetLineQuery(
     Number(lineId)
-  );
+  )
 
-  const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+  const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
   interface FormValues {
-    fromDate: Dayjs;
-    toDate: Dayjs;
-    times: Dayjs[];
-    weekdays: [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
-    lineId: number | "";
+    fromDate: Dayjs
+    toDate: Dayjs
+    times: Dayjs[]
+    weekdays: [boolean, boolean, boolean, boolean, boolean, boolean, boolean]
+    lineId: number | ""
   }
 
   const initialValues: FormValues = {
@@ -47,10 +47,10 @@ const AddManyStarts = () => {
     times: [dayjs()],
     weekdays: [false, false, false, false, false, false, false],
     lineId: Number(lineId),
-  };
+  }
 
   const createStartList = (values: FormValues): TInputDeparture[] => {
-    const startArray = [];
+    const startArray = []
 
     for (
       let start = values.fromDate;
@@ -62,37 +62,37 @@ const AddManyStarts = () => {
           const dateTime = start
             .set("hour", time.hour())
             .set("minute", time.minute())
-            .set("second", 0);
+            .set("second", 0)
           startArray.push({
             start: dateTime.toDate(),
             lineId: Number(values.lineId),
-          });
+          })
         }
       }
     }
 
-    return startArray;
-  };
+    return startArray
+  }
 
   const handleSubmit = async (values: FormValues) => {
-    const starts = createStartList(values);
+    const starts = createStartList(values)
     try {
-      const result = await addDepartures(starts);
+      const result = await addDepartures(starts)
 
       if (!("error" in result)) {
         showSnackbar({
           message: `${starts.length} starts successfully added!`,
           duration: 5000,
           severity: "success",
-        });
-        void navigate("/logged/schedule");
+        })
+        void navigate("/logged/schedule")
       }
     } catch (e) {
-      showErrorSnack(e);
+      showErrorSnack(e)
     }
-  };
+  }
 
-  const isBusy = isLoadingLine || isAddingDepartures;
+  const isBusy = isLoadingLine || isAddingDepartures
 
   return (
     <>
@@ -178,8 +178,8 @@ const AddManyStarts = () => {
                             <Box display={"flex"} flexDirection={"column"}>
                               {props.values.times.length > 0 &&
                                 props.values.times.map((_p, index) => {
-                                  const time = `times[${index}]`;
-                                  const fieldLabel = `start ${index + 1}`;
+                                  const time = `times[${index}]`
+                                  const fieldLabel = `start ${index + 1}`
                                   return (
                                     <Box
                                       key={index}
@@ -221,7 +221,7 @@ const AddManyStarts = () => {
                                         </Button>
                                       )}
                                     </Box>
-                                  );
+                                  )
                                 })}
                               <Box
                                 display={"flex"}
@@ -246,7 +246,7 @@ const AddManyStarts = () => {
         </>
       )}
     </>
-  );
-};
+  )
+}
 
-export default AddManyStarts;
+export default AddManyStarts

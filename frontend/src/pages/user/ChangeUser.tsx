@@ -1,94 +1,94 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { Field, Form, Formik } from "formik";
-import { Box, Typography, useTheme } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom"
+import { Field, Form, Formik } from "formik"
+import { Box, Typography, useTheme } from "@mui/material"
 
-import Spinner from "../../components/Spinner";
+import Spinner from "../../components/Spinner"
 import {
   FormButtons,
   FormGroupContainer,
   FormMainContainer,
   FormSelect,
-} from "../../components/FormComponents";
-import { showSnackbar } from "../../components/SnackbarProvider";
-import { getErrorMessage } from "../../utils/getErrorMessage";
+} from "../../components/FormComponents"
+import { showSnackbar } from "../../components/SnackbarProvider"
+import { getErrorMessage } from "../../utils/getErrorMessage"
 import {
   useDeleteUserMutation,
   useGetUserQuery,
   useUpdateUserMutation,
-} from "../../redux/api/userApi";
-import { useGetUserlevelsQuery } from "../../redux/api/userlevelApi";
-import showErrorSnack from "../../utils/showErrorSnack";
+} from "../../redux/api/userApi"
+import { useGetUserlevelsQuery } from "../../redux/api/userlevelApi"
+import showErrorSnack from "../../utils/showErrorSnack"
 
 const ChangeUser = () => {
-  const { userId } = useParams<{ userId: string }>();
+  const { userId } = useParams<{ userId: string }>()
 
   const { data: user, isLoading: isLoadingUser } = useGetUserQuery(
     String(userId)
-  );
+  )
 
   const { data: userlevels, isLoading: isLoadingUserlevels } =
-    useGetUserlevelsQuery();
+    useGetUserlevelsQuery()
 
-  const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
+  const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation()
 
-  const [deleteUser, { isLoading: isDeletingUser }] = useDeleteUserMutation();
+  const [deleteUser, { isLoading: isDeletingUser }] = useDeleteUserMutation()
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const theme = useTheme();
+  const theme = useTheme()
 
   interface IFormvalues {
-    userlevel: string;
-    disabled: boolean;
+    userlevel: string
+    disabled: boolean
   }
 
   const handleSubmit = async (values: IFormvalues) => {
     const body = {
       ...values,
       userlevels: values.userlevel === "admin" ? ["user", "admin"] : ["user"],
-    };
+    }
     try {
       const result = await updateUser({
         id: String(user?.id),
         body,
-      });
+      })
       showSnackbar({
         message: `user ${result.data?.username} updated`,
         duration: 5000,
         severity: "success",
-      });
-      void navigate("/logged/users");
+      })
+      void navigate("/logged/users")
     } catch (e) {
-      showErrorSnack(e);
+      showErrorSnack(e)
     }
-  };
+  }
 
   const handleDelete = async () => {
     try {
       if (user) {
-        await deleteUser(user?.id);
+        await deleteUser(user?.id)
         showSnackbar({
           message: `user ${user.username} deleted`,
           duration: 5000,
           severity: "success",
-        });
-        void navigate("/logged/users");
+        })
+        void navigate("/logged/users")
       }
     } catch (e) {
-      const message = getErrorMessage(e);
-      showSnackbar({ severity: "error", duration: 6000, message });
+      const message = getErrorMessage(e)
+      showSnackbar({ severity: "error", duration: 6000, message })
     }
-  };
+  }
 
   const getUserlevel = (levels: string[]) => {
     if (levels.includes("admin")) {
-      return "admin";
+      return "admin"
     }
-    return "user";
-  };
+    return "user"
+  }
 
   const isBusy =
-    isLoadingUser || isLoadingUserlevels || isUpdatingUser || isDeletingUser;
+    isLoadingUser || isLoadingUserlevels || isUpdatingUser || isDeletingUser
 
   return (
     <>
@@ -160,7 +160,7 @@ const ChangeUser = () => {
         </>
       )}
     </>
-  );
-};
+  )
+}
 
-export default ChangeUser;
+export default ChangeUser

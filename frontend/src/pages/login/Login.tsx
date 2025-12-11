@@ -1,50 +1,50 @@
-import { useDispatch } from "react-redux";
-import { Form, Formik } from "formik";
-import * as yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux"
+import { Form, Formik } from "formik"
+import * as yup from "yup"
+import { useNavigate } from "react-router-dom"
 
-import Spinner from "../../components/Spinner";
+import Spinner from "../../components/Spinner"
 import {
   FormButtons,
   FormGroupContainer,
   FormMainContainer,
   FormTextField,
-} from "../../components/FormComponents";
-import { setCredentials } from "../../redux/authSlice";
-import { useLoginMutation } from "../../redux/api/authApi";
-import showErrorSnack from "../../utils/showErrorSnack";
-import { authTypes } from "../../../../types";
-import { showSnackbar } from "../../components/SnackbarProvider";
+} from "../../components/FormComponents"
+import { setCredentials } from "../../redux/authSlice"
+import { useLoginMutation } from "../../redux/api/authApi"
+import showErrorSnack from "../../utils/showErrorSnack"
+import { authTypes } from "../../../../types"
+import { showSnackbar } from "../../components/SnackbarProvider"
 
 const loginSchema = yup.object({
   username: yup.string().required("Password is required"),
   password: yup.string().required("Password is required"),
-});
+})
 
 const Login = () => {
-  const navigate = useNavigate();
-  const [login, { isLoading: isLogging }] = useLoginMutation();
-  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const [login, { isLoading: isLogging }] = useLoginMutation()
+  const dispatch = useDispatch()
 
   const handleSubmit = async (values: authTypes.TLoginRequest) => {
     try {
-      const result = await login(values).unwrap();
+      const result = await login(values).unwrap()
       if (result.user.disabled) {
         showSnackbar({
           duration: 10000,
           severity: "error",
           message: `user ${result.user.username} disabled`,
-        });
+        })
       } else {
-        dispatch(setCredentials({ accessToken: result.token }));
-        void navigate("/logged/timetables");
+        dispatch(setCredentials({ accessToken: result.token }))
+        void navigate("/logged/timetables")
       }
     } catch (e) {
-      showErrorSnack(e);
+      showErrorSnack(e)
     }
-  };
+  }
 
-  const isBusy = isLogging;
+  const isBusy = isLogging
 
   return (
     <div>
@@ -75,7 +75,7 @@ const Login = () => {
         </Formik>
       </FormMainContainer>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

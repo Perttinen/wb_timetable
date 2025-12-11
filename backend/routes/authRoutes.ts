@@ -1,14 +1,14 @@
-import Router from "express";
+import Router from "express"
 
-import auth from "../controllers/authController";
-import { authorizer } from "../util/middleware";
+import auth from "../controllers/authController"
+import { authorizer } from "../util/middleware"
 
-const router = Router();
+const router = Router()
 
-router.route("/login").post(auth.login);
-router.route("/logout").post(auth.logout);
-router.route("/me").get(authorizer("user"), auth.me);
-router.route("/checkpw").post(authorizer("user"), auth.checkPassword);
-router.route("/refresh").get(auth.refresh);
+router.route("/login").post(auth.login)
+router.route("/logout").post(auth.logout)
+router.route("/me").get(authorizer("user"), auth.me)
+router.route("/checkpw").post(authorizer("user"), auth.checkPassword)
+router.route("/refresh").get(auth.refresh)
 
-export default router;
+export default router

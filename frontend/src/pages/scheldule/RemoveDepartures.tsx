@@ -1,40 +1,40 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
-import { TimePicker } from "@mui/x-date-pickers";
-import dayjs, { Dayjs } from "dayjs";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import { Field, Form, Formik } from "formik";
+import { useNavigate, useParams } from "react-router-dom"
+import { Box, Typography } from "@mui/material"
+import { TimePicker } from "@mui/x-date-pickers"
+import dayjs, { Dayjs } from "dayjs"
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore"
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
+import { Field, Form, Formik } from "formik"
 
 import {
   FormButtons,
   FormDatePicker,
   FormGroupContainer,
   FormMainContainer,
-} from "../../components/FormComponents";
-import { showSnackbar } from "../../components/SnackbarProvider";
-import Spinner from "../../components/Spinner";
-import { useDeleteDeparturesMutation } from "../../redux/api/departureApi";
-import { departureTypes } from "../../../../types";
+} from "../../components/FormComponents"
+import { showSnackbar } from "../../components/SnackbarProvider"
+import Spinner from "../../components/Spinner"
+import { useDeleteDeparturesMutation } from "../../redux/api/departureApi"
+import { departureTypes } from "../../../../types"
 
-dayjs.extend(isSameOrAfter);
-dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter)
+dayjs.extend(isSameOrBefore)
 
 const RemoveStarts = () => {
-  const { lineId } = useParams<{ lineId: string }>();
+  const { lineId } = useParams<{ lineId: string }>()
   const [deleteDepartures, { isLoading: isDeletingDepartures }] =
-    useDeleteDeparturesMutation();
-  const navigate = useNavigate();
+    useDeleteDeparturesMutation()
+  const navigate = useNavigate()
 
-  const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+  const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
   interface FormValues {
-    fromDate: Dayjs;
-    toDate: Dayjs;
-    fromTime: Dayjs;
-    toTime: Dayjs;
-    weekdays: [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
-    lineId: number | "";
+    fromDate: Dayjs
+    toDate: Dayjs
+    fromTime: Dayjs
+    toTime: Dayjs
+    weekdays: [boolean, boolean, boolean, boolean, boolean, boolean, boolean]
+    lineId: number | ""
   }
 
   const initialValues: FormValues = {
@@ -44,7 +44,7 @@ const RemoveStarts = () => {
     toTime: dayjs(),
     weekdays: [false, false, false, false, false, false, false],
     lineId: Number(lineId),
-  };
+  }
 
   const handleSubmit = async (values: FormValues) => {
     const payload: departureTypes.TDeleteDeparturesPayload = {
@@ -54,19 +54,19 @@ const RemoveStarts = () => {
       fromTime: values.fromTime.format("HH:mm"),
       toTime: values.toTime.format("HH:mm"),
       weekdays: values.weekdays,
-    };
+    }
     try {
-      const result = await deleteDepartures(payload);
+      const result = await deleteDepartures(payload)
       if (!("error" in result)) {
-        const message = `${result.data} start(s) deleted`;
-        showSnackbar({ message, severity: "success", duration: 5000 });
-        void navigate("/logged/schedule");
+        const message = `${result.data} start(s) deleted`
+        showSnackbar({ message, severity: "success", duration: 5000 })
+        void navigate("/logged/schedule")
       }
     } catch (e) {
-      console.error(e);
+      console.error(e)
     }
-  };
-  const isBusy = isDeletingDepartures;
+  }
+  const isBusy = isDeletingDepartures
   return (
     <>
       {isBusy && <Spinner />}
@@ -115,7 +115,7 @@ const RemoveStarts = () => {
                         label="From time"
                         value={values.fromTime}
                         onChange={(newValue): void => {
-                          void setFieldValue("fromTime", newValue);
+                          void setFieldValue("fromTime", newValue)
                         }}
                       />
                     )}
@@ -126,7 +126,7 @@ const RemoveStarts = () => {
                         label="To time"
                         value={values.toTime}
                         onChange={(newValue): void => {
-                          void setFieldValue("toTime", newValue);
+                          void setFieldValue("toTime", newValue)
                         }}
                       />
                     )}
@@ -136,7 +136,7 @@ const RemoveStarts = () => {
               <FormButtons
                 buttons={["cancel", "delete", "save"]}
                 onCancel={() => {
-                  void navigate("/logged/schedule");
+                  void navigate("/logged/schedule")
                 }}
                 submitLabel="delete"
               />
@@ -145,7 +145,7 @@ const RemoveStarts = () => {
         </Formik>
       </FormMainContainer>
     </>
-  );
-};
+  )
+}
 
-export default RemoveStarts;
+export default RemoveStarts

@@ -1,17 +1,17 @@
-import request from "supertest";
-import app from "../../backend/app";
-import { TNewUserRequest } from "../../types/userTypes";
+import request from "supertest"
+import app from "../../backend/app"
+import { TNewUserRequest } from "../../types/userTypes"
 
 export const login = async (username: string, password: string) => {
   const response = await request(app)
     .post("/api/auth/login")
-    .send({ username, password });
-  return response;
-};
+    .send({ username, password })
+  return response
+}
 
 export const createUser = async (token: string, payload: TNewUserRequest) => {
   return request(app)
     .post("/api/user")
     .set("Authorization", `Bearer ${token}`)
-    .send(payload);
-};
+    .send(payload)
+}

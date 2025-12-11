@@ -1,18 +1,18 @@
-import User from "./user";
-import UserAndlevel from "./userAndLevel";
-import Userlevel from "./userlevel";
-import Dock from "./dock";
-import Line from "./line";
-import LineDock from "./lineDock";
-import Departure from "./departure";
+import User from "./user"
+import UserAndlevel from "./userAndLevel"
+import Userlevel from "./userlevel"
+import Dock from "./dock"
+import Line from "./line"
+import LineDock from "./lineDock"
+import Departure from "./departure"
 
-Line.belongsTo(Dock, { as: "startDock", foreignKey: "startDockId" });
-Line.belongsTo(Dock, { as: "endDock", foreignKey: "endDockId" });
+Line.belongsTo(Dock, { as: "startDock", foreignKey: "startDockId" })
+Line.belongsTo(Dock, { as: "endDock", foreignKey: "endDockId" })
 
-User.belongsToMany(Userlevel, { through: UserAndlevel });
-Userlevel.belongsToMany(User, { through: UserAndlevel });
+User.belongsToMany(Userlevel, { through: UserAndlevel })
+Userlevel.belongsToMany(User, { through: UserAndlevel })
 
-Line.belongsToMany(Dock, { through: LineDock, as: "docks" });
-Dock.belongsToMany(Line, { through: LineDock, as: "lines" });
+Line.belongsToMany(Dock, { through: LineDock, as: "docks" })
+Dock.belongsToMany(Line, { through: LineDock, as: "lines" })
 
-export { UserAndlevel, User, Userlevel, Dock, Line, LineDock, Departure };
+export { UserAndlevel, User, Userlevel, Dock, Line, LineDock, Departure }

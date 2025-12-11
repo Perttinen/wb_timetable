@@ -4,21 +4,21 @@ import {
   InferAttributes,
   InferCreationAttributes,
   CreationOptional,
-} from "@sequelize/core";
+} from "@sequelize/core"
 
-import db from "../db";
-import Userlevel from "./userlevel";
-import User from "./user";
+import db from "../db"
+import Userlevel from "./userlevel"
+import User from "./user"
 
-const { sequelize } = db;
+const { sequelize } = db
 
 class UserAndlevel extends Model<
   InferAttributes<UserAndlevel>,
   InferCreationAttributes<UserAndlevel>
 > {
-  declare id: CreationOptional<number>;
-  declare userlevelId: number;
-  declare userId: number;
+  declare id: CreationOptional<number>
+  declare userlevelId: number
+  declare userId: number
 }
 
 UserAndlevel.init(
@@ -45,6 +45,6 @@ UserAndlevel.init(
     timestamps: false,
     modelName: "userAndLevel",
   }
-);
+)
 
-export default UserAndlevel;
+export default UserAndlevel

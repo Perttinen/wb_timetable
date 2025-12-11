@@ -1,9 +1,9 @@
-import * as lineTypes from "./lineTypes";
-import * as dockTypes from "./dockTypes";
-import * as userTypes from "./userTypes";
-import * as authTypes from "./authTypes";
-import * as departureTypes from "./departureTypes";
-import * as userlevelTypes from "./userlevelTypes";
+import * as lineTypes from "./lineTypes"
+import * as dockTypes from "./dockTypes"
+import * as userTypes from "./userTypes"
+import * as authTypes from "./authTypes"
+import * as departureTypes from "./departureTypes"
+import * as userlevelTypes from "./userlevelTypes"
 
 export {
   lineTypes,
@@ -12,4 +12,4 @@ export {
   authTypes,
   departureTypes,
   userlevelTypes,
-};
+}

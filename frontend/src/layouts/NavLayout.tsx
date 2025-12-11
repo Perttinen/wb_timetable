@@ -1,11 +1,11 @@
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom"
 
-import Navbar from "../components/Navbar";
-import Spinner from "../components/Spinner";
-import { useGetMeQuery } from "../redux/api/authApi";
+import Navbar from "../components/Navbar"
+import Spinner from "../components/Spinner"
+import { useGetMeQuery } from "../redux/api/authApi"
 
 const NavLayout = () => {
-  const { data: loggedUser, isLoading: isLoadingLoggedUser } = useGetMeQuery();
+  const { data: loggedUser, isLoading: isLoadingLoggedUser } = useGetMeQuery()
 
   return (
     <>
@@ -17,7 +17,7 @@ const NavLayout = () => {
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
-export default NavLayout;
+export default NavLayout

@@ -1,5 +1,5 @@
-import { lineTypes } from "../../../../types";
-import { api } from "./baseApi";
+import { lineTypes } from "../../../../types"
+import { api } from "./baseApi"
 
 export const lineApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -48,7 +48,7 @@ export const lineApi = api.injectEndpoints({
       invalidatesTags: ["Lines"],
     }),
   }),
-});
+})
 
 export const {
   useAddLineMutation,
@@ -56,4 +56,4 @@ export const {
   useGetLineQuery,
   useGetLinesQuery,
   useUpdateLineMutation,
-} = lineApi;
+} = lineApi

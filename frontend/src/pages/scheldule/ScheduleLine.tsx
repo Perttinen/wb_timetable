@@ -1,19 +1,19 @@
-import { Button, Box } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { Button, Box } from "@mui/material"
+import { useNavigate, useParams } from "react-router-dom"
 
 const Lines = () => {
-  const navigate = useNavigate();
-  const { lineId } = useParams<{ lineId: string }>();
+  const navigate = useNavigate()
+  const { lineId } = useParams<{ lineId: string }>()
 
   const handleAddOneStart = () => {
-    void navigate(`/logged/schedule/addone/${lineId}`);
-  };
+    void navigate(`/logged/schedule/addone/${lineId}`)
+  }
   const handleAddManyStarts = () => {
-    void navigate(`/logged/schedule/addmany/${lineId}`);
-  };
+    void navigate(`/logged/schedule/addmany/${lineId}`)
+  }
   const handleRemoveStarts = () => {
-    void navigate(`/logged/schedule/remove/${lineId}`);
-  };
+    void navigate(`/logged/schedule/remove/${lineId}`)
+  }
 
   return (
     <Box width={"100%"} justifySelf={"center"} sx={{ maxWidth: "md" }}>
@@ -58,7 +58,7 @@ const Lines = () => {
         </Button>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default Lines;
+export default Lines

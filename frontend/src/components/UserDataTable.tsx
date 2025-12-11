@@ -5,12 +5,12 @@ import {
   TableCell,
   TableRow,
   Typography,
-} from "@mui/material";
+} from "@mui/material"
 
-import { userTypes } from "../../../types";
+import { userTypes } from "../../../types"
 
 export const UserDataTable = ({ user }: { user: userTypes.TUserSafe }) => {
-  const userLevel = user.userlevels.includes("admin") ? "admin" : "user";
+  const userLevel = user.userlevels.includes("admin") ? "admin" : "user"
 
   return (
     <Box sx={{ margin: 1 }}>
@@ -31,5 +31,5 @@ export const UserDataTable = ({ user }: { user: userTypes.TUserSafe }) => {
         </TableBody>
       </Table>
     </Box>
-  );
-};
+  )
+}

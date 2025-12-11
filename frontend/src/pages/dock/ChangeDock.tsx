@@ -1,38 +1,38 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { Form, Formik } from "formik";
-import * as Yup from "yup";
+import { useNavigate, useParams } from "react-router-dom"
+import { Form, Formik } from "formik"
+import * as Yup from "yup"
 
 import {
   FormButtons,
   FormGroupContainer,
   FormMainContainer,
   FormTextField,
-} from "../../components/FormComponents";
-import { showSnackbar } from "../../components/SnackbarProvider";
-import Spinner from "../../components/Spinner";
+} from "../../components/FormComponents"
+import { showSnackbar } from "../../components/SnackbarProvider"
+import Spinner from "../../components/Spinner"
 import {
   useChangeDockMutation,
   useDeleteDockMutation,
   useGetDockQuery,
-} from "../../redux/api/dockApi";
-import showErrorSnack from "../../utils/showErrorSnack";
+} from "../../redux/api/dockApi"
+import showErrorSnack from "../../utils/showErrorSnack"
 
 const ChangeDock = () => {
-  const { dockId } = useParams<{ dockId: string }>();
+  const { dockId } = useParams<{ dockId: string }>()
   const { data: dock, isLoading: isLoadingDock } = useGetDockQuery(
     Number(dockId)
-  );
+  )
 
-  const navigate = useNavigate();
-  const [changeDock, { isLoading: isChangingDock }] = useChangeDockMutation();
-  const [deleteDock, { isLoading: isDeletingDock }] = useDeleteDockMutation();
+  const navigate = useNavigate()
+  const [changeDock, { isLoading: isChangingDock }] = useChangeDockMutation()
+  const [deleteDock, { isLoading: isDeletingDock }] = useDeleteDockMutation()
 
   const dockSchema = Yup.object().shape({
     name: Yup.string()
       .min(2, "Name must be 2-15 charecters!")
       .max(15, "Name must be 2-15 charecters!")
       .required("Name is required!"),
-  });
+  })
 
   const handleSubmit = async (values: { name: string | null }) => {
     try {
@@ -40,30 +40,30 @@ const ChangeDock = () => {
         const result = await changeDock({
           name: values.name,
           id: dock.id,
-        }).unwrap();
-        const message = `dock ${dock.name} changed to ${result.name}`;
-        showSnackbar({ message, severity: "success", duration: 5000 });
-        void navigate("/logged/docks");
+        }).unwrap()
+        const message = `dock ${dock.name} changed to ${result.name}`
+        showSnackbar({ message, severity: "success", duration: 5000 })
+        void navigate("/logged/docks")
       }
     } catch (e) {
-      showErrorSnack(e);
+      showErrorSnack(e)
     }
-  };
+  }
 
   const handleDelete = async () => {
     try {
       if (dock?.id) {
-        await deleteDock(dock.id).unwrap();
-        const message = `dock ${dock.name} deleted`;
-        showSnackbar({ message, severity: "success", duration: 5000 });
-        void navigate("/logged/docks");
+        await deleteDock(dock.id).unwrap()
+        const message = `dock ${dock.name} deleted`
+        showSnackbar({ message, severity: "success", duration: 5000 })
+        void navigate("/logged/docks")
       }
     } catch (e) {
-      showErrorSnack(e);
+      showErrorSnack(e)
     }
-  };
+  }
 
-  const isBusy = isChangingDock || isDeletingDock || isLoadingDock;
+  const isBusy = isChangingDock || isDeletingDock || isLoadingDock
 
   return (
     <>
@@ -93,7 +93,7 @@ const ChangeDock = () => {
         </FormMainContainer>
       )}
     </>
-  );
-};
+  )
+}
 
-export default ChangeDock;
+export default ChangeDock

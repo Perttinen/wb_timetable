@@ -4,17 +4,17 @@ import {
   InferAttributes,
   InferCreationAttributes,
   CreationOptional,
-} from "@sequelize/core";
-import db from "../db";
+} from "@sequelize/core"
+import db from "../db"
 
-import Dock from "./dock";
+import Dock from "./dock"
 
-const { sequelize } = db;
+const { sequelize } = db
 
 class Line extends Model<InferAttributes<Line>, InferCreationAttributes<Line>> {
-  declare id: CreationOptional<number>;
-  declare startDockId: number;
-  declare endDockId: number;
+  declare id: CreationOptional<number>
+  declare startDockId: number
+  declare endDockId: number
 }
 
 Line.init(
@@ -41,6 +41,6 @@ Line.init(
     underscored: true,
     timestamps: false,
   }
-);
+)
 
-export default Line;
+export default Line

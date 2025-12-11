@@ -1,5 +1,5 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { apiQuery } from "./apiQuery";
+import { createApi } from "@reduxjs/toolkit/query/react"
+import { apiQuery } from "./apiQuery"
 
 export const api = createApi({
   reducerPath: "api",
@@ -15,4 +15,4 @@ export const api = createApi({
     "Me",
   ],
   endpoints: () => ({}),
-});
+})

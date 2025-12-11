@@ -1,24 +1,24 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom"
 
-import Spinner from "../components/Spinner";
-import { useGetMeQuery } from "../redux/api/authApi";
+import Spinner from "../components/Spinner"
+import { useGetMeQuery } from "../redux/api/authApi"
 
 const LoggedLayout = ({
   preferredUserlevel,
 }: {
-  preferredUserlevel: string;
+  preferredUserlevel: string
 }) => {
-  const { data: user } = useGetMeQuery();
+  const { data: user } = useGetMeQuery()
 
   if (!user) {
-    return <Spinner />;
+    return <Spinner />
   }
 
   if (!user?.userlevels.includes(preferredUserlevel)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/" replace />
   }
 
-  return <Outlet />;
-};
+  return <Outlet />
+}
 
-export default LoggedLayout;
+export default LoggedLayout

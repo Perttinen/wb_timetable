@@ -1,10 +1,10 @@
-import Router from "express";
+import Router from "express"
 
-import userlevels from "../controllers/userlevelController";
-import { authorizer } from "../util/middleware";
+import userlevels from "../controllers/userlevelController"
+import { authorizer } from "../util/middleware"
 
-const router = Router();
+const router = Router()
 
-router.route("/").get(authorizer("admin"), userlevels.getUserlevels);
+router.route("/").get(authorizer("admin"), userlevels.getUserlevels)
 
-export default router;
+export default router

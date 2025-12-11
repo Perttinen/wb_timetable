@@ -1,5 +1,5 @@
-import { api } from "./baseApi";
-import { dockTypes } from "../../../../types";
+import { api } from "./baseApi"
+import { dockTypes } from "../../../../types"
 
 export const dockApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -28,7 +28,7 @@ export const dockApi = api.injectEndpoints({
       invalidatesTags: ["GetDocks"],
     }),
   }),
-});
+})
 
 export const {
   useGetDocksQuery,
@@ -36,4 +36,4 @@ export const {
   useAddDockMutation,
   useChangeDockMutation,
   useDeleteDockMutation,
-} = dockApi;
+} = dockApi

@@ -9,4 +9,4 @@ export const docks = [
   { name: "Korkeakari" },
   { name: "Lammassaari" },
   { name: "Pursiseura" },
-];
+]

@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import MenuIcon from "@mui/icons-material/Menu";
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import MenuIcon from "@mui/icons-material/Menu"
 import {
   MenuItem,
   Tooltip,
@@ -13,64 +13,64 @@ import {
   Toolbar,
   Box,
   AppBar,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+} from "@mui/material"
+import { useTheme } from "@mui/material/styles"
 
-import { UserCard } from "./UserCard";
-import { useGetMeQuery, useLogoutMutation } from "../redux/api/authApi";
+import { UserCard } from "./UserCard"
+import { useGetMeQuery, useLogoutMutation } from "../redux/api/authApi"
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  const theme = useTheme();
-  const [usercard, setUsercard] = useState(false);
-  const { data: loggedUser } = useGetMeQuery();
-  const [logout] = useLogoutMutation();
+  const navigate = useNavigate()
+  const theme = useTheme()
+  const [usercard, setUsercard] = useState(false)
+  const { data: loggedUser } = useGetMeQuery()
+  const [logout] = useLogoutMutation()
 
   const getPagesByUserlevels = (userlevels: string[]) => {
-    const pagesToShow = [];
+    const pagesToShow = []
     if (userlevels.includes("user"))
-      pagesToShow.push("timetables", "schedule", "docks", "lines");
-    if (userlevels.includes("admin")) pagesToShow.push("users");
-    return pagesToShow;
-  };
+      pagesToShow.push("timetables", "schedule", "docks", "lines")
+    if (userlevels.includes("admin")) pagesToShow.push("users")
+    return pagesToShow
+  }
 
-  const avatar = !loggedUser ? "?" : loggedUser.username[0].toUpperCase();
+  const avatar = !loggedUser ? "?" : loggedUser.username[0].toUpperCase()
 
   const showProfile = () => {
-    setUsercard(true);
-    setAnchorElUser(null);
-  };
+    setUsercard(true)
+    setAnchorElUser(null)
+  }
 
   const handleLogout = () => {
-    setAnchorElUser(null);
-    void navigate("/");
-    setTimeout(() => logout(), 500);
-  };
+    setAnchorElUser(null)
+    void navigate("/")
+    setTimeout(() => logout(), 500)
+  }
 
-  const pages = loggedUser ? getPagesByUserlevels(loggedUser.userlevels) : [];
+  const pages = loggedUser ? getPagesByUserlevels(loggedUser.userlevels) : []
 
   const userMenuItems = [
     { label: "Profile", function: () => showProfile() },
     { label: "Logout", function: () => handleLogout() },
-  ];
+  ]
 
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
+    setAnchorElNav(event.currentTarget)
+  }
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
+    setAnchorElUser(event.currentTarget)
+  }
 
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+    setAnchorElNav(null)
+  }
 
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+    setAnchorElUser(null)
+  }
 
   return (
     <>
@@ -159,7 +159,7 @@ const Navbar = () => {
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => {
-                const isActive = location.pathname.includes(page);
+                const isActive = location.pathname.includes(page)
                 return (
                   <Button
                     key={page}
@@ -185,7 +185,7 @@ const Navbar = () => {
                       {page}
                     </Link>
                   </Button>
-                );
+                )
               })}
             </Box>
             <Box sx={{ flexGrow: 0 }}>
@@ -224,7 +224,7 @@ const Navbar = () => {
       </AppBar>
       <UserCard setUserCard={setUsercard} userCard={usercard} />
     </>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

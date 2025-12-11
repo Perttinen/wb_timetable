@@ -1,26 +1,26 @@
-import request from "supertest";
+import request from "supertest"
 
-import app from "../backend/app";
-import initializeDb from "./helpers/initializeTestDb";
-import { login } from "./helpers/api";
-import { TTestUser } from "../types/userTypes";
-import { TLoginResponse } from "../types/authTypes";
+import app from "../backend/app"
+import initializeDb from "./helpers/initializeTestDb"
+import { login } from "./helpers/api"
+import { TTestUser } from "../types/userTypes"
+import { TLoginResponse } from "../types/authTypes"
 
 describe("Userlevel API", () => {
-  const hal: TTestUser = {} as TTestUser;
+  const hal: TTestUser = {} as TTestUser
   beforeAll(async () => {
-    const db = await initializeDb();
+    const db = await initializeDb()
     if (!db) {
-      throw new Error("Database initialization failed");
+      throw new Error("Database initialization failed")
     }
     const halLogin = (await login("hal", process.env.HAL_PW!))
-      .body as TLoginResponse;
-    hal.token = halLogin.token;
-  });
+      .body as TLoginResponse
+    hal.token = halLogin.token
+  })
   test("Get userlevels, GET /userlevel", async () => {
     const response = await request(app)
       .get("/api/userlevel")
-      .set("Authorization", `Bearer ${hal.token}`);
-    expect(response.status).toBe(200);
-  });
-});
+      .set("Authorization", `Bearer ${hal.token}`)
+    expect(response.status).toBe(200)
+  })
+})

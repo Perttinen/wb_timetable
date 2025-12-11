@@ -4,17 +4,17 @@ import {
   InferAttributes,
   InferCreationAttributes,
   CreationOptional,
-} from "@sequelize/core";
+} from "@sequelize/core"
 
-import db from "../db";
+import db from "../db"
 
-const { sequelize } = db;
+const { sequelize } = db
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-  declare id: CreationOptional<number>;
-  declare username: string;
-  declare password: string;
-  declare disabled: CreationOptional<boolean>;
+  declare id: CreationOptional<number>
+  declare username: string
+  declare password: string
+  declare disabled: CreationOptional<boolean>
 }
 
 User.init(
@@ -45,6 +45,6 @@ User.init(
     timestamps: false,
     modelName: "user",
   }
-);
+)
 
-export default User;
+export default User

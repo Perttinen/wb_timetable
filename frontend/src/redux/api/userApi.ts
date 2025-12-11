@@ -1,9 +1,9 @@
-import { api } from "./baseApi";
-import { userTypes } from "../../../../types";
+import { api } from "./baseApi"
+import { userTypes } from "../../../../types"
 
 interface IUpdateUserArgs {
-  id: string;
-  body: userTypes.TUpdateUserRequest;
+  id: string
+  body: userTypes.TUpdateUserRequest
 }
 
 export const userApi = api.injectEndpoints({
@@ -33,7 +33,7 @@ export const userApi = api.injectEndpoints({
           url: `/user/${id}`,
           method: "PATCH",
           body,
-        };
+        }
       },
       invalidatesTags: ["Users", "User"],
     }),
@@ -46,7 +46,7 @@ export const userApi = api.injectEndpoints({
       invalidatesTags: ["Users"],
     }),
   }),
-});
+})
 
 export const {
   useAddUserMutation,
@@ -54,4 +54,4 @@ export const {
   useGetUserQuery,
   useGetUsersQuery,
   useUpdateUserMutation,
-} = userApi;
+} = userApi
