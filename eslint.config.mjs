@@ -1,6 +1,6 @@
-import eslint from "@eslint/js";
-import tseslint from "typescript-eslint";
-import stylistic from "@stylistic/eslint-plugin";
+import eslint from "@eslint/js"
+import tseslint from "typescript-eslint"
+import stylistic from "@stylistic/eslint-plugin"
 
 export default tseslint.config(
   {
@@ -20,7 +20,7 @@ export default tseslint.config(
     },
     ignores: ["build/*"],
     rules: {
-      "@stylistic/semi": "error",
+      "@stylistic/semi": "off",
       "@typescript-eslint/no-unsafe-assignment": "error",
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/explicit-function-return-type": "off",
@@ -41,4 +41,4 @@ export default tseslint.config(
       "@typescript-eslint/no-unsafe-assignment": "off",
     },
   }
-);
+)
