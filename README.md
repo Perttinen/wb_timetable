@@ -2,7 +2,7 @@
 
 [WB-Line Live Demo](https://wb-timetable-prod.onrender.com)
 
-A **waterbus timetable management tool** built as part of the Helsinki University **[Fullstack Programming](https://fullstackopen.com/en/)** course (10 credits).
+A **waterbus timetable management tool** built as part (10 credits) of the Helsinki University **[Fullstack Programming](https://fullstackopen.com/en/)** course.
 
 ### Project Resources
 
