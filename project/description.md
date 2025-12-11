@@ -1,9 +1,86 @@
-## Project Description
+# WB-LINE
 
-Tällä hetkellä esimerkiksi Helsingin edustalla liikennöivien vesibussien aikatauluinformaatio on sekavaa. Jokaisella liikennöitsijällä on omat järjestelmänsä aikatauluista tiedottamiseen. Tiedot ovat hajallaan netissä tai jopa pelkkinä paperisina aikatauluina laiturilla. Esimerkiksi vuorojen peruuntumisesta tai kysynnän mukaan ajettavista ylimääräisistä vuoroista tiedottaminen reaaliajassa on haastavaa. Laiturikohtaiset aikataulut puuttuvat lähes täysin.
+WB-LINE is a scheduling application for **water bus traffic**.  
+It consists of two main parts:
 
-Projektin tarkoituksena on luoda web sovellus, joka mahdollistaa liikennöitsijästä riippumattomat reaaliaikaiset seuraavista lähdöistä kertovat aikataulunäytöt laitureille, yhteisöille ja asiakkaiden laitteille.
+- **Management Tool** – for logged‑in users to manage schedules, resources and user accounts.
+- **Public Timetable Viewer** – a simple display of upcoming departures, intended for info screens or other public devices.
 
-Aikataulunäytössä tulee olla mahdollisimman pitkä lista laiturin seuraavista lähdöistä. Jokaisesta lähdöstä tulee ilmetä lähtöaika, määränpää, mahdolliset pysähdykset (laiturit) sekä liikennöitsijä. Otsikkona aikataululle toimii laiturin nimi.
+---
 
-Sovelluksessa on oltava työkalu aikataulujen ja reittien käyttäjäystävälliseen syöttämiseen. Aikataulut perustuvat reitteihin. Reittiin kuuluvat lähtöpaikka ja välipysähdykset. Aikataulutuksen tulee perustua reittien lähtöaikoihin, siten että välipysähdysten aikataulut luodaan automattisesti, kun reitille annetaan lähtöaika. Reittien luomisesta vastaa jokin erillinen instanssi. Lähtöjen syöttäminen, poistaminen ja muokkaaminen on liikennöitsijän vastuulla.
+## Getting Started
+
+To create content:
+
+1. Create new docks or use existing ones.
+2. Combine docks into a line, or use an existing line.
+3. Schedule the line.
+4. Open the timetabe of start dock (or one of the stopdocks) of sheduled line!
+
+---
+
+## Public Timetable (`/timetables`)
+
+- Displays a list of selectable docks.
+- Selecting a dock shows its timetable.
+- Timetable refreshes automatically every **1 minute**.
+
+---
+
+## Login (`/`)
+
+- Basic login with **username and password**.
+- Session expires after **7 days** (new login required).
+
+---
+
+## Management Tool
+
+### Menu Bar
+
+- Responsive design:
+  - **xs** → navigation menu
+  - **md+** → navigation buttons
+- User menu includes:
+  - Viewing personal data with change password feature
+  - Logging out
+
+---
+
+### Timetables (`/logged/timetables`)
+
+- Same as the public timetable, but with a navigation bar.
+
+---
+
+### Schedule (`/logged/schedule`)
+
+- **Add one start** – Add a single departure for the selected line.
+- **Add many starts** – Add multiple departures by selecting weekdays and a date range. Values are inclusive.
+- **Remove starts** – Remove departures within selected time periods and weekdays. Values are inclusive.
+  - _Note: “From time” must be earlier than “To time”._
+
+---
+
+### Docks (`/logged/docks`)
+
+- **Create dock** – Add a new dock with a name.
+- **Select dock** – Edit or delete an existing dock.
+
+---
+
+### Lines (`/logged/lines`)
+
+- **Create line** – Select at least a start and end dock.
+  - Optional: add stops between start and end.
+  - Define minutes from line start to each stop to calculate timetable.
+- **Select line** – Edit stop delays or delete the line.
+
+---
+
+### Users (`/logged/users`) – _Admins only_
+
+- **Create user** – Add a new user with username, password, and user level.
+- **Select user** – Change user level, disable or delete a user.
+
+---
