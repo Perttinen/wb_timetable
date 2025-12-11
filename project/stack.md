@@ -41,6 +41,7 @@ Built with **TypeScript + Node.js**, providing APIs and database management.
 
 - **Linting & Tooling**
   - ESLint + TypeScript ESLint
+  - **GitHub Actions** – CI pipeline for linting, testing, and building on every push to `dev`
 
 ---
 
