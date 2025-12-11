@@ -1,4 +1,4 @@
-## ⚙️ Tech Stack
+## Tech Stack
 
 This project is organized as a **monorepo** with separate frontend and backend packages.
 
