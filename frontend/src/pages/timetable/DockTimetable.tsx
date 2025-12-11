@@ -45,7 +45,6 @@ const noBottomStyle = {
 const basicRowStyle = {
   ...baseStyle,
   lineHeight: "50px",
-  borderBottom: "1",
 };
 
 const DockTimetable = ({ fullwidth }: Props) => {
