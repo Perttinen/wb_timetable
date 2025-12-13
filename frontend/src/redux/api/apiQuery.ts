@@ -8,7 +8,6 @@ import { selectCurrentToken, setCredentials } from "../authSlice"
 import { RootState } from "../store"
 import { getErrorMessage } from "../../utils/getErrorMessage"
 import showErrorSnack from "../../utils/showErrorSnack"
-import { error } from "console"
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "/api",
