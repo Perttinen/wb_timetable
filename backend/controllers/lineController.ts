@@ -2,10 +2,13 @@ import { Request, Response } from "express"
 import asyncHandler from "express-async-handler"
 
 import { Line, LineDock } from "../../database/models"
+import db from "../../database/db"
 import { throwNotFound, throwValidationError } from "../util/errorThrowers"
 import { dockIdsAreValid, lineIncludes } from "../util/helperFunctions"
 import { createReturnableLine } from "../util/helperFunctions"
 import { lineTypes } from "../../types"
+
+const { sequelize } = db
 
 // @desc create line
 // @route POST /line
@@ -77,15 +80,19 @@ const deleteAllLines = asyncHandler(async (_req: Request, res: Response) => {
 // @route DELETE /line/:id
 // @access admin
 const deleteLine = asyncHandler(async (req: Request, res: Response) => {
-  await LineDock.destroy({ where: { lineId: req.params.id } })
+  await sequelize.transaction(async (t) => {
+    await LineDock.destroy({
+      where: { lineId: req.params.id },
+      transaction: t,
+    })
 
-  const lineDestroyed = await Line.destroy({ where: { id: req.params.id } })
+    const lineDestroyed = await Line.destroy({
+      where: { id: req.params.id },
+      transaction: t,
+    })
 
-  if (!lineDestroyed) {
-    throwNotFound(`line ${req.params.id} not destroyed`)
-  }
-
-  res.status(200).send(lineDestroyed)
+    res.status(200).send({ deleted: lineDestroyed })
+  })
 })
 
 // @desc get lines

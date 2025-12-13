@@ -48,11 +48,6 @@ const deleteDock = asyncHandler(async (req, res) => {
 
   const destroyedDock = await Dock.destroy({ where: { id } })
 
-  if (!destroyedDock) {
-    throwNotFound("nothing deleted")
-    return
-  }
-
   res.status(200).json(destroyedDock)
 })
 
