@@ -63,12 +63,13 @@ const ChangeLine = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      const result = await deleteLine(id)
-      if (!("error" in result)) {
-        const message = `line ${id} deleted`
-        showSnackbar({ message, severity: "success", duration: 5000 })
-        void navigate("/logged/lines")
-      }
+      // const result =
+      await deleteLine(id).unwrap()
+      // if (!("error" in result)) {
+      const message = `line ${id} deleted`
+      showSnackbar({ message, severity: "success", duration: 5000 })
+      void navigate("/logged/lines")
+      // }
     } catch (e) {
       showErrorSnack(e)
     }
