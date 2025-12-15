@@ -39,7 +39,7 @@ export const departureApi = api.injectEndpoints({
     }),
 
     deleteDepartures: builder.mutation<
-      void,
+      number,
       departureTypes.TDeleteDeparturesPayload
     >({
       query: (deleteManyDepartures) => ({

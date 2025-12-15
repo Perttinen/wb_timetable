@@ -58,17 +58,14 @@ export const ChangePassword = ({
     }
 
     try {
-      const pwOk = await checkPw({ password: values.currentPassword })
-
-      if (pwOk.data) {
-        await updateUser(payload)
-        showSnackbar({
-          duration: 5000,
-          severity: "success",
-          message: "Password updated succesfully",
-        })
-        setPwChangeDialog(false)
-      }
+      await checkPw({ password: values.currentPassword }).unwrap()
+      await updateUser(payload)
+      showSnackbar({
+        duration: 5000,
+        severity: "success",
+        message: "Password updated succesfully",
+      })
+      setPwChangeDialog(false)
     } catch (e) {
       showSnackbar({
         duration: 10000,

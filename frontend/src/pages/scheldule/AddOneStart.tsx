@@ -35,15 +35,13 @@ const AddOneStart = () => {
       lineId: Number(values.lineId),
     }
     try {
-      const result = await addDeparture(parsedValues)
-      if (result) {
-        showSnackbar({
-          message: "start successfully added!",
-          severity: "success",
-          duration: 5000,
-        })
-        void navigate("/logged/schedule")
-      }
+      await addDeparture(parsedValues).unwrap()
+      showSnackbar({
+        message: "start successfully added!",
+        severity: "success",
+        duration: 5000,
+      })
+      void navigate("/logged/schedule")
     } catch (e) {
       showErrorSnack(e)
     }

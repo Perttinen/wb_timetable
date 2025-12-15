@@ -16,6 +16,7 @@ import { showSnackbar } from "../../components/SnackbarProvider"
 import Spinner from "../../components/Spinner"
 import { useDeleteDeparturesMutation } from "../../redux/api/departureApi"
 import { departureTypes } from "../../../../types"
+import showErrorSnack from "../../utils/showErrorSnack"
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
@@ -56,14 +57,12 @@ const RemoveStarts = () => {
       weekdays: values.weekdays,
     }
     try {
-      const result = await deleteDepartures(payload)
-      if (!("error" in result)) {
-        const message = `${result.data} start(s) deleted`
-        showSnackbar({ message, severity: "success", duration: 5000 })
-        void navigate("/logged/schedule")
-      }
+      const result = await deleteDepartures(payload).unwrap()
+      const message = `${result} start(s) deleted`
+      showSnackbar({ message, severity: "success", duration: 5000 })
+      void navigate("/logged/schedule")
     } catch (e) {
-      console.error(e)
+      showErrorSnack(e)
     }
   }
   const isBusy = isDeletingDepartures

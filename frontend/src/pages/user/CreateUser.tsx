@@ -11,9 +11,9 @@ import {
 } from "../../components/FormComponents"
 import { showSnackbar } from "../../components/SnackbarProvider"
 import Spinner from "../../components/Spinner"
-import { getErrorMessage } from "../../utils/getErrorMessage"
 import { useAddUserMutation } from "../../redux/api/userApi"
 import { useGetUserlevelsQuery } from "../../redux/api/userlevelApi"
+import showErrorSnack from "../../utils/showErrorSnack"
 
 const CreateUser = () => {
   const navigate = useNavigate()
@@ -41,21 +41,15 @@ const CreateUser = () => {
     }
 
     try {
-      const result = await addUser(newUser).unwrap()
-      if (result) {
-        showSnackbar({
-          message: `user ${values.username} created`,
-          duration: 5000,
-          severity: "success",
-        })
-        void navigate("/logged/users")
-      }
+      await addUser(newUser).unwrap()
+      showSnackbar({
+        message: `user ${values.username} created`,
+        duration: 5000,
+        severity: "success",
+      })
+      void navigate("/logged/users")
     } catch (e) {
-      let message = getErrorMessage(e)
-      if (message === "Validation error") {
-        message = `${newUser.username} already exists`
-      }
-      showSnackbar({ severity: "error", duration: 6000, message })
+      showErrorSnack(e)
     }
   }
 
