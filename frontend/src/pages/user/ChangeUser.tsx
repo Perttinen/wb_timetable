@@ -51,9 +51,9 @@ const ChangeUser = () => {
       const result = await updateUser({
         id: String(user?.id),
         body,
-      })
+      }).unwrap()
       showSnackbar({
-        message: `user ${result.data?.username} updated`,
+        message: `user ${result.username} updated`,
         duration: 5000,
         severity: "success",
       })

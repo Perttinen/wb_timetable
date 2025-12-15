@@ -46,15 +46,14 @@ const ChangeLine = () => {
           stops,
           endDockId: line.endDock.id,
         }
-        const result = await updateLine({
+        await updateLine({
           id: String(line?.id),
           body: payload,
-        })
-        if (!("error" in result)) {
-          const message = `line ${line?.id} succesfully updated`
-          showSnackbar({ message, severity: "success", duration: 5000 })
-          void navigate("/logged/lines")
-        }
+        }).unwrap()
+
+        const message = `line ${line?.id} succesfully updated`
+        showSnackbar({ message, severity: "success", duration: 5000 })
+        void navigate("/logged/lines")
       } catch (e) {
         showErrorSnack(e)
       }
@@ -63,13 +62,10 @@ const ChangeLine = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      // const result =
       await deleteLine(id).unwrap()
-      // if (!("error" in result)) {
       const message = `line ${id} deleted`
       showSnackbar({ message, severity: "success", duration: 5000 })
       void navigate("/logged/lines")
-      // }
     } catch (e) {
       showErrorSnack(e)
     }

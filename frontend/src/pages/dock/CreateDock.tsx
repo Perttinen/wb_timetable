@@ -30,15 +30,13 @@ const CreateDock = () => {
 
   const handleSubmit = async (values: { name: string }) => {
     try {
-      const result = await addDock(values).unwrap()
-      if (result) {
-        showSnackbar({
-          message: `dock ${values.name} created`,
-          duration: 5000,
-          severity: "success",
-        })
-        void navigate("/logged/docks")
-      }
+      await addDock(values).unwrap()
+      showSnackbar({
+        message: `dock ${values.name} created`,
+        duration: 5000,
+        severity: "success",
+      })
+      void navigate("/logged/docks")
     } catch (e) {
       showErrorSnack(e)
     }

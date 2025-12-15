@@ -77,16 +77,13 @@ const AddManyStarts = () => {
   const handleSubmit = async (values: FormValues) => {
     const starts = createStartList(values)
     try {
-      const result = await addDepartures(starts)
-
-      if (!("error" in result)) {
-        showSnackbar({
-          message: `${starts.length} starts successfully added!`,
-          duration: 5000,
-          severity: "success",
-        })
-        void navigate("/logged/schedule")
-      }
+      await addDepartures(starts).unwrap()
+      showSnackbar({
+        message: `${starts.length} starts successfully added!`,
+        duration: 5000,
+        severity: "success",
+      })
+      void navigate("/logged/schedule")
     } catch (e) {
       showErrorSnack(e)
     }
