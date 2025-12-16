@@ -71,30 +71,30 @@ const initializeUsers = async () => {
     })
     await UserAndlevel.bulkCreate(userAndLevelsToAdd)
   }
-  // await createUser({
-  //   username: "aami",
-  //   userlevel: ["user", "admin"],
-  //   password: String(process.env.TEST_ADMIN_PW),
-  // })
+  await createUser({
+    username: "aami",
+    userlevel: ["user", "admin"],
+    password: String(process.env.TEST_ADMIN_PW),
+  })
 
-  // await createUser({
-  //   username: "juuse",
-  //   userlevel: ["user"],
-  //   password: String(process.env.TEST_USER_PW),
-  // })
+  await createUser({
+    username: "juuse",
+    userlevel: ["user"],
+    password: String(process.env.TEST_USER_PW),
+  })
 
-  // await createUser({
-  //   username: "matti",
-  //   userlevel: ["user", "admin"],
-  //   password: String(process.env.MATTI_PW),
-  // })
+  await createUser({
+    username: "matti",
+    userlevel: ["user", "admin"],
+    password: String(process.env.MATTI_PW),
+  })
 
   await createUser({
     username: "outisa",
     userlevel: ["user", "admin"],
     password: String(process.env.OUTISA_PW),
   })
-  return 1
+  return 4
 }
 
 const create4Lines = async (docks: IDock[]) => {
