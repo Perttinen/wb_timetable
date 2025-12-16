@@ -1,9 +1,13 @@
 import { TLoginResponse } from "../types/authTypes"
 import { login } from "./helpers/api"
+import initializeDb from "./helpers/initializeTestDb"
 
 const userProperties = ["id", "username", "disabled", "userlevels"]
 
 describe("Auth API", () => {
+  beforeAll(async () => {
+    await initializeDb()
+  })
   test("Hal can log in", async () => {
     const response = await login("hal", process.env.HAL_PW!)
     expect(response.status).toBe(200)
