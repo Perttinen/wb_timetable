@@ -54,17 +54,10 @@ const rollbackMigration = async () => {
   await migrator.down()
 }
 
-const closeDatabase = async () => {
-  console.log("Closing database connection...")
-  await sequelize.close()
-  console.log("Database connection closed.")
-}
-
 export type Migration = typeof migrator._types.migration
 
 export default {
   connectToDatabase,
   sequelize,
   rollbackMigration,
-  closeDatabase,
 }
