@@ -5,6 +5,7 @@ import initializeDb from "./helpers/initializeTestDb"
 import { login } from "./helpers/api"
 import { TTestUser } from "../types/userTypes"
 import { TLoginResponse } from "../types/authTypes"
+import db from "../database/db"
 
 describe("Userlevel API", () => {
   const hal: TTestUser = {} as TTestUser
@@ -16,6 +17,10 @@ describe("Userlevel API", () => {
     const halLogin = (await login("hal", process.env.HAL_PW!))
       .body as TLoginResponse
     hal.token = halLogin.token
+  })
+
+  afterAll(async () => {
+    await db.closeDatabase()
   })
   test("Get userlevels, GET /userlevel", async () => {
     const response = await request(app)

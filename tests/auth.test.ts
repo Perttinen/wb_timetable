@@ -1,3 +1,4 @@
+import db from "../database/db"
 import { TLoginResponse } from "../types/authTypes"
 import { login } from "./helpers/api"
 import initializeDb from "./helpers/initializeTestDb"
@@ -7,6 +8,10 @@ const userProperties = ["id", "username", "disabled", "userlevels"]
 describe("Auth API", () => {
   beforeAll(async () => {
     await initializeDb()
+  })
+
+  afterAll(async () => {
+    await db.closeDatabase()
   })
   test("Hal can log in", async () => {
     const response = await login("hal", process.env.HAL_PW!)

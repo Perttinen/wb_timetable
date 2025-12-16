@@ -5,6 +5,7 @@ import { TUserSafe } from "../types/userTypes"
 import { login, createUser } from "./helpers/api"
 import initializeDb from "./helpers/initializeTestDb"
 import { TLoginResponse } from "../types/authTypes"
+import db from "../database/db"
 
 const userProperties = ["id", "username", "disabled", "userlevels"]
 
@@ -28,6 +29,10 @@ describe("User API", () => {
     const halLogin = (await login("hal", process.env.HAL_PW!))
       .body as TLoginResponse
     hal.token = halLogin.token
+  })
+
+  afterAll(async () => {
+    await db.closeDatabase()
   })
 
   test("hal can create admin, POST /user", async () => {
