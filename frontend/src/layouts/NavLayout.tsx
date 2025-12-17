@@ -6,6 +6,7 @@ import { useGetMeQuery } from "../redux/api/authApi"
 
 const NavLayout = () => {
   const { data: loggedUser, isLoading: isLoadingLoggedUser } = useGetMeQuery()
+  console.log("test")
 
   return (
     <>
