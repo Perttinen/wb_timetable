@@ -17,14 +17,12 @@ describe("User API", () => {
   const hal: TTestUser = {} as TTestUser
   const testAdmin: TTestUser = {} as TTestUser
   const testUser: TTestUser = {} as TTestUser
-  let usersCount: number = 0
 
   beforeAll(async () => {
     const db = await initializeDb()
     if (!db) {
       throw new Error("Database initialization failed")
     }
-    usersCount = db.initialUsersCount
     const halLogin = (await login("hal", process.env.HAL_PW!))
       .body as TLoginResponse
     hal.token = halLogin.token
@@ -98,7 +96,7 @@ describe("User API", () => {
       .set("Authorization", `Bearer ${hal.token}`)
     expect(response.status).toBe(200)
     const body = response.body as TUserSafe[]
-    expect(body.length).toBe(usersCount + 3)
+    expect(body.length).toBe(3)
   })
 
   test("Get user by id, GET /usr:id", async () => {
@@ -136,6 +134,6 @@ describe("User API", () => {
       .set("Authorization", `Bearer ${hal.token}`)
     expect(response.status).toBe(204)
     const usersBody = usersRes.body as TUserSafe[]
-    expect(usersBody.length).toBe(usersCount + 2)
+    expect(usersBody.length).toBe(2)
   })
 })

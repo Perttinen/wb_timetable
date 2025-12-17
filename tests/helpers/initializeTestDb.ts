@@ -7,11 +7,8 @@ import {
   UserAndlevel,
 } from "../../database/models"
 import { Op } from "@sequelize/core"
-import bcrypt from "bcrypt"
 
 import { docks } from "./docks"
-import { getUserlevels } from "../../backend/util/helperFunctions"
-import { TNewUserRequest } from "../../types/userTypes"
 
 interface IDock {
   id: number
@@ -50,34 +47,6 @@ export const deleteAllButHal = async () => {
     })
     await User.destroy({ where: { id: { [Op.not]: jsonHal.id } } })
   }
-}
-
-const initializeUsers = async () => {
-  const allUserlevels = await getUserlevels()
-
-  const createUser = async (user: TNewUserRequest) => {
-    const pwHash = await bcrypt.hash(user.password, 10)
-
-    const createdUser = await User.create({
-      username: user.username,
-      password: pwHash,
-    })
-
-    const levelsToAdd = allUserlevels.filter((l) =>
-      user.userlevel.includes(l.userlevel)
-    )
-    const userAndLevelsToAdd = levelsToAdd.map((l) => {
-      return { userlevelId: l.id, userId: createdUser.id }
-    })
-    await UserAndlevel.bulkCreate(userAndLevelsToAdd)
-  }
-
-  await createUser({
-    username: "outisa",
-    userlevel: ["user", "admin"],
-    password: String(process.env.OUTISA_PW),
-  })
-  return 1
 }
 
 const create4Lines = async (docks: IDock[]) => {
@@ -164,11 +133,10 @@ const initializeDb = async () => {
     await Dock.destroy({ where: {} })
     await deleteAllButHal()
     // add initial values
-    const initialUsersCount = await initializeUsers()
     const docksDb = await create20Docks()
     const lineIdsDb = await create4Lines(docksDb)
     const departuresDb = await create10Departures(lineIdsDb)
-    return { docksDb, lineIdsDb, departuresDb, initialUsersCount }
+    return { docksDb, lineIdsDb, departuresDb }
   } catch (e) {
     if (e instanceof Error) {
       console.log(e.message)
