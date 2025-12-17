@@ -1,5 +1,4 @@
 import { DataTypes } from "@sequelize/core"
-import { Dock } from "../models"
 import type { Migration } from "../db"
 
 export const up: Migration = async ({ context: queryInterface }) => {
@@ -11,12 +10,19 @@ export const up: Migration = async ({ context: queryInterface }) => {
     },
     end_dock_id: {
       type: DataTypes.INTEGER,
-      references: { model: Dock, key: "id" },
+      references: {
+        table: "docks",
+        key: "id",
+      } as unknown as never,
       allowNull: false,
     },
     start_dock_id: {
       type: DataTypes.INTEGER,
-      references: { model: Dock, key: "id" },
+
+      references: {
+        table: "docks",
+        key: "id",
+      } as unknown as never,
       allowNull: false,
     },
   })

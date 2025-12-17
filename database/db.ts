@@ -10,7 +10,7 @@ const sequelize: Sequelize =
   process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "test"
     ? (console.log("ENV: ", process.env.NODE_ENV),
       new Sequelize({
-        url: String(process.env.DB),
+        url: String(process.env.TEST_DB),
         dialect: PostgresDialect,
         ssl: true,
         logging:

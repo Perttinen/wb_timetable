@@ -1,5 +1,6 @@
 import { DataTypes } from "@sequelize/core"
-import { User, Userlevel } from "../models"
+// import { User, Userlevel } from "../models"
+
 import type { Migration } from "../db"
 
 export const up: Migration = async ({ context: queryInterface }) => {
@@ -11,12 +12,18 @@ export const up: Migration = async ({ context: queryInterface }) => {
     },
     userlevelId: {
       type: DataTypes.INTEGER,
-      references: { model: Userlevel, key: "id" },
+      references: {
+        table: "userlevels",
+        key: "id",
+      } as unknown as never,
       allowNull: false,
     },
     userId: {
       type: DataTypes.INTEGER,
-      references: { model: User, key: "id" },
+      references: {
+        table: "users",
+        key: "id",
+      } as unknown as never,
       allowNull: false,
     },
   })
