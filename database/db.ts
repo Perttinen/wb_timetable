@@ -8,7 +8,7 @@ dotenv.config()
 
 const sequelize: Sequelize =
   process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "test"
-    ? (console.log("dev database"),
+    ? (console.log("ENV: ", process.env.NODE_ENV),
       new Sequelize({
         url: String(process.env.DB),
         dialect: PostgresDialect,
@@ -18,7 +18,7 @@ const sequelize: Sequelize =
             ? false
             : (msg) => console.log(chalk.magentaBright(msg)),
       }))
-    : (console.log("prod database"),
+    : (console.log("ENV: ", process.env.NODE_ENV),
       new Sequelize({
         url: String(process.env.LOCAL_DB),
         dialect: PostgresDialect,

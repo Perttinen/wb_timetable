@@ -3,7 +3,7 @@ import request from "supertest"
 import app from "../backend/app"
 import { TUserSafe } from "../types/userTypes"
 import { login, createUser } from "./helpers/api"
-import { deleteAllButHal } from "./helpers/initializeTestDb"
+import initializeDb from "./helpers/initializeTestDb"
 import { TLoginResponse } from "../types/authTypes"
 
 const userProperties = ["id", "username", "disabled", "userlevels"]
@@ -19,7 +19,10 @@ describe("User API", () => {
   const testUser: TTestUser = {} as TTestUser
 
   beforeAll(async () => {
-    await deleteAllButHal()
+    const db = await initializeDb()
+    if (!db) {
+      throw new Error("Database initialization failed")
+    }
     const halLogin = (await login("hal", process.env.HAL_PW!))
       .body as TLoginResponse
     hal.token = halLogin.token

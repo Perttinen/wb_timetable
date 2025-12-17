@@ -7,8 +7,8 @@ import {
   UserAndlevel,
 } from "../../database/models"
 import { Op } from "@sequelize/core"
+
 import { docks } from "./docks"
-// import { createUser, login } from "./api";
 
 interface IDock {
   id: number

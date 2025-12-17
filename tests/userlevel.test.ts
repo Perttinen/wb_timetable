@@ -17,6 +17,7 @@ describe("Userlevel API", () => {
       .body as TLoginResponse
     hal.token = halLogin.token
   })
+
   test("Get userlevels, GET /userlevel", async () => {
     const response = await request(app)
       .get("/api/userlevel")
