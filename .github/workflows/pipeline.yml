@@ -8,7 +8,7 @@ jobs:
   massive_ci_pipeline:
     runs-on: ubuntu-latest
     env:
-      DB: ${{ secrets.DB }}
+      DB: ${{ secrets.TEST_DB }}
       HAL_PW: ${{ secrets.HAL_PW }}
       TEST_PW: ${{ secrets.TEST_PW }}
     steps:
