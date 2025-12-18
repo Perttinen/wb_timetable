@@ -108,13 +108,14 @@ const deleteDepartures = asyncHandler(
 
       const startMinutes = startInLocal.hour() * 60 + startInLocal.minute()
 
-      const dayjsDay = startInLocal.day()
-      const frontendIndex = dayjsDay === 0 ? 6 : dayjsDay - 1
+      // const dayjsDay = startInLocal.day()
+      // const frontendIndex = dayjsDay === 0 ? 6 : dayjsDay - 1
 
       return (
         startMinutes >= fromMinutes &&
         startMinutes <= toMinutes &&
-        weekdays[frontendIndex] === true
+        weekdays[dayjs(departure.start).subtract(1, "day").day()]
+        // weekdays[frontendIndex] === true
       )
     })
 

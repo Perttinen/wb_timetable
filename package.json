@@ -7,7 +7,7 @@
     "testii": "ts-node-test tests/",
     "tsc": "tsc",
     "dev": "cross-env NODE_ENV=dev ts-node-dev index.ts",
-    "migration:down": "cross-env NODE_ENV=dev ts-node backend/util/rollback.ts",
+    "migration:down": "cross-env NODE_ENV=dev ts-node database/rollback.ts",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "start": "cross-env NODE_ENV=dev ts-node index.ts",
