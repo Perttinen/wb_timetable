@@ -80,8 +80,14 @@ const deleteDepartures = asyncHandler(
       throwValidationError("From time can't be greater than To time!")
     }
 
-    const fromDateTime = dayjs(`${fromDate}T${fromTime}`).tz(TZ)
-    const toDateTime = dayjs(`${toDate}T${toTime}`).add(1, "minute").tz(TZ)
+    const fromDateTime = dayjs(`${fromDate}T${fromTime}`)
+    const toDateTime = dayjs(`${toDate}T${toTime}`).add(1, "minute")
+
+    console.log("fromDateTime: ", fromDateTime)
+    console.log("toDateTime: ", toDateTime)
+
+    console.log("fromDateTime.toDate(): ", fromDateTime.toDate())
+    console.log("toDateTime.toDate(): ", toDateTime.toDate())
 
     console.log("fromDateTime: ", fromDateTime.utc().toDate())
     console.log("toDateTime: ", toDateTime.utc().toDate())
@@ -99,17 +105,6 @@ const deleteDepartures = asyncHandler(
     })
 
     console.log("rawDepartures: ", rawDepartures)
-
-    // const filteredDepartures = rawDepartures.filter((departure) => {
-    //   const start = dayjs(departure.start)
-    //   const startMinutes = start.hour() * 60 + start.minute()
-
-    //   return (
-    //     startMinutes >= fromMinutes &&
-    //     startMinutes <= toMinutes &&
-    //     weekdays[dayjs(departure.start).subtract(1, "day").day()]
-    //   )
-    // })
 
     const filteredDepartures = rawDepartures.filter((departure) => {
       const startInLocal = dayjs(departure.start).tz(TZ)
