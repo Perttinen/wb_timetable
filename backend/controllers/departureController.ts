@@ -99,6 +99,8 @@ const deleteDepartures = asyncHandler(
       )
     })
 
+    // console.log("filteredDepartures: ", filteredDepartures)
+
     const departureIdsToDelete = filteredDepartures.map(
       (departure) => departure.id
     )
