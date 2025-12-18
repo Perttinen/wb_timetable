@@ -80,8 +80,8 @@ const deleteDepartures = asyncHandler(
       throwValidationError("From time can't be greater than To time!")
     }
 
-    const fromDateTime = dayjs(`${fromDate}T${fromTime}`)
-    const toDateTime = dayjs(`${toDate}T${toTime}`).add(1, "minute")
+    const fromDateTime = dayjs(`${fromDate}T${fromTime}`).tz(TZ)
+    const toDateTime = dayjs(`${toDate}T${toTime}`).add(1, "minute").tz(TZ)
 
     console.log("fromDateTime: ", fromDateTime.utc().toDate())
     console.log("toDateTime: ", toDateTime.utc().toDate())
