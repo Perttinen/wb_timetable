@@ -83,6 +83,9 @@ const deleteDepartures = asyncHandler(
     const fromDateTime = dayjs(`${fromDate}T${fromTime}`)
     const toDateTime = dayjs(`${toDate}T${toTime}`).add(1, "minute")
 
+    console.log("fromDateTime: ", fromDateTime)
+    console.log("toDateTime: ", toDateTime)
+
     const rawDepartures = await Departure.findAll({
       where: {
         lineId,
@@ -103,6 +106,8 @@ const deleteDepartures = asyncHandler(
     //   )
     // })
 
+    console.log("rawDepartures: ", rawDepartures)
+
     const filteredDepartures = rawDepartures.filter((departure) => {
       const startInLocal = dayjs(departure.start).tz(TZ)
 
@@ -118,6 +123,8 @@ const deleteDepartures = asyncHandler(
         // weekdays[frontendIndex] === true
       )
     })
+
+    console.log("filteredDepartures: ", filteredDepartures)
 
     const departureIdsToDelete = filteredDepartures.map(
       (departure) => departure.id
