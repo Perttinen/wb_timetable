@@ -18,7 +18,7 @@ jobs:
           node-version: "20"
       - name: Setup environment
         run: |
-          echo "DB=${DB}" >> .env
+          echo "DB=${TEST_DB}" >> .env
           echo "HAL_PW=${HAL_PW}" >> .env
           echo "TEST_PW=${HAL_PW}" >> .env
       - name: Install dependencies

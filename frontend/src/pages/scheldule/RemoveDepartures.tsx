@@ -48,6 +48,8 @@ const RemoveStarts = () => {
   }
 
   const handleSubmit = async (values: FormValues) => {
+    console.log(values)
+
     const payload: departureTypes.TDeleteDeparturesPayload = {
       lineId: values.lineId as number,
       fromDate: values.fromDate.format("YYYY-MM-DD"),

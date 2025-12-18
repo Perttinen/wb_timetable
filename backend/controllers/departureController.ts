@@ -5,6 +5,7 @@ import dayjs from "dayjs"
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import utc from "dayjs/plugin/utc"
 import isBetween from "dayjs/plugin/isBetween"
+import timezone from "dayjs/plugin/timezone"
 
 import { Departure, Dock, Line } from "../../database/models"
 import { throwNotFound, throwValidationError } from "../util/errorThrowers"
@@ -14,6 +15,7 @@ import { departureTypes } from "../../types"
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(isBetween)
+dayjs.extend(timezone)
 
 // @desc create
 // @route POST /departure/addone
@@ -64,6 +66,8 @@ const deleteDepartures = asyncHandler(
       throwValidationError("Missing required fields")
     }
 
+    const TZ = "Europe/Helsinki"
+
     const getMinutes = (time: string) => {
       const splitted = time.split(":")
       return Number(splitted[0]) * 60 + Number(splitted[1])
@@ -88,18 +92,31 @@ const deleteDepartures = asyncHandler(
       },
     })
 
+    // const filteredDepartures = rawDepartures.filter((departure) => {
+    //   const start = dayjs(departure.start)
+    //   const startMinutes = start.hour() * 60 + start.minute()
+
+    //   return (
+    //     startMinutes >= fromMinutes &&
+    //     startMinutes <= toMinutes &&
+    //     weekdays[dayjs(departure.start).subtract(1, "day").day()]
+    //   )
+    // })
+
     const filteredDepartures = rawDepartures.filter((departure) => {
-      const start = dayjs(departure.start)
-      const startMinutes = start.hour() * 60 + start.minute()
+      const startInLocal = dayjs(departure.start).tz(TZ)
+
+      const startMinutes = startInLocal.hour() * 60 + startInLocal.minute()
+
+      const dayjsDay = startInLocal.day()
+      const frontendIndex = dayjsDay === 0 ? 6 : dayjsDay - 1
 
       return (
         startMinutes >= fromMinutes &&
         startMinutes <= toMinutes &&
-        weekdays[dayjs(departure.start).subtract(1, "day").day()]
+        weekdays[frontendIndex] === true
       )
     })
-
-    // console.log("filteredDepartures: ", filteredDepartures)
 
     const departureIdsToDelete = filteredDepartures.map(
       (departure) => departure.id
