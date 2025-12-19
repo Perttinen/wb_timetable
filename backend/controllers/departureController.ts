@@ -5,6 +5,7 @@ import dayjs from "dayjs"
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import utc from "dayjs/plugin/utc"
 import isBetween from "dayjs/plugin/isBetween"
+import timezone from "dayjs/plugin/timezone"
 
 import { Departure, Dock, Line } from "../../database/models"
 import { throwNotFound, throwValidationError } from "../util/errorThrowers"
@@ -14,6 +15,7 @@ import { departureTypes } from "../../types"
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(isBetween)
+dayjs.extend(timezone)
 
 // @desc create
 // @route POST /departure/addone
@@ -64,37 +66,32 @@ const deleteDepartures = asyncHandler(
       throwValidationError("Missing required fields")
     }
 
-    const getMinutes = (time: string) => {
-      const splitted = time.split(":")
-      return Number(splitted[0]) * 60 + Number(splitted[1])
+    const TZ = "Europe/Helsinki"
+
+    const getTotalMinutes = (time: string): number => {
+      const [hours, minutes] = time.split(":")
+      return Number(hours) * 60 + Number(minutes)
     }
 
-    const fromMinutes = getMinutes(fromTime)
-    const toMinutes = getMinutes(toTime)
-
-    if (fromMinutes > toMinutes) {
-      throwValidationError("From time can't be greater than To time!")
-    }
-
-    const fromDateTime = dayjs(`${fromDate}T${fromTime}`)
-    const toDateTime = dayjs(`${toDate}T${toTime}`).add(1, "minute")
+    const minutesFrom = getTotalMinutes(fromTime)
+    const minutesTo = getTotalMinutes(toTime)
 
     const rawDepartures = await Departure.findAll({
       where: {
         lineId,
         start: {
-          [Op.between]: [fromDateTime.toDate(), toDateTime.toDate()],
+          [Op.between]: [fromDate, toDate],
         },
       },
     })
 
     const filteredDepartures = rawDepartures.filter((departure) => {
-      const start = dayjs(departure.start)
-      const startMinutes = start.hour() * 60 + start.minute()
-
+      const startMinutes =
+        dayjs(departure.start).tz(TZ).get("hour") * 60 +
+        dayjs(departure.start).tz(TZ).get("minutes")
       return (
-        startMinutes >= fromMinutes &&
-        startMinutes <= toMinutes &&
+        startMinutes >= minutesFrom &&
+        startMinutes <= minutesTo &&
         weekdays[dayjs(departure.start).subtract(1, "day").day()]
       )
     })
@@ -110,7 +107,6 @@ const deleteDepartures = asyncHandler(
         },
       },
     })
-
     res.status(200).json(deletedCount)
   }
 )

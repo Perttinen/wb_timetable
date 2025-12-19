@@ -1,5 +1,4 @@
 import { DataTypes } from "@sequelize/core"
-import { Line } from "../models"
 import type { Migration } from "../db"
 
 export const up: Migration = async ({ context: queryInterface }) => {
@@ -12,7 +11,10 @@ export const up: Migration = async ({ context: queryInterface }) => {
     line_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: Line, key: "id" },
+      references: {
+        table: "lines",
+        key: "id",
+      } as unknown as never,
     },
     start: {
       type: DataTypes.DATE,

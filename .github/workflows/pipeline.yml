@@ -8,7 +8,7 @@ jobs:
   massive_ci_pipeline:
     runs-on: ubuntu-latest
     env:
-      DB: ${{ secrets.DB }}
+      TEST_DB: ${{ secrets.TEST_DB }}
       HAL_PW: ${{ secrets.HAL_PW }}
       TEST_PW: ${{ secrets.TEST_PW }}
     steps:
@@ -18,7 +18,7 @@ jobs:
           node-version: "20"
       - name: Setup environment
         run: |
-          echo "DB=${DB}" >> .env
+          echo "DB=${TEST_DB}" >> .env
           echo "HAL_PW=${HAL_PW}" >> .env
           echo "TEST_PW=${HAL_PW}" >> .env
       - name: Install dependencies
