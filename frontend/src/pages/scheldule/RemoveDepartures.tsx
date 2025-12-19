@@ -61,8 +61,8 @@ const RemoveStarts = () => {
       lineId: values.lineId as number,
       fromDate: fromDate.toISOString(),
       toDate: toDate.toISOString(),
-      fromTime: values.fromTime.toISOString(),
-      toTime: values.toTime.toISOString(),
+      fromTime: values.fromTime.format("HH:mm"),
+      toTime: values.toTime.format("HH:mm"),
       weekdays: values.weekdays,
     }
     try {

@@ -52,95 +52,6 @@ const createManyDepartures = asyncHandler(
   }
 )
 
-// // @desc deleteMany
-// // @route DELETE /departure/deletemany
-// // @access user
-// const deleteDepartures = asyncHandler(
-//   async (
-//     req: Request<unknown, unknown, departureTypes.TDeleteDeparturesPayload>,
-//     res
-//   ) => {
-//     const { lineId, fromDate, toDate, fromTime, toTime, weekdays } = req.body
-
-//     if (!lineId || !fromDate || !toDate || !fromTime || !toTime || !weekdays) {
-//       throwValidationError("Missing required fields")
-//     }
-
-//     const TZ = "Europe/Helsinki"
-
-//     const getMinutes = (time: string) => {
-//       const splitted = time.split(":")
-//       return Number(splitted[0]) * 60 + Number(splitted[1])
-//     }
-
-//     const fromMinutes = getMinutes(fromTime)
-//     const toMinutes = getMinutes(toTime)
-
-//     if (fromMinutes > toMinutes) {
-//       throwValidationError("From time can't be greater than To time!")
-//     }
-
-//     const fromDateTime = dayjs(`${fromDate}T${fromTime}`)
-//     const toDateTime = dayjs(`${toDate}T${toTime}`).add(1, "minute")
-
-//     console.log("fromDateTime: ", fromDateTime)
-//     console.log("toDateTime: ", toDateTime)
-
-//     console.log("fromDateTime.toDate(): ", fromDateTime.toDate())
-//     console.log("toDateTime.toDate(): ", toDateTime.toDate())
-
-//     console.log("fromDateTime: ", fromDateTime.utc().toDate())
-//     console.log("toDateTime: ", toDateTime.utc().toDate())
-
-//     const rawDepartures = await Departure.findAll({
-//       where: {
-//         lineId,
-//         start: {
-//           [Op.between]: [
-//             fromDateTime.utc().toDate(),
-//             toDateTime.utc().toDate(),
-//           ],
-//         },
-//       },
-//     })
-
-//     console.log("rawDepartures: ", rawDepartures)
-
-//     const filteredDepartures = rawDepartures.filter((departure) => {
-//       const startInLocal = dayjs(departure.start).tz(TZ)
-
-//       const startMinutes = startInLocal.hour() * 60 + startInLocal.minute()
-
-//       // const dayjsDay = startInLocal.day()
-//       // const frontendIndex = dayjsDay === 0 ? 6 : dayjsDay - 1
-
-//       return (
-//         startMinutes >= fromMinutes &&
-//         startMinutes <= toMinutes &&
-//         weekdays[dayjs(departure.start).subtract(1, "day").day()]
-//         // weekdays[frontendIndex] === true
-//       )
-//     })
-
-//     console.log("filteredDepartures: ", filteredDepartures)
-
-//     const departureIdsToDelete = filteredDepartures.map(
-//       (departure) => departure.id
-//     )
-
-//     const deletedCount = await Departure.destroy({
-//       where: {
-//         id: {
-//           [Op.in]: departureIdsToDelete,
-//         },
-//       },
-//     })
-
-//     console.log("departureIdsToDelete: ", departureIdsToDelete)
-
-//     res.status(200).json(deletedCount)
-//   }
-// )
 // @desc deleteMany
 // @route DELETE /departure/deletemany
 // @access user
@@ -155,9 +66,15 @@ const deleteDepartures = asyncHandler(
       throwValidationError("Missing required fields")
     }
 
-    console.log(fromDate)
-    console.log(toDate)
     const TZ = "Europe/Helsinki"
+
+    const getTotalMinutes = (time: string): number => {
+      const [hours, minutes] = time.split(":")
+      return Number(hours) * 60 + Number(minutes)
+    }
+
+    const minutesFrom = getTotalMinutes(fromTime)
+    const minutesTo = getTotalMinutes(toTime)
 
     const rawDepartures = await Departure.findAll({
       where: {
@@ -168,14 +85,29 @@ const deleteDepartures = asyncHandler(
       },
     })
 
-    for (const d of rawDepartures) {
-      console.log(dayjs(d.start).tz(TZ).get("hour"))
-    }
+    const filteredDepartures = rawDepartures.filter((departure) => {
+      const startMinutes =
+        dayjs(departure.start).tz(TZ).get("hour") * 60 +
+        dayjs(departure.start).tz(TZ).get("minutes")
+      return (
+        startMinutes >= minutesFrom &&
+        startMinutes <= minutesTo &&
+        weekdays[dayjs(departure.start).subtract(1, "day").day()]
+      )
+    })
 
-    console.log(rawDepartures)
+    const departureIdsToDelete = filteredDepartures.map(
+      (departure) => departure.id
+    )
 
-    res.status(200).end()
-    // res.status(200).json(deletedCount)
+    const deletedCount = await Departure.destroy({
+      where: {
+        id: {
+          [Op.in]: departureIdsToDelete,
+        },
+      },
+    })
+    res.status(200).json(deletedCount)
   }
 )
 
