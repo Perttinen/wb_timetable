@@ -66,8 +66,6 @@ const deleteDepartures = asyncHandler(
       throwValidationError("Missing required fields")
     }
 
-    const TZ = "Europe/Helsinki"
-
     const getTotalMinutes = (time: string): number => {
       const [hours, minutes] = time.split(":")
       return Number(hours) * 60 + Number(minutes)
@@ -76,25 +74,43 @@ const deleteDepartures = asyncHandler(
     const minutesFrom = getTotalMinutes(fromTime)
     const minutesTo = getTotalMinutes(toTime)
 
+    console.log("fromDate: ", new Date(fromDate))
+    console.log("toDate: ", toDate)
+
     const rawDepartures = await Departure.findAll({
       where: {
         lineId,
         start: {
-          [Op.between]: [fromDate, toDate],
+          [Op.between]: [new Date(fromDate), new Date(toDate)],
         },
       },
     })
 
+    console.log("rawDepartures: ", rawDepartures)
+
+    const TZ = "Europe/Helsinki"
+
     const filteredDepartures = rawDepartures.filter((departure) => {
+      const localStartTime = dayjs(departure.start).tz(TZ)
       const startMinutes =
-        dayjs(departure.start).tz(TZ).get("hour") * 60 +
-        dayjs(departure.start).tz(TZ).get("minutes")
+        localStartTime.get("hour") * 60 + localStartTime.get("minutes")
+
+      console.log("startMinutes: ", startMinutes)
+      console.log("minutesFrom: ", minutesFrom)
+      console.log("minutesTo: ", minutesTo)
+      console.log(
+        "weekdays: ",
+        weekdays[localStartTime.subtract(1, "day").day()]
+      )
+
       return (
         startMinutes >= minutesFrom &&
         startMinutes <= minutesTo &&
-        weekdays[dayjs(departure.start).subtract(1, "day").day()]
+        weekdays[localStartTime.subtract(1, "day").day()]
       )
     })
+
+    console.log("filteredDepartures: ", filteredDepartures)
 
     const departureIdsToDelete = filteredDepartures.map(
       (departure) => departure.id
