@@ -89,6 +89,11 @@ const deleteDepartures = asyncHandler(
       const startMinutes =
         dayjs(departure.start).tz(TZ).get("hour") * 60 +
         dayjs(departure.start).tz(TZ).get("minutes")
+
+      console.log("startMinutes: ", startMinutes)
+      console.log("minutesFrom: ", minutesFrom)
+      console.log("minutesTo: ", minutesTo)
+
       return (
         startMinutes >= minutesFrom &&
         startMinutes <= minutesTo &&
