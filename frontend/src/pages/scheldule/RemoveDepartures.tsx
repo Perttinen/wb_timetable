@@ -17,6 +17,11 @@ import Spinner from "../../components/Spinner"
 import { useDeleteDeparturesMutation } from "../../redux/api/departureApi"
 import { departureTypes } from "../../../../types"
 import showErrorSnack from "../../utils/showErrorSnack"
+// import utc from "dayjs/plugin/utc"
+// import timezone from "dayjs/plugin/timezone"
+
+// dayjs.extend(utc)
+// dayjs.extend(timezone)
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
@@ -49,6 +54,45 @@ const RemoveStarts = () => {
 
   const combineDateAndTime = (date: dayjs.Dayjs, time: dayjs.Dayjs) =>
     date.hour(time.hour()).minute(time.minute()).second(0).millisecond(0)
+
+  // const combineDateAndTime = (date: dayjs.Dayjs, time: dayjs.Dayjs) =>
+  //   date
+  //     .hour(time.hour())
+  //     .minute(time.minute())
+  //     .second(0)
+  //     .millisecond(0)
+  //     .tz("Europe/Helsinki", true) // interpret as Helsinki local time
+
+  // const handleSubmit = async (values: FormValues) => {
+  //   // Combine date + time in Helsinki local time
+  //   const localFrom = combineDateAndTime(values.fromDate, values.fromTime)
+  //   const localTo = combineDateAndTime(values.toDate, values.toTime).add(
+  //     1,
+  //     "minute"
+  //   )
+
+  //   // Convert to UTC for backend + DB comparison
+  //   const fromDateUTC = localFrom.utc()
+  //   const toDateUTC = localTo.utc()
+
+  //   const payload: departureTypes.TDeleteDeparturesPayload = {
+  //     lineId: values.lineId as number,
+  //     fromDate: fromDateUTC.toISOString(),
+  //     toDate: toDateUTC.toISOString(),
+  //     fromTime: values.fromTime.format("HH:mm"),
+  //     toTime: values.toTime.format("HH:mm"),
+  //     weekdays: values.weekdays,
+  //   }
+
+  //   try {
+  //     const result = await deleteDepartures(payload).unwrap()
+  //     const message = `${result} start(s) deleted`
+  //     showSnackbar({ message, severity: "success", duration: 5000 })
+  //     void navigate("/logged/schedule")
+  //   } catch (e) {
+  //     showErrorSnack(e)
+  //   }
+  // }
 
   const handleSubmit = async (values: FormValues) => {
     const fromDate = combineDateAndTime(values.fromDate, values.fromTime)
