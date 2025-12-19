@@ -47,18 +47,26 @@ const RemoveStarts = () => {
     lineId: Number(lineId),
   }
 
+  const combineDateAndTime = (date: dayjs.Dayjs, time: dayjs.Dayjs) =>
+    date.hour(time.hour()).minute(time.minute()).second(0).millisecond(0)
+
   const handleSubmit = async (values: FormValues) => {
-    console.log(values)
+    const fromDate = combineDateAndTime(values.fromDate, values.fromTime)
+    const toDate = combineDateAndTime(values.toDate, values.toTime).add(
+      1,
+      "minute"
+    )
 
     const payload: departureTypes.TDeleteDeparturesPayload = {
       lineId: values.lineId as number,
-      fromDate: values.fromDate.format("YYYY-MM-DD"),
-      toDate: values.toDate.format("YYYY-MM-DD"),
-      fromTime: values.fromTime.format("HH:mm"),
-      toTime: values.toTime.format("HH:mm"),
+      fromDate: fromDate.toISOString(),
+      toDate: toDate.toISOString(),
+      fromTime: values.fromTime.toISOString(),
+      toTime: values.toTime.toISOString(),
       weekdays: values.weekdays,
     }
     try {
+      // const result = await deleteDepartures(values).unwrap()
       const result = await deleteDepartures(payload).unwrap()
       const message = `${result} start(s) deleted`
       showSnackbar({ message, severity: "success", duration: 5000 })

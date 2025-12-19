@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs"
+
 export type TDeleteDeparturesPayload = {
   lineId: number
   fromDate: string
@@ -5,6 +7,15 @@ export type TDeleteDeparturesPayload = {
   fromTime: string
   toTime: string
   weekdays: boolean[]
+}
+
+export type TDeleteDepartures = {
+  fromDate: Dayjs
+  toDate: Dayjs
+  fromTime: Dayjs
+  toTime: Dayjs
+  weekdays: [boolean, boolean, boolean, boolean, boolean, boolean, boolean]
+  lineId: number | ""
 }
 
 export type TInputDeparture = {
