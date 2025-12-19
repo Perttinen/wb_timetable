@@ -89,6 +89,7 @@ const deleteDepartures = asyncHandler(
     console.log("rawDepartures: ", rawDepartures)
 
     const TZ = "Europe/Helsinki"
+    console.log("testing branch")
 
     const filteredDepartures = rawDepartures.filter((departure) => {
       const localStartTime = dayjs(departure.start).tz(TZ)
